@@ -44,7 +44,7 @@ public:
 	Module* Mod;
 
 public:
-	CodeGenContext() { Mod = new Module(:"main", getGlobalContext()); }
+	CodeGenContext() { Mod = new Module("main", getGlobalContext()); }
 	~CodeGenContext();
 
 	void GenerateCode(NBlock & in_Root);
