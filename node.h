@@ -1,0 +1,119 @@
+#include <iostream>
+#include <vector>
+#include <llvm/Value.h>
+
+class CodeGenContext;
+class NStatement;
+class NExpression;
+class NVariableDeclaration;
+
+typedef std::vector<NStatement*> StatementList;
+typedef std::vector<NExpression*> ExpressionList;
+typedef std::vector<NVariableDeclaration*> VariableList;
+
+struct Node
+{
+	virtual ~Node() { }
+	virtual llvm::Value* CodeGen(CodeGenContext & io_Context) { }
+};
+
+struct NExpression : public Node
+{ };
+
+struct NStatement : public Node
+{ };
+
+struct NInteger : public NExpression
+{
+	long long Value;
+
+	NInteger(const long long & in_Value = 0L) : Value(in_Value) { }
+	virtual llvm::Value* CodeGen(CodeGenContext & io_Context);
+};
+
+struct NDouble : public NExpression
+{
+	double Value;
+
+	NDouble(const double & in_Value) : Value(in_Value) { }
+	virtual llvm::CodeGen(CodeGenContext & io_Context);
+};
+
+struct NIdentifier : public NExpression
+{
+	std::string Name;
+
+	NIdentifier(const std::string & in_Name) : Name(in_Name) { }
+	virtual llvm::Value* CodeGen(CodeGenContext & io_Context);
+};
+
+struct NMethodCall : public NExpression
+{
+	const NIdentifier& ID;
+	ExpressionList Arguments;
+
+	NMethodCall(const NIdentifier & in_ID, ExpressionList & in_Args = std::vector<NExpression*>()) :
+		ID(in_ID), Arguments(in_Args) { }
+	virtual llvm::Value* CodeGen(CodeGenContext & io_Context);
+};
+
+struct NBinaryOperator : public NExpression
+{
+	int Op;
+	NExpression& LHS;
+	NExpression& RHS;
+	NBinaryOperator(int in_Op, NIdentifier & in_LHS, NIdentifier & in_RHS) :
+		Op(in_Op), LHS(in_LHS), RHS(in_RHS) { }
+	virtual llvm::Value* CodeGen(CodeGenContext & io_Context);
+};
+
+struct NAssignment : public NExpression
+{
+	NIdentifier& LHS;
+	NIdentifier& RHS;
+
+	NAssignment(NIdentifier & in_LHS, NIdentifier & in_RHS) :
+		LHS(in_LHS), RHS(in_RHS) { }
+
+	virtual llvm::Value* CodeGen(CodeGenContext & io_Context);
+};
+
+struct NBlock : public NExpression
+{
+	StatementList Statements;
+	
+	NBlock() { }
+	virtual llvm::Value* CodeGen(CodeGenContext & io_Context);
+};
+
+struct NExpressionStatement : public NStatement
+{
+	NExpression& Expression;
+
+	NExpressionStatement(NExpression & in_Expression) :
+		Expression(in_Expression) { }
+	virtual llvm::Value* CodeGen(CodeGenContext & io_Context);
+};
+
+struct NVariableDeclaration : public NStatement
+{
+	const NIdentifier& Type;
+	NIdentifier& ID;
+	NExpression* AssignmentExpr;
+
+	NVariableDeclaration(const NIdentifier & in_Type, NIdentifier & in_ID, NExpression * in_Assignment = nullptr) :
+		Type(in_Type), ID(in_ID), AssignmentExpr(in_Assignment) { }
+	virtual llvm::Value* CodeGen(CodeGenContext & io_Context);
+};
+
+struct NFunctionDeclaration : NStatement
+{
+	const NIdentifier& Type;
+	const NIdentifier& ID;
+	VariableList Arguments;
+	NBlock& Block;
+
+	NFunctionDeclaration(const NIdentifier & in_Type, const NIdentifier & in_ID, const VariableList & in_Args, NBlock & in_Block) :
+		Type(in_Type), ID(in_ID), Arguments(in_Args), Block(in_Block) { }
+	virtual llvm::Value* CodeGen(CodeGenContext & io_Context);
+};

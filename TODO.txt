@@ -1,0 +1,4 @@
+- Resolve shift/reduce conflicts in basic grammar
+- Make a CMake file to generate a Visual Studio solution
+- Extend compiler to be fully java-- compliant
+- Add disclaimer
