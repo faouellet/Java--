@@ -9,15 +9,15 @@
 /*Possible ways to access the data*/
 %union
 {
-	Node * node;
-	NBlock * block;
-	NExpression * expr;
-	NStatement * stmt;
-	NIdentifier * ident;
-	NVariableDeclaration * var_decl;
-	std::vector<NVariableDeclaration*> * var_vec;
-	std::vector<NExpression*> * expr_vec;
-	std::string * string;
+	Node* node;
+	NBlock* block;
+	NExpression* expr;
+	NStatement* stmt;
+	NIdentifier* ident;
+	NVariableDeclaration* var_decl;
+	std::vector<NVariableDeclaration*>* var_vec;
+	std::vector<NExpression*>* expr_vec;
+	std::string* string;
 	int token;
 }
 
@@ -25,7 +25,7 @@
 %token <string> TIDENTIFIER TINTEGER TDOUBLE
 %token <token> TCEQ TCNE TCLT TCLE TCGT TCGE TEQUAL
 %token <token> TLPAREN TRPAREN TLBRACE TRBRACE TCOMMA TDOT
-%token <token> TPLUS TMINUS TMINUS TMUL TDIV
+%token <token> TPLUS TMINUS TMUL TDIV
 
 /**/
 %type <ident>	ident
@@ -44,64 +44,61 @@
 
 %%
 
-program		: stmts { _ProgramBlock = $1; }
+program 	: stmts { programBlock = $1; }
 			;
 
-stmts		: stmt { $$ = new NBlock(); $$->statements.push_back($<stmt>1); }
+stmts 		: stmt { $$ = new NBlock(); $$->statements.push_back($<stmt>1); }
 			| stmts stmt { $1->statements.push_back($<stmt>2); }
 			;
 
-stmt		: var_decl
-			| func_decl
+stmt 		: var_decl | func_decl
 			| expr { $$ = new NExpressionStatement(*$1); }
+	     	;
+
+block 		: TLBRACE stmts TRBRACE { $$ = $2; }
+			| TLBRACE TRBRACE { $$ = new NBlock(); }
 			;
 
-block		: TLBRACE stmts TRBRACE { $$ = $2; }
-			| TLBRACE TRBRACE { $$ = new Block(); }
+var_decl 	: ident ident { $$ = new NVariableDeclaration(*$1, *$2); }
+			| ident ident TEQUAL expr { $$ = new NVariableDeclaration(*$1, *$2, $4); }
 			;
 
-var_decl	: ident ident { $$ = NVariableDeclaration(*$1, *$2); }
-			| ident ident TEQUAL expr { $$ = NVariableDeclaration(*$1, *$2, *$4); }
+func_decl 	: ident ident TLPAREN func_decl_args TRPAREN block { $$ = new NFunctionDeclaration(*$1, *$2, *$4, *$6); delete $4; }
 			;
 
-func_decl	: ident ident TLPAREN func_decl_arg TRPAREN block { $$ new NFunctionDeclaration(*$1, *$2, *$4, *$6); delete $4; }
-			;
-
-func_decl_args	: /*blank*/ { $$ = new VariableList(); }
+func_decl_args 	: /*blank*/ { $$ = new VariableList(); }
 				| var_decl { $$ = new VariableList(); $$->push_back($<var_decl>1); }
 				| func_decl_args TCOMMA var_decl { $1->push_back($<var_decl>3); }
 				;
 
-ident		: TIDENTIFIER { $$ = new NIdentifier(*$1); delete $1; }
+ident 		: TIDENTIFIER { $$ = new NIdentifier(*$1); delete $1; }
 			;
 
-numeric		: TINTEGER { $$ = new NInteger(atol($1->c_str())); delete $1; }
+numeric 	: TINTEGER { $$ = new NInteger(atol($1->c_str())); delete $1; }
 			| TDOUBLE { $$ = new NDouble(atof($1->c_str())); delete $1; }
 			;
 
-expr		: ident TEQUAL expr { $$ = new NAssignment(*$<ident>1, *$3); }
+expr 		: ident TEQUAL expr { $$ = new NAssignment(*$<ident>1, *$3); }
 			| ident TLPAREN call_args TRPAREN { $$ = new NMethodCall(*$1, *$3); delete $3; }
 			| ident { $<ident>$ = $1; }
 			| numeric
-			| expr comparison expr { $$ = new NBinaryOperator(*$1, *$2, *$3); }
-			| TLPAREN expr TRPAREN { $$ = $2; }
+			| expr comparison expr { $$ = new NBinaryOperator(*$1, $2, *$3); }
+		    | TLPAREN expr TRPAREN { $$ = $2; }
 			;
 
-call_args	: /*blank*/ { $$ new ExpressionList(); }
+call_args 	: /*blank*/ { $$ = new ExpressionList(); }
 			| expr { $$ = new ExpressionList(); $$->push_back($1); }
 			| call_args TCOMMA expr { $1->push_back($3); }
 			;
 
-comparison	: TCEQ
-			| TCNE
-			| TCLT
-			| TCLE
-			| TCGT
+comparison	: TCEQ 
+			| TCNE 
+			| TCLT 
+			| TCLE 
+			| TCGT 
 			| TCGE
-			| TPLUS
-			| TMINUS
-			| TMUL
+			| TPLUS 
+			| TMINUS 
+			| TMUL 
 			| TDIV
-			;
-
-%%
+;
