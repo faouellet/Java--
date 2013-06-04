@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include <llvm/Value.h>
+#include <llvm/IR/Value.h>
 
 class CodeGenContext;
 class NStatement;
@@ -36,7 +36,7 @@ struct NDouble : public NExpression
 	double Value;
 
 	NDouble(const double & in_Value) : Value(in_Value) { }
-	virtual llvm::CodeGen(CodeGenContext & io_Context);
+	virtual llvm::Value* CodeGen(CodeGenContext & io_Context);
 };
 
 struct NIdentifier : public NExpression
@@ -52,8 +52,9 @@ struct NMethodCall : public NExpression
 	const NIdentifier& ID;
 	ExpressionList Arguments;
 
-	NMethodCall(const NIdentifier & in_ID, ExpressionList & in_Args = std::vector<NExpression*>()) :
+	NMethodCall(const NIdentifier & in_ID, ExpressionList & in_Args) :
 		ID(in_ID), Arguments(in_Args) { }
+	NMethodCall(const NIdentifier & in_ID) : ID(in_ID) { }
 	virtual llvm::Value* CodeGen(CodeGenContext & io_Context);
 };
 

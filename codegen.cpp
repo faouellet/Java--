@@ -1,9 +1,8 @@
 #include "codegen.h"
-
-#include "codegen.h"
+#include "node.h"
 #include "parser.hpp"
 
-void CodeGenContext::GenerateBlock(NBlock & in_Root)
+void CodeGenContext::GenerateCode(NBlock & in_Root)
 {
 	std::cout << "Genrating code..." << std::endl;
 
@@ -36,11 +35,11 @@ GenericValue CodeGenContext::RunCode()
 
 static const Type* TypeOf(const NIdentifier & in_Type)
 {
-	if(in_Type.name.compare("int") == 0)
+	if(in_Type.Name.compare("int") == 0)
 	{
 		return Type::getInt64Ty(getGlobalContext());
 	}
-	else if(in_Type.name.compare("double") == 0)
+	else if(in_Type.Name.compare("double") == 0)
 	{
 		return Type::getDoubleTy(getGlobalContext());
 	}
@@ -83,7 +82,7 @@ Value* NMethodCall::CodeGen(CodeGenContext & io_Context)
 	std::vector<Value*> l_Args;
 	for(auto& in_Arg : Arguments)
 	{
-		l_Args.push_back(in_Arg.CodeGen(io_Context));
+		l_Args.push_back(in_Arg->CodeGen(io_Context));
 	}
 	CallInst* l_Call = CallInst::Create(l_Function, l_Args.begin(), l_Args.end(), "", io_Context);
 	std::cout << "Creating method call: " << ID.Name << std::endl;
@@ -107,7 +106,7 @@ Value* NBinaryOperator::CodeGen(CodeGenContext & io_Context)
 	return NULL;
 math:
 	return BinaryOperator::Create(l_Instr, LHS.CodeGen(io_Context), 
-		RHS.CodeGen(io_Context), "", io_Context.currentBlock());
+		RHS.CodeGen(io_Context), "", io_Context.CurrentBlock());
 }
 
 Value* NAssignment::CodeGen(CodeGenContext & io_Context)
@@ -118,7 +117,7 @@ Value* NAssignment::CodeGen(CodeGenContext & io_Context)
 		std::cerr << "undeclared variable " << LHS.Name << std::endl;
 		return nullptr;
 	}
-	return new StoreInst(RHS.CodeGen(io_Context), io_Context.Locals()[LHS.Name], false, io_Context.currentBlock());
+	return new StoreInst(RHS.CodeGen(io_Context), io_Context.Locals()[LHS.Name], false, io_Context.CurrentBlock());
 }
 
 Value* NBlock::CodeGen(CodeGenContext & io_Context)
@@ -128,7 +127,7 @@ Value* NBlock::CodeGen(CodeGenContext & io_Context)
 	for(auto& in_Stmt : Statements)
 	{
 		std::cout << "Generating code for " << typeid(in_Stmt).name() << std::endl;
-		l_Last = (in_Stmt).CodeGen(io_Context);
+		l_Last = in_Stmt->CodeGen(io_Context);
 	}
 
 	std::cout << "Creating block" << std::endl;
@@ -167,11 +166,11 @@ Value* NFunctionDeclaration::CodeGen(CodeGenContext & io_Context)
 	Function* l_Function = Function::Create(l_FType, GlobalValue::InternalLinkage, ID.Name.c_str(), io_Context.Mod);
 	BasicBlock* l_Block = BasicBlock::Create(getGlobalContext(), "entry", l_Function, 0);
 
-	io_Context.pushBlock(l_Block);
+	io_Context.PushBlock(l_Block);
 
 	for(auto& in_Arg : Arguments)
 	{
-		in_Arg.CodeGen(io_Context);
+		in_Arg->CodeGen(io_Context);
 	}
 	
 	Block.CodeGen(io_Context);
