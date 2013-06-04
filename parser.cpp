@@ -69,7 +69,7 @@
 #line 1 "parser.y"
 
 	#include "node.h"
-	NBlock * _ProgramBlock; /*Top level root node of the final AST*/
+	NBlock * programBlock; /*Top level root node of the final AST*/
 
 	extern int yylex();
 	void yyerror(const char * in_ErrorMsg) { printf("ERROR: %s\n", in_ErrorMsg); }
@@ -1440,14 +1440,14 @@ yyreduce:
 
 /* Line 1806 of yacc.c  */
 #line 50 "parser.y"
-    { (yyval.block) = new NBlock(); (yyval.block)->statements.push_back((yyvsp[(1) - (1)].stmt)); }
+    { (yyval.block) = new NBlock(); (yyval.block)->Statements.push_back((yyvsp[(1) - (1)].stmt)); }
     break;
 
   case 4:
 
 /* Line 1806 of yacc.c  */
 #line 51 "parser.y"
-    { (yyvsp[(1) - (2)].block)->statements.push_back((yyvsp[(2) - (2)].stmt)); }
+    { (yyvsp[(1) - (2)].block)->Statements.push_back((yyvsp[(2) - (2)].stmt)); }
     break;
 
   case 7:
@@ -1489,28 +1489,28 @@ yyreduce:
 
 /* Line 1806 of yacc.c  */
 #line 66 "parser.y"
-    { (yyval.stmt) = new NFunctionDeclaration(*(yyvsp[(1) - (6)].ident), *(yyvsp[(2) - (6)].ident), *(yyvsp[(4) - (6)].varvec), *(yyvsp[(6) - (6)].block)); delete (yyvsp[(4) - (6)].varvec); }
+    { (yyval.stmt) = new NFunctionDeclaration(*(yyvsp[(1) - (6)].ident), *(yyvsp[(2) - (6)].ident), *(yyvsp[(4) - (6)].var_vec), *(yyvsp[(6) - (6)].block)); delete (yyvsp[(4) - (6)].var_vec); }
     break;
 
   case 13:
 
 /* Line 1806 of yacc.c  */
 #line 69 "parser.y"
-    { (yyval.varvec) = new VariableList(); }
+    { (yyval.var_vec) = new VariableList(); }
     break;
 
   case 14:
 
 /* Line 1806 of yacc.c  */
 #line 70 "parser.y"
-    { (yyval.varvec) = new VariableList(); (yyval.varvec)->push_back((yyvsp[(1) - (1)].var_decl)); }
+    { (yyval.var_vec) = new VariableList(); (yyval.var_vec)->push_back((yyvsp[(1) - (1)].var_decl)); }
     break;
 
   case 15:
 
 /* Line 1806 of yacc.c  */
 #line 71 "parser.y"
-    { (yyvsp[(1) - (3)].varvec)->push_back((yyvsp[(3) - (3)].var_decl)); }
+    { (yyvsp[(1) - (3)].var_vec)->push_back((yyvsp[(3) - (3)].var_decl)); }
     break;
 
   case 16:
@@ -1545,7 +1545,7 @@ yyreduce:
 
 /* Line 1806 of yacc.c  */
 #line 82 "parser.y"
-    { (yyval.expr) = new NMethodCall(*(yyvsp[(1) - (4)].ident), *(yyvsp[(3) - (4)].exprvec)); delete (yyvsp[(3) - (4)].exprvec); }
+    { (yyval.expr) = new NMethodCall(*(yyvsp[(1) - (4)].ident), *(yyvsp[(3) - (4)].expr_vec)); delete (yyvsp[(3) - (4)].expr_vec); }
     break;
 
   case 21:
@@ -1573,21 +1573,21 @@ yyreduce:
 
 /* Line 1806 of yacc.c  */
 #line 89 "parser.y"
-    { (yyval.exprvec) = new ExpressionList(); }
+    { (yyval.expr_vec) = new ExpressionList(); }
     break;
 
   case 26:
 
 /* Line 1806 of yacc.c  */
 #line 90 "parser.y"
-    { (yyval.exprvec) = new ExpressionList(); (yyval.exprvec)->push_back((yyvsp[(1) - (1)].expr)); }
+    { (yyval.expr_vec) = new ExpressionList(); (yyval.expr_vec)->push_back((yyvsp[(1) - (1)].expr)); }
     break;
 
   case 27:
 
 /* Line 1806 of yacc.c  */
 #line 91 "parser.y"
-    { (yyvsp[(1) - (3)].exprvec)->push_back((yyvsp[(3) - (3)].expr)); }
+    { (yyvsp[(1) - (3)].expr_vec)->push_back((yyvsp[(3) - (3)].expr)); }
     break;
 
 

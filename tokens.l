@@ -24,7 +24,7 @@ extern "C" int yywrap() { }
 ")"						return TOKEN(TRPAREN);
 "{"						return TOKEN(TLBRACE);
 "}"						return TOKEN(TRBRACE);
-"."						returnn TOKEN(TDOT);
+"."						return TOKEN(TDOT);
 ","						return TOKEN(TCOMMA);
 "+"						return TOKEN(TPLUS);
 "-"						return TOKEN(TLESS);

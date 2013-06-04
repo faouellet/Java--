@@ -6,6 +6,7 @@
 - In TypeOf, try to replace the ifs by a switch
 - Remove the goto in NBinaryOperator
 - Update the code so it works with LLVM 3.2
+- Add test files (.mjv)
 
 ?- Separate the logic contained in the code generator into multiple files
 ?- Separate into folders

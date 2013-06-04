@@ -1,6 +1,6 @@
 %{
 	#include "node.h"
-	NBlock * _ProgramBlock; /*Top level root node of the final AST*/
+	NBlock * programBlock; /*Top level root node of the final AST*/
 
 	extern int yylex();
 	void yyerror(const char * in_ErrorMsg) { printf("ERROR: %s\n", in_ErrorMsg); }
@@ -28,13 +28,13 @@
 %token <token> TPLUS TMINUS TMUL TDIV
 
 /**/
-%type <ident>	ident
-%type <expr>	numeric expr
-%type <varvec>	func_decl_args
-%type <exprvec>	call_args
-%type <block>	program stmts block
-%type <stmt>	stmt var_decl func_decl
-%type <token>	comparison
+%type <ident>		ident
+%type <expr>		numeric expr
+%type <var_vec>		func_decl_args
+%type <expr_vec>	call_args
+%type <block>		program stmts block
+%type <stmt>		stmt var_decl func_decl
+%type <token>		comparison
 
 /* Operator precedence */
 %left TPLUS TMINUS
@@ -47,8 +47,8 @@
 program 	: stmts { programBlock = $1; }
 			;
 
-stmts 		: stmt { $$ = new NBlock(); $$->statements.push_back($<stmt>1); }
-			| stmts stmt { $1->statements.push_back($<stmt>2); }
+stmts 		: stmt { $$ = new NBlock(); $$->Statements.push_back($<stmt>1); }
+			| stmts stmt { $1->Statements.push_back($<stmt>2); }
 			;
 
 stmt 		: var_decl | func_decl

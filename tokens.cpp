@@ -834,7 +834,7 @@ return TOKEN(TRBRACE);
 case 16:
 YY_RULE_SETUP
 #line 27 "tokens.l"
-returnn TOKEN(TDOT);
+return TOKEN(TDOT);
 	YY_BREAK
 case 17:
 YY_RULE_SETUP

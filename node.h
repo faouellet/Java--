@@ -63,7 +63,8 @@ struct NBinaryOperator : public NExpression
 	int Op;
 	NExpression& LHS;
 	NExpression& RHS;
-	NBinaryOperator(int in_Op, NIdentifier & in_LHS, NIdentifier & in_RHS) :
+
+	NBinaryOperator(NExpression & in_LHS, int in_Op, NExpression & in_RHS) :
 		Op(in_Op), LHS(in_LHS), RHS(in_RHS) { }
 	virtual llvm::Value* CodeGen(CodeGenContext & io_Context);
 };
@@ -71,9 +72,9 @@ struct NBinaryOperator : public NExpression
 struct NAssignment : public NExpression
 {
 	NIdentifier& LHS;
-	NIdentifier& RHS;
+	NExpression& RHS;
 
-	NAssignment(NIdentifier & in_LHS, NIdentifier & in_RHS) :
+	NAssignment(NIdentifier & in_LHS, NExpression & in_RHS) :
 		LHS(in_LHS), RHS(in_RHS) { }
 
 	virtual llvm::Value* CodeGen(CodeGenContext & io_Context);
