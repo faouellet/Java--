@@ -1,0 +1,73 @@
+/*
+** Test ClassFrame.mjv
+**
+** This tests the Class Frame. No "rslt" file is produced
+** as execution should not produce any output. The test is
+** complete when the JVM can run it without error (i.e
+** nothing happens at the command line).
+**
+** Also tests :
+** 1) Field declarations along with their STD initializers.
+** 2) Local Variable decl. and STD initializers.
+** 3) Method declarations.
+**
+*/
+
+public class ClassFrame
+{
+  static public boolean spfb;
+  static public int spfi;
+  static public float spff;
+
+  static boolean sfb;
+  static int sfi;
+  static float sff;
+
+  public boolean pfb;
+  public int pfi;
+  public float pff;
+
+  boolean fb;
+  int fi;
+  float ff;
+
+  static public boolean[] spfb1d;
+  static public int[] spfi1d;
+  static public float[] spff1d;
+
+  static boolean[] sfb1d;
+  static int[] sfi1d;
+  static float[] sff1d;
+
+  public boolean[] pfb1d;
+  public int[] pfi1d;
+  public float[] pff1d;
+
+  boolean[] fb1d;
+  int[] fi1d;
+  float[] ff1d;
+
+  static public void main()
+  {
+    boolean b0, b1, b2;
+    int i, j, k;
+    float x, y;
+
+  }
+
+  static public boolean p0( boolean v )
+  {
+    return v;
+  }
+
+  static public int p1( int v )
+  {
+    return v;
+  }
+
+  static public float p2( float v )
+  {
+    return v;
+  }
+
+}

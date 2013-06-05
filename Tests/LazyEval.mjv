@@ -1,0 +1,171 @@
+/*
+** Test for Lazy Evaluation :
+**
+**   + Comparison  Operators <, <=, >=, >
+**   + Equivalence Operators == !=
+**      with both Boolean and Non-Boolean operands.
+**   + Logic Operators && || !
+**   + Primary expressions (i.e. the constants "false" and "true".
+**
+**   + All Statements that use Lazy Evaluation :
+**     - Assignments
+**     - IfThen, IfThenElse and While
+**     - Procedure and Function Calls (actuals evaluation)
+**     - Return with a Value
+**     - print()
+**
+** pre-conditions, Const.mjv : Constants must work.
+**                 print() for Non-Primary expr must work.
+**                 printstr(), println() must work.
+**
+**  This doesn't test "rValues".
+**
+*/
+
+public class LazyEval
+{
+  public static void main()
+  {
+    /* In the case of Operators with non boolean operands,
+    ** for all Operators, we need only test for false and true result
+    ** as we are testing Lazy Evaluation, not the operators themselves.
+    */
+    printstr( "( 2 < 1 )  == " ); print( 2 < 1 ); println();
+    printstr( "( 1 < 2 )  == " ); print( 1 < 2 ); println();
+
+    printstr( "( 2 <= 1 ) == " ); print( 2 <= 1 ); println();
+    printstr( "( 2 <= 2 ) == " ); print( 2 <= 2 ); println();
+
+    printstr( "( 1 >= 2 ) == " ); print( 1 >= 2 ); println();
+    printstr( "( 2 >= 1 ) == " ); print( 2 >= 1 ); println();
+
+    printstr( "( 1 > 2 )  == " ); print( 1 > 2 ); println();
+    printstr( "( 2 > 1 )  == " ); print( 2 > 1 ); println();
+
+    printstr( "( 1 == 2 ) == " ); print( 1 == 2 ); println();
+    printstr( "( 1 == 1 ) == " ); print( 1 == 1 ); println();
+
+    printstr( "( 1 != 1 ) == " ); print( 1 != 1 ); println();
+    printstr( "( 1 != 2 ) == " ); print( 1 != 2 ); println();
+
+    /* For Boolean operands, all four operand combinations must be tested.
+    ** and we get truth table like results.
+    **
+    ** N.B.: The following tests only use Primary Boolean operands (the
+    **  constants "false" and "true", themselves Lazy Evaluated). However,
+    **  if the Operators give correct results under these circumpstances
+    **  substituting a more complex expression for any of the operands
+    **  should also yield correct results. Therefore these tests can be
+    **  considered exhaustive.
+    */
+    printstr( "( false == false ) == " ); print( false == false ); println();
+    printstr( "( false == true  ) == " ); print( false == true  ); println();
+    printstr( "( true  == false ) == " ); print( true  == false ); println();
+    printstr( "( true  == true  ) == " ); print( true  == true  ); println();
+
+    printstr( "( false != false ) == " ); print( false != false ); println();
+    printstr( "( false != true  ) == " ); print( false != true  ); println();
+    printstr( "( true  != false ) == " ); print( true  != false ); println();
+    printstr( "( true  != true  ) == " ); print( true  != true  ); println();
+
+    printstr( "( false && false ) == " ); print( false && false ); println();
+    printstr( "( false && true  ) == " ); print( false && true  ); println();
+    printstr( "( true  && false ) == " ); print( true  && false ); println();
+    printstr( "( true  && true  ) == " ); print( true  && true  ); println();
+
+    printstr( "( false || false ) == " ); print( false || false ); println();
+    printstr( "( false || true  ) == " ); print( false || true  ); println();
+    printstr( "( true  || false ) == " ); print( true  || false ); println();
+    printstr( "( true  || true  ) == " ); print( true  || true  ); println();
+
+    printstr( "( ! true   ) == " ); print( ! true   ); println();
+    printstr( "( ! false  ) == " ); print( ! false  ); println();
+
+    /* Again, in order to test the Statements that go Lazy Evaluation, it is
+    ** enough to test Non-Primary Boolean expressions as their control
+    ** expressions (for control flow Statements) or expressions otherwise.
+    ** And we must do so for both "false" and "true" results... This only
+    ** tests whether or not the wrapper around Lazy Evaluated expressions
+    ** is correctly installed.
+    */
+
+  boolean b;
+    printstr( "b = true; b = ! b; => b == " ); b = true; b = ! b; print( b );
+    println();
+    printstr( "b = ! b; => b == " ); b = ! b; print( b ); println();
+
+    printstr( "if ( ! false ) => " );
+    if ( ! false )
+    {
+      printstr( "Then... " );
+    }
+    printstr( "End if (IfThen)." ); println();
+
+    printstr( "if ( ! true )  => " );
+    if ( ! true )
+    {
+      printstr( "Then ??? " );
+    }
+    printstr( "End if (IfThen)." ); println();
+
+    printstr( "if ( ! false ) => " );
+    if ( ! false )
+    {
+      printstr( "Then... " );
+    }
+    else
+    {
+      printstr( "Else ??? " );
+    }
+    printstr( "End if." ); println();
+
+    printstr( "if ( ! true )  => " );
+    if ( ! true )
+    {
+      printstr( "Then ??? " );
+    }
+    else
+    {
+      printstr( "Else... " );
+    }
+    printstr( "End if." ); println();
+
+    printstr( "b = false; while( ! b ) => " ); b = false;
+    while( ! b )
+    {
+      printstr( "Body... b = ! b; " );
+      b = ! b;
+    }
+    printstr( "End While." ); println();
+
+    /* For Procedure Call and Function Call, it is enough to test Function
+    ** Calls since in both cases, it is the Arguments which need be Lazy
+    ** Evaluated. Note that here, print() is used in STD Eval...
+    */
+    printstr( "echo( ! false ) == " ); print( echo( ! false ) ); println();
+    printstr( "echo( ! true  ) == " ); print( echo( ! true  ) ); println();
+
+    printstr( "NotTrue()  == " ); print( NotTrue() ); println();
+    printstr( "NotFalse() == " ); print( NotFalse() ); println();
+
+    return;
+  }
+
+  static boolean NotFalse()
+  {
+    /* Tests aReturnValueStatement construct. */
+    return ( ! false );
+  }
+
+  static boolean NotTrue()
+  {
+    /* Tests aReturnValueStatement construct. */
+    return ( ! true );
+  }
+
+  static boolean echo( boolean v )
+  {
+    return v;
+  }
+
+}

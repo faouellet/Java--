@@ -1,0 +1,11 @@
+/*
+** Test ...
+*/
+
+public class <test_name>
+{
+  static public void main()
+  {
+    return;
+  }
+}

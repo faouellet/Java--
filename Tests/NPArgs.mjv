@@ -1,0 +1,148 @@
+/*
+** Test NPArgs.mjv
+**
+** To test all Non-Primary Non-Boolean expressions as acuals
+** of Function (hence Procedure as well) Calls.
+**
+*/
+
+public class NPArgs
+{
+  static int a, b;
+  static float e, f;
+
+  static public void main()
+  {
+
+   printstr( "*** static int a, b; ***" ); println();
+   printstr( "*** static float e, f; ***" ); println();
+   println();
+
+   printstr( "i_echo( 1 + 2 ) = " ); print( i_echo( 1 + 2 ) ); println();
+   printstr( "i_echo( 11 - 34 ) = " ); print( i_echo( 11 - 34 ) ); println();
+   printstr( "i_echo( 10 * 8 ) = " ); print( i_echo( 10 * 8 ) ); println();
+   printstr( "i_echo( 80 / 10 ) = " ); print( i_echo( 80 / 10 ) ); println();
+   printstr( "i_echo( 82 % 10 ) = " ); print( i_echo( 82 % 10 ) ); println();
+
+   printstr( "f_echo( 1.0f + 2.0f ) = " ); print( f_echo( 1.0f + 2.0f ) ); println();
+   printstr( "f_echo( 11.0f - 32.0f ) = " ); print( f_echo( 11.0f - 32.0f ) ); println();
+   printstr( "f_echo( 10.0f * 8.0f ) = " ); print( f_echo( 10.0f * 8.0f ) ); println();
+   printstr( "f_echo( 80.0f / 10.0f ) = " ); print( f_echo( 80.0f / 10.0f ) ); println();
+   printstr( "f_echo( 82.0f % 10.0f ) = " ); print( f_echo( 82.0f % 10.0f ) ); println();
+
+   printstr( "a = 1; b = 2;" ); a = 1; b = 2; println();
+   printstr( "i_echo( a + b ) = " ); print( i_echo( a + b ) ); println();
+   printstr( "a = 11; b = 34;" ); a = 11; b = 34; println();
+   printstr( "i_echo( a - b ) = " ); print( i_echo( a - b ) ); println();
+   printstr( "a = 10; b = 8;" ); a = 10; b = 8; println();
+   printstr( "i_echo( a * b ) = " ); print( i_echo( a * b ) ); println();
+   printstr( "a = 80; b = 10;" ); a = 80; b = 10; println();
+   printstr( "i_echo( a / b ) = " ); print( i_echo( a / b ) ); println();
+   printstr( "a = 83; b = 10;" ); a = 83; b = 10; println();
+   printstr( "i_echo( a % b ) = " ); print( i_echo( a % b ) ); println();
+
+   /* With coersion... */
+   printstr( "e = 1; f = 2;" ); e = 1; f = 2; println();
+   printstr( "f_echo( e + f ) = " ); print( f_echo( e + f ) ); println();
+   printstr( "e = 11; f = 34;" ); e = 11; f = 34; println();
+   printstr( "f_echo( e - f ) = " ); print( f_echo( e - f ) ); println();
+   printstr( "e = 10; f = 8;" ); e = 10; f = 8; println();
+   printstr( "f_echo( e * f ) = " ); print( f_echo( e * f ) ); println();
+   printstr( "e = 80; f = 10;" ); e = 80; f = 10; println();
+   printstr( "f_echo( e / f ) = " ); print( f_echo( e / f ) ); println();
+   printstr( "e = 83; f = 10;" ); e = 83; f = 10; println();
+   printstr( "f_echo( e % f ) = " ); print( f_echo( e % f ) ); println();
+
+   /* Without coersion... */
+   printstr( "e = 1.0f; f = 2.0f;" ); e = 1.0f; f = 2.0f; println();
+   printstr( "f_echo( e + f ) = " ); print( f_echo( e + f ) ); println();
+   printstr( "e = 11.0f; f = 34.0f;" ); e = 11.0f; f = 34.0f; println();
+   printstr( "f_echo( e - f ) = " ); print( f_echo( e - f ) ); println();
+   printstr( "e = 10.0f; f = 8.0f;" ); e = 10.0f; f = 8.0f; println();
+   printstr( "f_echo( e * f ) = " ); print( f_echo( e * f ) ); println();
+   printstr( "e = 80.0f; f = 10.0f;" ); e = 80.0f; f = 10.0f; println();
+   printstr( "f_echo( e / f ) = " ); print( f_echo( e / f ) ); println();
+   printstr( "e = 83.0f; f = 10.0f;" ); e = 83.0f; f = 10.0f; println();
+   printstr( "f_echo( e % f ) = " ); print( f_echo( e % f ) ); println();
+
+   printstr( "a = 4;" ); a = 4; println();
+   printstr( "i_echo( - a ) ) = " ); print( i_echo( - a ) ); println();
+   printstr( "e = 4.0f;" ); e = 4.0f; println();
+   printstr( "f_echo( - e ) ) = " ); print( f_echo( - e ) ); println();
+
+int a;
+float e;
+
+   println();
+   printstr( "*** int a; ***" ); println();
+   printstr( "*** float e; ***" ); println();
+   println();
+
+   printstr( "a = 1; b = 2;" ); a = 1; b = 2; println();
+   printstr( "i_echo( a + b ) = " ); print( i_echo( a + b ) ); println();
+   printstr( "a = 11; b = 34;" ); a = 11; b = 34; println();
+   printstr( "i_echo( a - b ) = " ); print( i_echo( a - b ) ); println();
+   printstr( "a = 10; b = 8;" ); a = 10; b = 8; println();
+   printstr( "i_echo( a * b ) = " ); print( i_echo( a * b ) ); println();
+   printstr( "a = 80; b = 10;" ); a = 80; b = 10; println();
+   printstr( "i_echo( a / b ) = " ); print( i_echo( a / b ) ); println();
+   printstr( "a = 83; b = 10;" ); a = 83; b = 10; println();
+   printstr( "i_echo( a % b ) = " ); print( i_echo( a % b ) ); println();
+
+   printstr( "e = 1; f = 2;" ); e = 1; f = 2; println();
+   printstr( "f_echo( e + f ) = " ); print( f_echo( e + f ) ); println();
+   printstr( "e = 11; f = 34;" ); e = 11; f = 34; println();
+   printstr( "f_echo( e - f ) = " ); print( f_echo( e - f ) ); println();
+   printstr( "e = 10; f = 8;" ); e = 10; f = 8; println();
+   printstr( "f_echo( e * f ) = " ); print( f_echo( e * f ) ); println();
+   printstr( "e = 80; f = 10;" ); e = 80; f = 10; println();
+   printstr( "f_echo( e / f ) = " ); print( f_echo( e / f ) ); println();
+   printstr( "e = 83; f = 10;" ); e = 83; f = 10; println();
+   printstr( "f_echo( e % f ) = " ); print( f_echo( e % f ) ); println();
+
+int[][][] b;
+  b = new int[1][1][1];
+float[][][] f;
+  f = new float[1][1][1];
+
+   println();
+   printstr( "*** int[][][] b; b = new int[1][1][1]; ***" ); println();
+   printstr( "*** float[][][] f; f = new float[1][1][1]; ***" ); println();
+   println();
+
+   printstr( "a = 1; b[0][0][0] = 2;" ); a = 1; b[0][0][0] = 2; println();
+   printstr( "i_echo( a + b[0][0][0] ) = " ); print( i_echo( a + b[0][0][0] ) ); println();
+   printstr( "a = 11; b[0][0][0] = 34;" ); a = 11; b[0][0][0] = 34; println();
+   printstr( "i_echo( a - b[0][0][0] ) = " ); print( i_echo( a - b[0][0][0] ) ); println();
+   printstr( "a = 10; b[0][0][0] = 8;" ); a = 10; b[0][0][0] = 8; println();
+   printstr( "i_echo( a * b[0][0][0] ) = " ); print( i_echo( a * b[0][0][0] ) ); println();
+   printstr( "a = 80; b[0][0][0] = 10;" ); a = 80; b[0][0][0] = 10; println();
+   printstr( "i_echo( a / b[0][0][0] ) = " ); print( i_echo( a / b[0][0][0] ) ); println();
+   printstr( "a = 83; b[0][0][0] = 10;" ); a = 83; b[0][0][0] = 10; println();
+   printstr( "i_echo( a % b[0][0][0] ) = " ); print( i_echo( a % b[0][0][0] ) ); println();
+
+   printstr( "e = 1; f[0][0][0] = 2;" ); e = 1; f[0][0][0] = 2; println();
+   printstr( "f_echo( e + f[0][0][0] ) = " ); print( f_echo( e + f[0][0][0] ) ); println();
+   printstr( "e = 11; f[0][0][0] = 34;" ); e = 11; f[0][0][0] = 34; println();
+   printstr( "f_echo( e - f[0][0][0] ) = " ); print( f_echo( e - f[0][0][0] ) ); println();
+   printstr( "e = 10; f[0][0][0] = 8;" ); e = 10; f[0][0][0] = 8; println();
+   printstr( "f_echo( e * f[0][0][0] ) = " ); print( f_echo( e * f[0][0][0] ) ); println();
+   printstr( "e = 80; f[0][0][0] = 10;" ); e = 80; f[0][0][0] = 10; println();
+   printstr( "f_echo( e / f[0][0][0] ) = " ); print( f_echo( e / f[0][0][0] ) ); println();
+   printstr( "e = 83; f[0][0][0] = 10;" ); e = 83; f[0][0][0] = 10; println();
+   printstr( "f_echo( e % f[0][0][0] ) = " ); print( f_echo( e % f[0][0][0] ) ); println();
+
+    return;
+  }
+
+  static int i_echo( int v )
+  {
+    return v;
+  }
+
+  static float f_echo( float v )
+  {
+    return v;
+  }
+
+}

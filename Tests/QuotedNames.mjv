@@ -1,0 +1,131 @@
+/*
+** Test QuotedNames.mjv
+**
+** Sanity check on the jasmin version. This diagnose if
+**  there are any problems with quoted names in .var and
+**  .field directives...
+**
+** For field, declaring them is enough, since all fields
+**  are initialized to their default values in the generated
+**  code.
+**
+** Variables are never referred to by name in the generated
+**  code (only by their index in the stack frame), so it is
+**  enough if they do not generated a jasmin diagnostic and
+**  that their field siblings are correctly recognized. So
+**  this class has no executing code proper. If it compiles
+**  OK in jasmin, and runs correctly in JVM (i.e. the class
+**  inits and the verification process), it should be fine.
+**
+*/
+
+public class QuotedNames
+{
+
+  static int
+    if_icmpeq,
+    if_icmpne,
+    if_icmplt,
+    if_icmple,
+    if_icmpgt,
+    if_icmpge,
+    if_acmpeq,
+    if_acmpne,
+    ifeq,
+    ifne,
+    iflt,
+    ifle,
+    ifgt,
+    ifge,
+    fcmpg,
+    fcmpl,
+    ineg,
+    iadd,
+    isub,
+    imul,
+    idiv,
+    irem,
+    fneg,
+    fadd,
+    fsub,
+    fmul,
+    fdiv,
+    frem;
+
+  int
+    multianewarray,
+    ireturn,
+    lreturn,
+    freturn,
+    areturn,
+    getstatic,
+    putstatic,
+    getfield,
+    putfield,
+    invokestatic,
+    invokevirtual,
+    invokespecial,
+    invokeinterface,
+    aload,
+    iload,
+    fload,
+    astore,
+    istore,
+    fstore,
+    baload,
+    iaload,
+    faload,
+    bastore,
+    iastore,
+    fastore,
+    ldc,
+    ldc_w,
+    ldc2_w,
+    bipush,
+    sipush,
+    aconst_null,
+    iconst_0,
+    iconst_1,
+    fconst_0;
+
+  static public void main()
+  {
+    int
+      multianewarray,
+      ireturn,
+      lreturn,
+      freturn,
+      areturn,
+      getstatic,
+      putstatic,
+      getfield,
+      putfield,
+      invokestatic,
+      invokevirtual,
+      invokespecial,
+      invokeinterface,
+      aload,
+      iload,
+      fload,
+      astore,
+      istore,
+      fstore,
+      baload,
+      iaload,
+      faload,
+      bastore,
+      iastore,
+      fastore,
+      ldc,
+      ldc_w,
+      ldc2_w,
+      bipush,
+      sipush,
+      aconst_null,
+      iconst_0,
+      iconst_1,
+      fconst_0;
+
+    return;
+  }
+}

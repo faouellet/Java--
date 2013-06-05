@@ -1,0 +1,143 @@
+/*
+** Test Conditionals.mjv (uses Lazy Evaluation)
+**
+** 1) Primary expr. conditionals.
+** 2) Assymetric conditionals.
+** 3) Some true array test.
+*/
+
+public class Conditionals
+{
+  static public void main()
+  {
+   boolean b;
+
+    /* Primary expressions conditionals are not tested by "LazyEval.mjv" */
+
+    printstr( "if ( true ) => " );
+    if ( true )
+    {
+      printstr( "Then... " );
+    }
+    printstr( "End if (IfThen)." ); println();
+
+    printstr( "if ( false )  => " );
+    if ( false )
+    {
+      printstr( "Then ??? " );
+    }
+    printstr( "End if (IfThen)." ); println();
+
+    printstr( "if ( true ) => " );
+    if ( true )
+    {
+      printstr( "Then... " );
+    }
+    else
+    {
+      printstr( "Else ??? " );
+    }
+    printstr( "End if." ); println();
+
+    printstr( "if ( false )  => " );
+    if ( false )
+    {
+      printstr( "Then ??? " );
+    }
+    else
+    {
+      printstr( "Else... " );
+    }
+    printstr( "End if." ); println();
+
+    printstr( "b = true; while( b ) => " ); b = true;
+    while( b )
+    {
+      printstr( "Body... b = false; " );
+      b = false;
+    }
+    printstr( "End While." ); println();
+
+    /* Assymetric Conditionals... */
+
+    if ( 1 < 2 )
+      if ( 2 < 1 )
+        ;
+      else
+      {
+        printstr( "if ( 1 < 2 ) if ( 2 < 1 ) ; else ... " ); println();
+      }
+
+    if ( 1 < 2 )
+      if ( 2 < 3 )
+      {
+        printstr( "if ( 1 < 2 ) if ( 2 < 3 ) Then... " ); println();
+      }
+      else
+        ;
+
+    b = true;
+    while ( b )
+      if ( 1 < 2 )
+        if ( 2 < 1 )
+          ;
+        else
+        {
+          printstr( "b = true; while ( b ) if ( 1 < 2 ) if ( 2 < 1 ) ; else b = ! b;" );
+          b = ! b;
+          println();
+        }
+
+    /* True array test. */
+
+    int[] limit, ix;
+      limit = new int[3];
+      limit[0] = 3;
+      limit[1] = 4;
+      limit[2] = 5;
+      ix = new int[3];
+    int[][][] tbl;
+
+    tbl = new int[ limit[0] ][][];
+    ix[0] = 0;
+    while ( ix[0] < limit[0] )
+    {
+      tbl[ ix[0] ] = new int[ limit[1] ][];
+      ix[1] = 0;
+      while (  ix[1] < limit[1] )
+      {
+        tbl[ ix[0] ][ ix[1] ] = new int[ limit[2] ];
+        ix[2] = 0;
+        while ( ix[2] < limit[2] )
+        {
+          tbl[ ix[0] ][ ix[1] ][ ix[2] ] = ( ix[0] * limit[1] + ix[1] ) * limit[2] + ix[2];
+          ix[2] = ix[2] + 1;
+        }
+        ix[1] = ix[1] + 1;
+      }
+      ix[0] = ix[0] + 1;
+    }
+
+    ix[0] = 0;
+    while ( ix[0] < limit[0] )
+    {
+      ix[1] = 0;
+      while (  ix[1] < limit[1] )
+      {
+        ix[2] = 0;
+        while ( ix[2] < limit[2] )
+        {
+          printstr( "tbl[" ); print( ix[0] ); printstr( "]" );
+          printstr( "[" ); print( ix[1] ); printstr( "]" );
+          printstr( "[" ); print( ix[2] ); printstr( "] = " );
+          print( tbl[ ix[0] ][ ix[1] ][ ix[2] ] ); println();
+          ix[2] = ix[2] + 1;
+        }
+        ix[1] = ix[1] + 1;
+      }
+      ix[0] = ix[0] + 1;
+    }
+
+    return;
+  }
+}

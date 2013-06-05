@@ -1,0 +1,49 @@
+/*
+** Test Read operation.
+*/
+
+public class Read
+{
+  static int sfi;
+  static float sfe;
+  static boolean sfb;
+  static int[][] sfi2d;
+  static float[][] sfe2d;
+  static boolean[][] sfb2d;
+
+  static public void main()
+  {
+    int i;
+    float e;
+    boolean b;
+
+      printstr( "read( i ); => " ); read( i ); print( i ); println();
+      printstr( "read( e ); => " ); read( e ); print( e ); println();
+      printstr( "read( b ); => " ); read( b ); print( b ); println();
+
+      printstr( "read( sfi ); => " ); read( sfi ); print( sfi ); println();
+      printstr( "read( sfe ); => " ); read( sfe ); print( sfe ); println();
+      printstr( "read( sfb ); => " ); read( sfb ); print( sfb ); println();
+
+    int[] i1d;
+      i1d = new int[1];
+    float[] e1d;
+      e1d = new float[1];
+    boolean[] b1d;
+      b1d = new boolean[1];
+
+      printstr( "read( i1d[0] ); => " ); read( i1d[0] ); print( i1d[0] ); println();
+      printstr( "read( e1d[0] ); => " ); read( e1d[0] ); print( e1d[0] ); println();
+      printstr( "read( b1d[0] ); => " ); read( b1d[0] ); print( b1d[0] ); println();
+
+      sfi2d = new int[1][1];
+      sfe2d = new float[1][1];
+      sfb2d = new boolean[1][1];
+
+      printstr( "read( sfi2d[0][0] ); => " ); read( sfi2d[0][0] ); print( sfi2d[0][0] ); println();
+      printstr( "read( sfe2d[0][0] ); => " ); read( sfe2d[0][0] ); print( sfe2d[0][0] ); println();
+      printstr( "read( sfb2d[0][0] ); => " ); read( sfb ); print( sfb2d[0][0] ); println();
+
+    return;
+  }
+}

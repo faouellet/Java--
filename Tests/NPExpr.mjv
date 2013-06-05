@@ -1,0 +1,137 @@
+/*
+** Test NPExpr.mjv
+**
+** To test all Non-Primary Non-Boolean expressions as rValue
+** and Operators.
+**
+*/
+
+public class NPExpr
+{
+  static int a, b;
+  static float e, f;
+
+  static public void main()
+  {
+
+   printstr( "*** static int a, b; ***" ); println();
+   printstr( "*** static float e, f; ***" ); println();
+   println();
+
+   printstr( "1 + 2 = " ); print( 1 + 2 ); println();
+   printstr( "11 - 34 = " ); print( 11 - 34 ); println();
+   printstr( "10 * 8 = " ); print( 10 * 8 ); println();
+   printstr( "80 / 10 = " ); print( 80 / 10 ); println();
+   printstr( "82 % 10 = " ); print( 82 % 10 ); println();
+
+   printstr( "1.0f + 2.0f = " ); print( 1.0f + 2.0f ); println();
+   printstr( "11.0f - 32.0f = " ); print( 11.0f - 32.0f ); println();
+   printstr( "10.0f * 8.0f = " ); print( 10.0f * 8.0f ); println();
+   printstr( "80.0f / 10.0f = " ); print( 80.0f / 10.0f ); println();
+   printstr( "82.0f % 10.0f = " ); print( 82.0f % 10.0f ); println();
+
+   printstr( "a = 1; b = 2;" ); a = 1; b = 2; println();
+   printstr( "a + b = " ); print( a + b ); println();
+   printstr( "a = 11; b = 34;" ); a = 11; b = 34; println();
+   printstr( "a - b = " ); print( a - b ); println();
+   printstr( "a = 10; b = 8;" ); a = 10; b = 8; println();
+   printstr( "a * b = " ); print( a * b ); println();
+   printstr( "a = 80; b = 10;" ); a = 80; b = 10; println();
+   printstr( "a / b = " ); print( a / b ); println();
+   printstr( "a = 83; b = 10;" ); a = 83; b = 10; println();
+   printstr( "a % b = " ); print( a % b ); println();
+
+   /* With coersion... */
+   printstr( "e = 1; f = 2;" ); e = 1; f = 2; println();
+   printstr( "e + f = " ); print( e + f ); println();
+   printstr( "e = 11; f = 34;" ); e = 11; f = 34; println();
+   printstr( "e - f = " ); print( e - f ); println();
+   printstr( "e = 10; f = 8;" ); e = 10; f = 8; println();
+   printstr( "e * f = " ); print( e * f ); println();
+   printstr( "e = 80; f = 10;" ); e = 80; f = 10; println();
+   printstr( "e / f = " ); print( e / f ); println();
+   printstr( "e = 83; f = 10;" ); e = 83; f = 10; println();
+   printstr( "e % f = " ); print( e % f ); println();
+
+   /* Without coersion... */
+   printstr( "e = 1.0f; f = 2.0f;" ); e = 1.0f; f = 2.0f; println();
+   printstr( "e + f = " ); print( e + f ); println();
+   printstr( "e = 11.0f; f = 34.0f;" ); e = 11.0f; f = 34.0f; println();
+   printstr( "e - f = " ); print( e - f ); println();
+   printstr( "e = 10.0f; f = 8.0f;" ); e = 10.0f; f = 8.0f; println();
+   printstr( "e * f = " ); print( e * f ); println();
+   printstr( "e = 80.0f; f = 10.0f;" ); e = 80.0f; f = 10.0f; println();
+   printstr( "e / f = " ); print( e / f ); println();
+   printstr( "e = 83.0f; f = 10.0f;" ); e = 83.0f; f = 10.0f; println();
+   printstr( "e % f = " ); print( e % f ); println();
+
+   printstr( "a = 4; a = -a;" ); a = 4; a = -a; println();
+   printstr( "a = " ); print(a); println();
+   printstr( "e = 4.0f; e = -e;" ); e = 4.0f; e = -e; println();
+   printstr( "e = " ); print(e); println();
+
+int a;
+float e;
+
+   println();
+   printstr( "*** int a; ***" ); println();
+   printstr( "*** float e; ***" ); println();
+   println();
+
+   printstr( "a = 1; b = 2;" ); a = 1; b = 2; println();
+   printstr( "a + b = " ); print( a + b ); println();
+   printstr( "a = 11; b = 34;" ); a = 11; b = 34; println();
+   printstr( "a - b = " ); print( a - b ); println();
+   printstr( "a = 10; b = 8;" ); a = 10; b = 8; println();
+   printstr( "a * b = " ); print( a * b ); println();
+   printstr( "a = 80; b = 10;" ); a = 80; b = 10; println();
+   printstr( "a / b = " ); print( a / b ); println();
+   printstr( "a = 83; b = 10;" ); a = 83; b = 10; println();
+   printstr( "a % b = " ); print( a % b ); println();
+
+   printstr( "e = 1; f = 2;" ); e = 1; f = 2; println();
+   printstr( "e + f = " ); print( e + f ); println();
+   printstr( "e = 11; f = 34;" ); e = 11; f = 34; println();
+   printstr( "e - f = " ); print( e - f ); println();
+   printstr( "e = 10; f = 8;" ); e = 10; f = 8; println();
+   printstr( "e * f = " ); print( e * f ); println();
+   printstr( "e = 80; f = 10;" ); e = 80; f = 10; println();
+   printstr( "e / f = " ); print( e / f ); println();
+   printstr( "e = 83; f = 10;" ); e = 83; f = 10; println();
+   printstr( "e % f = " ); print( e % f ); println();
+
+int[][][] b;
+  b = new int[1][1][1];
+float[][][] f;
+  f = new float[1][1][1];
+
+   println();
+   printstr( "*** int[][][] b; b = new int[1][1][1]; ***" ); println();
+   printstr( "*** float[][][] f; f = new float[1][1][1]; ***" ); println();
+   println();
+
+   printstr( "a = 1; b[0][0][0] = 2;" ); a = 1; b[0][0][0] = 2; println();
+   printstr( "a + b[0][0][0] = " ); print( a + b[0][0][0] ); println();
+   printstr( "a = 11; b[0][0][0] = 34;" ); a = 11; b[0][0][0] = 34; println();
+   printstr( "a - b[0][0][0] = " ); print( a - b[0][0][0] ); println();
+   printstr( "a = 10; b[0][0][0] = 8;" ); a = 10; b[0][0][0] = 8; println();
+   printstr( "a * b[0][0][0] = " ); print( a * b[0][0][0] ); println();
+   printstr( "a = 80; b[0][0][0] = 10;" ); a = 80; b[0][0][0] = 10; println();
+   printstr( "a / b[0][0][0] = " ); print( a / b[0][0][0] ); println();
+   printstr( "a = 83; b[0][0][0] = 10;" ); a = 83; b[0][0][0] = 10; println();
+   printstr( "a % b[0][0][0] = " ); print( a % b[0][0][0] ); println();
+
+   printstr( "e = 1; f[0][0][0] = 2;" ); e = 1; f[0][0][0] = 2; println();
+   printstr( "e + f[0][0][0] = " ); print( e + f[0][0][0] ); println();
+   printstr( "e = 11; f[0][0][0] = 34;" ); e = 11; f[0][0][0] = 34; println();
+   printstr( "e - f[0][0][0] = " ); print( e - f[0][0][0] ); println();
+   printstr( "e = 10; f[0][0][0] = 8;" ); e = 10; f[0][0][0] = 8; println();
+   printstr( "e * f[0][0][0] = " ); print( e * f[0][0][0] ); println();
+   printstr( "e = 80; f[0][0][0] = 10;" ); e = 80; f[0][0][0] = 10; println();
+   printstr( "e / f[0][0][0] = " ); print( e / f[0][0][0] ); println();
+   printstr( "e = 83; f[0][0][0] = 10;" ); e = 83; f[0][0][0] = 10; println();
+   printstr( "e % f[0][0][0] = " ); print( e % f[0][0][0] ); println();
+
+    return;
+  }
+}

@@ -1,0 +1,343 @@
+/*
+** Test EvalChecks.mjv
+**
+** Tests all CHECK Diagnostics of the evaluation phase.
+**
+** N.B.: We cannot check for duplicate class declaration because we
+**  are for the moment allowing only one such declaration, but
+**  this check should be added eventually.
+**
+** N.B.: Multiple lines comment should not offset line count...
+**
+*/
+
+/* This is line no. 14 */ static public class EvalChecks
+{
+  /* --------------------- Fields -------------------------- */
+
+  /* Duplicate Field declarations... */
+  static int sfi, sfi, idup;
+
+  static float sff;
+
+  float ff;
+
+
+
+  /* --------------------- Methods ------------------------- */
+
+  static public void main()
+  {
+    int idup; // This is allowed, field is shadowed...
+    float f, f; // Duplicate variable declaration...
+    int i;
+
+      fct(); // Undeclared method call...
+      f = fct();
+
+      f = ObjMethod(); // Call to Obj Method from static context.
+      ObjMethod();
+
+      ClassMethod( 1 ); // Wrong number of arguments.
+      f = ClassMethod( 1 );
+      sfm1p();
+      f = sfm1p();
+
+      sfm1p( f ); // Wrong argument type...
+      f = sfm1p( f );
+
+      sfm1p( 1 ); // This should not generate any error
+      f = sfm1p( 1 );
+
+      sfm1p = 1; // sfmp1 not declared as a variable or field.
+      f = sfm1p;
+
+      a = 1; // Symbol not declared...
+      i = a;
+
+      ff = 1.0f; // Object member reference from static context...
+      f = ff;
+
+    int[] i1d;
+      // Invalid indexed reference and variable ( i1d[0] )[0]...
+      i1d[0][0] = i1d[0][0];
+      i1d[f] = i1d[1]; // Indexing expr. is not int...
+      i1d[1] = i1d[f]; // Indexing expr. is not int...
+
+      f = main(); // Invalid return type in method call...
+
+      /* Incompatible Operand types for binary expressions... */
+
+      i = 1 && 1;
+      i = true && 1;
+      i = 1 && true;
+      i = 1f && 1;
+      i = true && 1f;
+      i = 1f && true;
+      i = null && 1;
+      i = true && null;
+      i = null && true;
+
+      i = 1 || 1;
+      i = true || 1;
+      i = 1 || true;
+      i = 1f || 1;
+      i = true || 1f;
+      i = 1f || true;
+      i = null || 1;
+      i = true || null;
+      i = null || true;
+
+      i = 1 + 1f; /* line 91 */
+      i = 1f + 1;
+      i = 1 - 1f;
+      i = 1f - 1;
+      i = 1 * 1f;
+      i = 1f * 1;
+      i = 1 / 1f;
+      i = 1f / 1;
+      i = 1 % 1f;
+      i = 1f % 1;
+
+      i = 1 + true; /* line 102 */
+      i = 1f + true;
+      i = 1 - true;
+      i = 1f - true;
+      i = 1 * true;
+      i = 1f * true;
+      i = 1 / true;
+      i = 1f / true;
+      i = 1 % true;
+      i = 1f % true;
+      i = true + 1; /* line 112 */
+      i = true + 1f;
+      i = true - 1;
+      i = true - 1f;
+      i = true * 1;
+      i = true * 1f;
+      i = true / 1;
+      i = true / 1f;
+      i = true % 1;
+      i = true % 1f;
+
+      i = 1 < 1f; /* line 123 */
+      i = 1f < 1;
+      i = 1 <= 1f;
+      i = 1f <= 1;
+      i = 1 >= 1f;
+      i = 1f >= 1;
+      i = 1 > 1f;
+      i = 1f > 1;
+      i = 1 == 1f;
+      i = 1f == 1;
+      i = 1 != 1f;
+      i = 1f != 1;
+
+      i = 1 < false; /* line 136 */
+      i = false < 1;
+      i = 1 <= false;
+      i = false <= 1;
+      i = 1 >= false;
+      i = false >= 1;
+      i = 1 > false;
+      i = false > 1;
+      i = 1 == false;
+      i = false == 1;
+      i = 1 != false;
+      i = false != 1;
+
+      i = 1 < null; /* line 149 */
+      i = null < 1;
+      i = 1 <= null;
+      i = null <= 1;
+      i = 1 >= null;
+      i = null >= 1;
+      i = 1 > null;
+      i = null > 1;
+      i = 1 == null;
+      i = null == 1;
+      i = 1 != null;
+      i = null != 1;
+
+      i = 1 < i1d; /* line 162 */
+      i = i1d < 1;
+      i = 1 <= i1d;
+      i = i1d <= 1;
+      i = 1 >= i1d;
+      i = i1d >= 1;
+      i = 1 > i1d;
+      i = i1d > 1;
+      i = 1 == i1d;
+      i = i1d == 1;
+      i = 1 != i1d;
+      i = i1d != 1;
+
+      i = 1f < false; /* line 175 */
+      i = false < 1f;
+      i = 1f <= false;
+      i = false <= 1f;
+      i = 1f >= false;
+      i = false >= 1f;
+      i = 1f > false;
+      i = false > 1f;
+      i = 1f == false;
+      i = false == 1f;
+      i = 1f != false;
+      i = false != 1f;
+
+      i = 1f < null; /* line 188 */
+      i = null < 1f;
+      i = 1f <= null;
+      i = null <= 1f;
+      i = 1f >= null;
+      i = null >= 1f;
+      i = 1f > null;
+      i = null > 1f;
+      i = 1f == null;
+      i = null == 1f;
+      i = 1f != null;
+      i = null != 1f;
+
+      i = 1f < i1d; /* line 201 */
+      i = i1d < 1f;
+      i = 1f <= i1d;
+      i = i1d <= 1f;
+      i = 1f >= i1d;
+      i = i1d >= 1f;
+      i = 1f > i1d;
+      i = i1d > 1f;
+      i = 1f == i1d;
+      i = i1d == 1f;
+      i = 1f != i1d;
+      i = i1d != 1f;
+
+      i = false == i1d; /* line 214 */
+      i = i1d == false;
+      i = true != i1d;
+      i = i1d != true;
+
+      /* Incompatible Operand type for Unary expressions... */
+
+      i = ! 1;     /* line 221 */
+      i = ! 1f;
+      i = ! null;
+      i = - true;
+      i = - false;
+      i = - null;
+
+      if ( 1 ) ;     // Boolean required...
+      if ( 1f ) ;
+      if ( null ) ;
+      if ( i1d ) ;
+      if ( 1 ) ; else ;
+      if ( 1f ) ; else ;
+      if ( null ) ; else ;
+      if ( i1d ) ; else ;
+      while ( 1 ) ;
+      while ( 1f ) ;
+      while ( null ) ;
+      while ( i1d ) ;
+
+      i = sfm1p( 1 ); // Assignment type mismatch... 241
+      i = true;
+      i = null;
+      i = i1d;
+      f = true;
+      f = null;
+      f = i1d;
+      i1d = true;
+      i1d = 1;
+      i1d = 1f;
+    int[][] i2d;
+      i1d = i2d;
+
+      read( i1d ); // Only scalar types on read()...
+
+      print( i2d );  // Only scalar on print()...
+      print( null );
+      print( 1L );
+      print( 1.0 );
+
+  }
+
+
+  /* Duplicate Method declaration... */
+  static public void main() {}
+
+
+  /* ------------------------------------------------------- */
+
+  float ObjMethod() { return 1.0f; }
+  static float ClassMethod() { return 1.0f; }
+  static float sfm1p( int i ) { return 1.0f; }
+
+  /* Return Statement CHECKs only for non-void methods... */
+
+  static int Rtn1()
+  {
+    // missing return altogether...
+  }
+
+  static int Rtn2( boolean a )
+  {
+    // Can fail to return...
+    if ( a )
+      return 1;
+  }
+
+  static int Rtn3( boolean a )
+  {
+    int i;
+
+      // Can fail to return...
+      i = 0;
+      while ( i < 6 )
+      {
+        if ( a )
+          return 1;
+        i = i + 1;
+      }
+  }
+
+  static int Rtn4( boolean a )
+  {
+    int i;
+
+      // Can fail to return...
+      i = 0;
+      while ( i < 6 )
+      {
+        if ( a )
+          return 1;
+        else
+          return 3;
+
+        i = i + 1;
+      }
+  }
+
+  static int Rtn5( boolean a )
+  {
+    // Shoud not generate any error...
+      if ( a )
+        return 1;
+      else
+        return 3;
+  }
+
+  static int Rtn6() // Missing expression in return...
+  {
+    return;
+  }
+
+  static int Rtn7() // Incompatible expression in return...
+  {
+    int[] i1d;
+
+    return 1f;
+    return true;
+    return null;
+    return i1d;
+  }
+
+}

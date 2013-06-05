@@ -1,0 +1,158 @@
+/*
+** Test RValLVal.mjv
+**
+** This is testing lValue and rValue constructs to see if they
+** work. Only Primary rValues are tested here, Non-Primary
+** rValues are tested in "NPExpr.mjv".
+**
+** The test goes form basic to more complex.
+** 1) We see if constants can be used as rValues.
+** 2) Then we go to simple variables and fields as lValues and
+**    rValues as they use two different adressing mechanism.
+** 3) Then Simple (one dimension) and complex (2 or more
+**    dimensions) indexed expr. are tested as lValues and
+**    rValues. Naturally we have to test their corresponding
+**    ACs.
+** 4) Function return as rValue and assignment to actuals
+**    are then tested.
+** 5) Finally Primary Boolean rValue Assignment is tested.
+**
+** N.B.: It is not necessary to test all data types since
+**  they all use the same basic mechanic in the Code
+**  Generator. However the case of Primary Boolean expr.
+**  is an exception for assignment since it does not use
+**  Lazy Evaluation. It should be tested here. Non-Primary
+**  Boolean rValues and assignment are tested exhaustively
+**  in "LazyEval.mjv".
+** N.B.: Testing "null" as an rValue is also problematic
+**  so we cannot do it here...
+**
+*/
+
+public class RValLVal
+{
+  static boolean sfb;
+  static int sfi;
+  static boolean[] sfb1d;
+  static boolean[][] sfb2d;
+
+  static public void main()
+  {
+
+      /* Constants as rValue... */
+      printstr( "print( true ); => " ); print( true ); println();
+      printstr( "print( false ); => " ); print( false ); println();
+      printstr( "print( 1 ); => " ); print( 1 ); println();
+      printstr( "print( 1.0f ); => " ); print( 1.0f ); println();
+
+      /* Fields and Locals as lValue... */
+      printstr( "sfi = 1; " ); sfi = 1;
+      printstr( "sfi = 2; " ); sfi = 2;
+      printstr( "print( sfi ); => " ); print( sfi ); println();
+
+    int i;
+      printstr( "i = 1; " ); i = 1;
+      printstr( "i = 2; " ); i = 2;
+      printstr( "print( i ); => " ); print( i ); println();
+
+      /* Simple AC as rValue, and idx'd expression as lValue and rValue... */
+    int[] i1d;
+      printstr( "i1d = new int[1]; " ); i1d = new int[1];
+      printstr( "i1d[0] = 1; " ); i1d[0] = 1;
+      printstr( "i1d[0] = 2; " ); i1d[0] = 2;
+      printstr( "print( i1d[0] ); => " ); print( i1d[0] ); println();
+
+      /* Complex AC rValue, Complex idx'd expr. as rValue and lValue... */
+    int[][] i2d;
+      printstr( "i2d = new int[1][]; " ); i2d = new int[1][];
+      printstr( "i2d[0] = i1d; " ); i2d[0] = i1d;
+      printstr( "print( i2d[0][0] ); => " ); print( i2d[0][0] ); println();
+      printstr( "i2d[0][0] = 3; " ); i2d[0][0] = 3;
+      printstr( "print( i2d[0][0] ); => " ); print( i2d[0][0] ); println();
+
+      printstr( "i2d = new int[1][1]; " ); i2d = new int[1][1];
+      printstr( "i2d[0][0] = 4; " ); i2d[0][0] = 4;
+      printstr( "print( i2d[0][0] ); => " ); print( i2d[0][0] ); println();
+
+      /* One way of testing "null" but requires conditionals...
+      i2d = null;
+      if ( i2d == null )
+      {
+        printstr( "null" ) println();
+      }
+      */
+
+      /* Assignment of rValue to actuals and Function return as rValue... */
+      printstr( "print( echo( 1 ) ); => " ); print( echo( 1 ) ); println();
+      printstr( "i = 2; " ); i = 2;
+      printstr( "print( echo( i ) ); => " ); print( echo( i ) ); println();
+      printstr( "sfi = 3; " ); sfi = 3;
+      printstr( "print( echo( sfi ) ); => " ); print( echo( sfi ) ); println();
+      printstr( "i1d = new int[1]; " ); i1d = new int[1];
+      printstr( "i1d[0] = 4; " ); i1d[0] = 4;
+      printstr( "print( echo( i1d[0] ) ); => " ); print( echo( i1d[0] ) ); println();
+      printstr( "i2d = new int[1][1]; " ); i2d = new int[1][1];
+      printstr( "i2d[0][0] = 5; " ); i2d[0][0] = 5;
+      printstr( "print( echo( i2d[0][0] ) ); => " ); print( echo( i2d[0][0] ) ); println();
+
+
+      /* Special case of Primary Boolean rValue Assignment... */
+
+      printstr( "sfb = false; " ); sfb = false;
+      printstr( "print( sfb ); => " ); print( sfb ); println();
+      printstr( "sfb = true; " ); sfb = true;
+      printstr( "print( sfb ); => " ); print( sfb ); println();
+
+    boolean b;
+      printstr( "b = false; " ); b = false;
+      printstr( "print( b ); => " ); print( b ); println();
+      printstr( "b = true; " ); b = true;
+      printstr( "print( b ); => " ); print( b ); println();
+
+      printstr( "sfb1d = new boolean[1]; " ); sfb1d = new boolean[1];
+      printstr( "sfb1d[0] = false; " ); sfb1d[0] = false;
+      printstr( "print( sfb1d[0] ); => " ); print( sfb1d[0] ); println();
+      printstr( "sfb1d[0] = true; " ); sfb1d[0] = true;
+      printstr( "print( sfb1d[0] ); => " ); print( sfb1d[0] ); println();
+
+      printstr( "sfb2d = new boolean[1][1]; " ); sfb2d = new boolean[1][1];
+      printstr( "sfb2d[0][0] = false; " ); sfb2d[0][0] = false;
+      printstr( "print( sfb2d[0][0] ); => " ); print( sfb2d[0][0] ); println();
+      printstr( "sfb2d[0][0] = true; " ); sfb2d[0][0] = true;
+      printstr( "print( sfb2d[0][0] ); => " ); print( sfb2d[0][0] ); println();
+
+      printstr( "print( b_echo( false ) ); => " ); print( b_echo( false ) ); println();
+      printstr( "print( b_echo( true ) ); => " ); print( b_echo( true ) ); println();
+      printstr( "b = false; " ); b = false;
+      printstr( "print( b_echo( b ) ); => " ); print( b_echo( b ) ); println();
+      printstr( "b = true; " ); b = true;
+      printstr( "print( b_echo( b ) ); => " ); print( b_echo( b ) ); println();
+      printstr( "sfb = false; " ); sfb = false;
+      printstr( "print( b_echo( sfb ) ); => " ); print( b_echo( sfb ) ); println();
+      printstr( "sfb = true; " ); sfb = true;
+      printstr( "print( b_echo( sfb ) ); => " ); print( b_echo( sfb ) ); println();
+      printstr( "sfb1d = new boolean[1]; " ); sfb1d = new boolean[1];
+      printstr( "sfb1d[0] = false; " ); sfb1d[0] = false;
+      printstr( "print( b_echo( sfb1d[0] ) ); => " ); print( b_echo( sfb1d[0] ) ); println();
+      printstr( "sfb1d[0] = true; " ); sfb1d[0] = true;
+      printstr( "print( b_echo( sfb1d[0] ) ); => " ); print( b_echo( sfb1d[0] ) ); println();
+      printstr( "sfb2d = new boolean[1][1]; " ); sfb2d = new boolean[1][1];
+      printstr( "sfb2d[0][0] = false; " ); sfb2d[0][0] = false;
+      printstr( "print( b_echo( sfb2d[0][0] ) ); => " ); print( b_echo( sfb2d[0][0] ) ); println();
+      printstr( "sfb2d[0][0] = true; " ); sfb2d[0][0] = true;
+      printstr( "print( b_echo( sfb2d[0][0] ) ); => " ); print( b_echo( sfb2d[0][0] ) ); println();
+
+    return;
+  }
+
+  static int echo( int v )
+  {
+    return v;
+  }
+
+  static boolean b_echo( boolean v )
+  {
+    return v;
+  }
+
+}
