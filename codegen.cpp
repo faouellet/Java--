@@ -6,8 +6,7 @@ void CodeGenContext::GenerateCode(NBlock & in_Root)
 {
 	std::cout << "Genrating code..." << std::endl;
 
-	std::vector<const Type*> l_ArgTypes;
-	FunctionType* l_FType = FunctionType::get(Type::getVoidTy(getGlobalContext()), l_ArgTypes, false);
+	FunctionType* l_FType = FunctionType::get(Type::getVoidTy(getGlobalContext()), std::vector<Type*>(), false);
 	m_MainFunction = Function::Create(l_FType, GlobalValue::InternalLinkage, "main", Mod);
 	BasicBlock* l_Block = BasicBlock::Create(getGlobalContext(), "entry", m_MainFunction);
 
@@ -19,21 +18,20 @@ void CodeGenContext::GenerateCode(NBlock & in_Root)
 	std::cout << "Done" << std::endl;
 	PassManager l_PassMgr;
 	l_PassMgr.add(createPrintModulePass(&outs()));
-	l_PassMgr.run();
+	l_PassMgr.run(*Mod);
 }
 
 GenericValue CodeGenContext::RunCode()
 {
 	std::cout << "Running code..." << std::endl;
-	ExistingModuleProvider* l_EMP = new ExistingModuleProvider(Mod);
-	ExecutionEngine* l_EEngine = ExecutionEngine::create(l_EMP, false);
+	ExecutionEngine* l_EEngine = ExecutionEngine::create(Mod);
 	std::vector<GenericValue> l_NoArgs;
 	GenericValue l_GenValue = l_EEngine->runFunction(m_MainFunction, l_NoArgs);
 	std::cout << "Code was run" << std::endl;
 	return l_GenValue;
 }
 
-static const Type* TypeOf(const NIdentifier & in_Type)
+static Type* TypeOf(const NIdentifier & in_Type)
 {
 	if(in_Type.Name.compare("int") == 0)
 	{
@@ -84,7 +82,7 @@ Value* NMethodCall::CodeGen(CodeGenContext & io_Context)
 	{
 		l_Args.push_back(in_Arg->CodeGen(io_Context));
 	}
-	CallInst* l_Call = CallInst::Create(l_Function, l_Args.begin(), l_Args.end(), "", io_Context);
+	CallInst* l_Call = CallInst::Create(l_Function, l_Args, "", io_Context.CurrentBlock());
 	std::cout << "Creating method call: " << ID.Name << std::endl;
 	return l_Call;
 }
@@ -155,11 +153,11 @@ Value* NVariableDeclaration::CodeGen(CodeGenContext & io_Context)
 
 Value* NFunctionDeclaration::CodeGen(CodeGenContext & io_Context)
 {
-	std::vector<const Type*> l_ArgTypes;
+	std::vector<llvm::Type*> l_ArgTypes;
 
 	for(auto& in_Arg : Arguments)
 	{
-		l_ArgTypes.push_back(TypeOf(in_Arg).Type);
+		l_ArgTypes.push_back(TypeOf((*in_Arg).Type));
 	}
 
 	FunctionType* l_FType = FunctionType::get(TypeOf(Type), l_ArgTypes, false);
