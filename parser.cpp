@@ -72,7 +72,7 @@
 	NBlock * programBlock; /*Top level root node of the final AST*/
 
 	extern int yylex();
-	void yyerror(const char * in_ErrorMsg) { printf("ERROR: %s\n", in_ErrorMsg); }
+	void yyerror(const char * in_ErrorMsg) { printf("ERROR: %s\n", in_ErrorMsg); std::exit(1); }
 
 
 /* Line 268 of yacc.c  */

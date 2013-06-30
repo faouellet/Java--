@@ -82,7 +82,7 @@ Value* NMethodCall::CodeGen(CodeGenContext & io_Context)
 	{
 		l_Args.push_back(in_Arg->CodeGen(io_Context));
 	}
-	CallInst* l_Call = CallInst::Create(l_Function, l_Args, "", io_Context.CurrentBlock());
+	CallInst* l_Call = CallInst::Create(l_Function, makeArrayRef(l_Args), "", io_Context.CurrentBlock());
 	std::cout << "Creating method call: " << ID.Name << std::endl;
 	return l_Call;
 }
@@ -160,7 +160,7 @@ Value* NFunctionDeclaration::CodeGen(CodeGenContext & io_Context)
 		l_ArgTypes.push_back(TypeOf((*in_Arg).Type));
 	}
 
-	FunctionType* l_FType = FunctionType::get(TypeOf(Type), l_ArgTypes, false);
+	FunctionType* l_FType = FunctionType::get(TypeOf(Type), makeArrayRef(l_ArgTypes), false);
 	Function* l_Function = Function::Create(l_FType, GlobalValue::InternalLinkage, ID.Name.c_str(), io_Context.Mod);
 	BasicBlock* l_Block = BasicBlock::Create(getGlobalContext(), "entry", l_Function, 0);
 

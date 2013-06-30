@@ -14,8 +14,8 @@ extern "C" int yywrap() { }
 [0-9]+\.[0-9]*			SAVE_TOKEN; return TDOUBLE;
 [0-9]+					SAVE_TOKEN; return TINTEGER;
 "="						return TOKEN(TEQUAL);
-"=="					return TOKEN(CEQ);
-"!="					return TOKEN(CNEQ);
+"=="					return TOKEN(TCEQ);
+"!="					return TOKEN(TCNE);
 "<"						return TOKEN(TCLT);
 "<="					return TOKEN(TCLE);
 ">"						return TOKEN(TCGT);
@@ -27,7 +27,7 @@ extern "C" int yywrap() { }
 "."						return TOKEN(TDOT);
 ","						return TOKEN(TCOMMA);
 "+"						return TOKEN(TPLUS);
-"-"						return TOKEN(TLESS);
+"-"						return TOKEN(TMINUS);
 "*"						return TOKEN(TMUL);
 "/"						return TOKEN(TDIV);
 .						printf("Unknown token\n"); yyterminate();
