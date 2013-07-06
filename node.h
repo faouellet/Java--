@@ -3,9 +3,9 @@
 #include <llvm/IR/Value.h>
 
 class CodeGenContext;
-class NStatement;
-class NExpression;
-class NVariableDeclaration;
+struct NStatement;
+struct NExpression;
+struct NVariableDeclaration;
 
 typedef std::vector<NStatement*> StatementList;
 typedef std::vector<NExpression*> ExpressionList;
@@ -14,7 +14,7 @@ typedef std::vector<NVariableDeclaration*> VariableList;
 struct Node
 {
 	virtual ~Node() { }
-	virtual llvm::Value* CodeGen(CodeGenContext & io_Context) { }
+	virtual llvm::Value* CodeGen(CodeGenContext & io_Context) { return nullptr; }
 };
 
 struct NExpression : public Node

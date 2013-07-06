@@ -29,7 +29,7 @@
 
 using namespace llvm;
 
-class NBlock;
+struct NBlock;
 
 struct CodeGenBlock
 {

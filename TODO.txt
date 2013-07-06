@@ -1,11 +1,11 @@
 - Resolve shift/reduce conflicts in basic grammar
 - Make a CMake file to generate a Visual Studio solution
 - Extend compiler to be fully java-- compliant
-- Add disclaimer
+- Add disclaimer / copyright stuff
 - Clean up/optimize the basic code
 - In TypeOf, try to replace the ifs by a switch
 - Remove the goto in NBinaryOperator
-- REFACTORING
+- Custom build rules under windows should use relative paths
 
 ?- Separate the logic contained in the code generator into multiple files
 ?- Separate into folders
