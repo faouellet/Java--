@@ -10,9 +10,21 @@ void yyerror(const char * in_ErrorMsg) { printf("ERROR: %s\n", in_ErrorMsg); std
 /*yylval*/
 %union
 {
-	int      IntConstant;
-	double   DoubleConstant;
-	char *   Identifier;
+	int					intConstant;
+	double				doubleConstant;
+	char				identifier[MaxIdentLen+1]; // +1 for terminating null
+	Declaration			*decl;
+    list<Decl*>			*declList;
+    Type				*type;
+    NamedType			*cType;
+    list<NamedType*>	*cTypeList;
+    FnDecl				*fDecl;
+    VarDecl				*var;
+    list<VarDecl*>		*varList;
+    Expr				*expr;
+    list<Expr*>			*exprList;
+    Stmt				*stmt;
+    list<Stmt*>			*stmtList;
 }
 
 /* Leaf Types */
@@ -40,57 +52,99 @@ void yyerror(const char * in_ErrorMsg) { printf("ERROR: %s\n", in_ErrorMsg); std
 
 %%
 
-program 	: stmts { programBlock = $1; }
-			;
+Program     : DeclList				  {
+										  @1;
+										  Program * program = new Program($1);
+										  program->Emit();
+			  						  }
+	   	    ;
 
-stmts 		: stmt { $$ = new NBlock(); $$->Statements.push_back($<stmt>1); }
-			| stmts stmt { $1->Statements.push_back($<stmt>2); }
-			;
+DeclList    : DeclList Decl			  { ($$=$1)->push_back($2); }
+		    | Decl					  { ($$=new list<Decl*>)->push_back($1); }
+		    ;
 
-stmt 		: var_decl | func_decl
-			| expr { $$ = new NExpressionStatement(*$1); }
-	     	;
+Decl        :    FnDecl				  { $$=$1; }
+            |    VarDecl			  { $$=$1; }
+            ;
 
-block 		: TLBRACE stmts TRBRACE { $$ = $2; }
-			| TLBRACE TRBRACE { $$ = new NBlock(); }
-			;
+VarDecl     :    Variable ';' 
+		    ;
 
-var_decl 	: ident ident { $$ = new NVariableDeclaration(*$1, *$2); }
-			| ident ident TEQUAL expr { $$ = new NVariableDeclaration(*$1, *$2, $4); }
-			;
+Type        :    T_Int                { $$ = Type::IntType; }
+            |    T_Double             { $$ = Type::DoubleType; }
+            |    T_Identifier         { $$ = new NamedType(new Identifier(@1,$1)); }
+		    ;
 
-func_decl 	: ident ident TLPAREN func_decl_args TRPAREN block { $$ = new NFunctionDeclaration(*$1, *$2, *$4, *$6); delete $4; }
-			;
+Formals     :    FormalList           { $$ = $1; }
+            |    /* empty */          { $$ = new list<VarDecl*>; }
+            ;
 
-func_decl_args 	: /*blank*/ { $$ = new VariableList(); }
-				| var_decl { $$ = new VariableList(); $$->push_back($<var_decl>1); }
-				| func_decl_args TCOMMA var_decl { $1->push_back($<var_decl>3); }
-				;
+FormalList  :    FormalList ',' Variable  
+                                      { ($$=$1)->push_back($3); }
+            |    Variable             { ($$ = new list<VarDecl*>)->push_back($1); }
+            ;
 
-ident 		: TIDENTIFIER { $$ = new NIdentifier(*$1); delete $1; }
-			;
+FnDecl      :    FnHeader StmtBlock   { ($$=$1)->SetFunctionBody($2); }
+            ;
 
-numeric 	: TINTEGER { $$ = new NInteger(atol($1->c_str())); delete $1; }
-			| TDOUBLE { $$ = new NDouble(atof($1->c_str())); delete $1; }
-			;
+StmtBlock   :    '{' VarDecls StmtList '}' 
+                                      { $$ = new StmtBlock($2, $3); }
+            ;
 
-expr 		: ident TEQUAL expr { $$ = new NAssignment(*$<ident>1, *$3); }
-			| ident TLPAREN call_args TRPAREN { $$ = new NMethodCall(*$1, *$3); delete $3; }
-			| ident { $<ident>$ = $1; }
-			| numeric
-			| expr comparison expr { $$ = new NBinaryOperator(*$1, $2, *$3); }
-		    | TLPAREN expr TRPAREN { $$ = $2; }
-			;
+VarDecls    :    VarDecls VarDecl     { ($$=$1)->push_back($2); }
+            |    /* empty */          { $$ = new list<VarDecl*>; }
+            ;
 
-call_args 	: /*blank*/ { $$ = new ExpressionList(); }
-			| expr { $$ = new ExpressionList(); $$->push_back($1); }
-			| call_args TCOMMA expr { $1->push_back($3); }
-			;
+StmtList    :    Stmt StmtList        { $$ = $2; $$->push_front($1); }
+            |    /* empty */          { $$ = new list<Stmt*>; }
+            ;
 
-comparison	: TCEQ 
-			| TCNE 
-			| TCLT 
-			| TCLE 
-			| TCGT 
-			| TCGE
-;
+Stmt        :    OptExpr ';'          { $$ = $1; }
+            |    StmtBlock
+            |    T_Return Expr ';'    { $$ = new ReturnStmt(@2, $2); }
+            |    T_Return ';'         { $$ = new ReturnStmt(@1, new EmptyExpr()); }
+            ;
+
+Call        :    T_Identifier '(' Actuals ')' 
+                                      { $$ = new Call(Join(@1,@4), NULL, new Identifier(@1,$1), $3); }
+            |    Expr '.' T_Identifier '(' Actuals ')' 
+                                      { $$ = new Call(Join(@1,@6), $1, new Identifier(@3,$3), $5); }
+            ;
+
+OptExpr     :    Expr                 { $$ = $1; }
+            |    /* empty */          { $$ = new EmptyExpr(); }
+
+Expr        :    Call
+            |    Constant
+            |    LValue '=' Expr      { $$ = new AssignExpr($1, new Operator(@2,"="), $3); }
+            |    Expr '+' Expr        { $$ = new ArithmeticExpr($1, new Operator(@2, "+"), $3); }
+            |    Expr '-' Expr        { $$ = new ArithmeticExpr($1, new Operator(@2, "-"), $3); }
+            |    Expr '/' Expr        { $$ = new ArithmeticExpr($1, new Operator(@2,"/"), $3); }
+            |    Expr '*' Expr        { $$ = new ArithmeticExpr($1, new Operator(@2,"*"), $3); }
+            |    Expr '%' Expr        { $$ = new ArithmeticExpr($1, new Operator(@2,"%"), $3); }
+            |    Expr T_Equal Expr    { $$ = new EqualityExpr($1, new Operator(@2,"=="), $3); }
+            |    Expr T_NotEqual Expr { $$ = new EqualityExpr($1, new Operator(@2,"!="), $3); }
+            |    Expr T_LessThan Expr
+							          { $$ = new RelationalExpr($1, new Operator(@2,"<"), $3); }
+            |    Expr T_GreaterThan Expr        
+									  { $$ = new RelationalExpr($1, new Operator(@2,">"), $3); }
+            |    Expr T_LessEqual Expr 
+                                      { $$ = new RelationalExpr($1, new Operator(@2,"<="), $3); }
+            |    Expr T_GreaterEqual Expr 
+                                      { $$ = new RelationalExpr($1, new Operator(@2,">="), $3); }
+            |    Expr T_And Expr      { $$ = new LogicalExpr($1, new Operator(@2,"&&"), $3); }
+            |    Expr T_Or Expr       { $$ = new LogicalExpr($1, new Operator(@2,"||"), $3); }
+            |    '(' Expr ')'         { $$ = $2; }
+            ;
+
+Constant  :    T_IntConstant        { $$ = new IntConstant(@1,$1); }
+          |    T_DoubleConstant     { $$ = new DoubleConstant(@1,$1); }
+          ;
+
+Actuals   :    ExprList             { $$ = $1; }
+          |    /* empty */          { $$ = new list<Expr*>; }
+          ;
+
+ExprList  :    ExprList ',' Expr    { ($$=$1)->push_back($3); }
+          |    Expr                 { ($$ = new list<Expr*>)->push_back($1); }
+          ;
