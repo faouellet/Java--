@@ -84,34 +84,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="codegen.cpp" />
+    <ClCompile Include="AST\codegen.cpp" />
+    <ClCompile Include="AST\declarations.cpp" />
+    <ClCompile Include="AST\expressions.cpp" />
+    <ClCompile Include="AST\statements.cpp" />
+    <ClCompile Include="AST\types.cpp" />
+    <ClCompile Include="Lexer\lex.yy.c" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Parser\y.tab.c" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Doc\Java-- Spec.pdf" />
-    <CustomBuild Include="parser.y">
-      <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\gnuwin32\bin\bison.exe -d -o parser.cpp parser.y</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">parser.cpp parser.hpp</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="tokens.l">
-      <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">flex -o tokens.cpp tokens.l</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">tokens.cpp;%(Outputs)</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">parser.y;parser.cpp;%(AdditionalInputs)</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\gnuwin32\bin\flex.exe -o tokens.cpp tokens.l</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">tokens.cpp;%(Outputs)</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalInputs)</AdditionalInputs>
-    </CustomBuild>
+    <None Include="Lexer\tokens.l" />
+    <None Include="Makefile" />
+    <None Include="Parser\parser.y" />
+    <None Include="Parser\y.output" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="codegen.h" />
-    <ClInclude Include="lexer.h" />
-    <ClInclude Include="node.h" />
-    <ClInclude Include="parser.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="TODO.txt" />
+    <ClInclude Include="AST\ast.h" />
+    <ClInclude Include="AST\codegen.h" />
+    <ClInclude Include="AST\declarations.h" />
+    <ClInclude Include="AST\expressions.h" />
+    <ClInclude Include="AST\node.h" />
+    <ClInclude Include="AST\statements.h" />
+    <ClInclude Include="AST\types.h" />
+    <ClInclude Include="Lexer\lexer.h" />
+    <ClInclude Include="Parser\parser.h" />
+    <ClInclude Include="Parser\y.tab.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

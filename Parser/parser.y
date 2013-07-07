@@ -1,46 +1,42 @@
 %{
-	#include "node.h"
-	NBlock * programBlock; /*Top level root node of the final AST*/
 
-	extern int yylex();
-	void yyerror(const char * in_ErrorMsg) { printf("ERROR: %s\n", in_ErrorMsg); std::exit(1); }
+#include "scanner.h"
+#include "parser.h"
+
+void yyerror(const char * in_ErrorMsg) { printf("ERROR: %s\n", in_ErrorMsg); std::exit(1); }
+
 %}
 
-/*Possible ways to access the data*/
+/*yylval*/
 %union
 {
-	Node* node;
-	NBlock* block;
-	NExpression* expr;
-	NStatement* stmt;
-	NIdentifier* ident;
-	NVariableDeclaration* var_decl;
-	std::vector<NVariableDeclaration*>* var_vec;
-	std::vector<NExpression*>* expr_vec;
-	std::string* string;
-	int token;
+	int      IntConstant;
+	double   DoubleConstant;
+	char *   Identifier;
 }
 
-/**/
-%token <string> TIDENTIFIER TINTEGER TDOUBLE
-%token <token> TCEQ TCNE TCLT TCLE TCGT TCGE TEQUAL
-%token <token> TLPAREN TRPAREN TLBRACE TRBRACE TCOMMA TDOT
-%token <token> TPLUS TMINUS TMUL TDIV
+/* Leaf Types */
+%token   T_Int T_Double
+%token   T_LessThan T_GreaterThan T_LessEqual T_GreaterEqual T_Equal T_NotEqual
+%token   T_And T_Or
 
-/**/
-%type <ident>		ident
-%type <expr>		numeric expr
-%type <var_vec>		func_decl_args
-%type <expr_vec>	call_args
-%type <block>		program stmts block
-%type <stmt>		stmt var_decl func_decl
-%type <token>		comparison
+%token   <identifier>      T_Identifier
+%token   <IntConstant>     T_IntConstant
+%token   <DoubleConstant>  T_DoubleConstant
 
-/* Operator precedence */
-%left TPLUS TMINUS
-%left TMUL TDIV
+/* Node Types */
+%type
 
-%start program
+/* Operators precedence */
+%left      '='
+%left      T_Or
+%left      T_And
+%nonassoc  T_Equal T_NotEqual
+%nonassoc  T_LessThan T_GreaterThan T_LessEqual T_GreaterEqual
+%left      '+' '-'
+%left      '*' '/' '%'
+%nonassoc  '!'
+%nonassoc  '.'
 
 %%
 
@@ -97,8 +93,4 @@ comparison	: TCEQ
 			| TCLE 
 			| TCGT 
 			| TCGE
-			| TPLUS 
-			| TMINUS 
-			| TMUL 
-			| TDIV
 ;
