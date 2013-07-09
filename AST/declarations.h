@@ -3,11 +3,28 @@
 
 #include "ast.h"
 
-class Declarations
+class Declaration : public Node
 {
 public:
-	Declarations();
-	virtual ~Declarations();
+	Declaration();
+	virtual ~Declaration();
+	virtual void Emit() = 0;
+};
+
+class FunctionDeclaration : public Declaration
+{
+public:
+	FunctionDeclaration();
+	virtual ~FunctionDeclaration();
+	virtual void Emit();
+};
+
+class VariableDeclaration : public Declaration
+{
+public:
+	VariableDeclaration();
+	virtual ~VariableDeclaration();
+	virtual void Emit();
 };
 
 #endif //DECLARATIONS_H

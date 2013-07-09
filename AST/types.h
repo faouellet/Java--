@@ -3,11 +3,21 @@
 
 #include "ast.h"
 
-class Types
+// Should suffice for the primitive types
+class Type : public Node
 {
 public:
-	Types();
-	virtual ~Types();
+	Type();
+	virtual ~Type();
+	virtual void Emit();
 };
+
+class ArrayType : public Type
+{
+public:
+	ArrayType();
+	virtual ~ArrayType();
+	virtual void Emit();
+}
 
 #endif // TYPES_H

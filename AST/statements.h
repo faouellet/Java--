@@ -3,11 +3,20 @@
 
 #include "ast.h"
 
-class Statements
+class Statement : public Node
 {
 public:
-	Statements();
-	virtual ~Statements();
+	Statement();
+	virtual ~Statement();
+	virtual void Emit() = 0;
+};
+
+class ReturnStatement : public Statement
+{
+public:
+	ReturnStatement();
+	virtual ~ReturnStatement();
+	virtual void Emit();
 };
 
 #endif // STATEMENTS_H
