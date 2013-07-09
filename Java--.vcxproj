@@ -84,11 +84,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AST\codegen.cpp" />
     <ClCompile Include="AST\declarations.cpp" />
     <ClCompile Include="AST\expressions.cpp" />
     <ClCompile Include="AST\statements.cpp" />
     <ClCompile Include="AST\types.cpp" />
+    <ClCompile Include="codegen.cpp" />
     <ClCompile Include="Lexer\lex.yy.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Parser\y.tab.c" />
@@ -101,15 +101,21 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AST\ast.h" />
-    <ClInclude Include="AST\codegen.h" />
     <ClInclude Include="AST\declarations.h" />
     <ClInclude Include="AST\expressions.h" />
-    <ClInclude Include="AST\node.h" />
     <ClInclude Include="AST\statements.h" />
     <ClInclude Include="AST\types.h" />
+    <ClInclude Include="codegen.h" />
     <ClInclude Include="Lexer\lexer.h" />
     <ClInclude Include="Parser\parser.h" />
     <ClInclude Include="Parser\y.tab.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="TODO.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Java--.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

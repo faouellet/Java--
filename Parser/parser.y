@@ -37,7 +37,15 @@ void yyerror(const char * in_ErrorMsg) { printf("ERROR: %s\n", in_ErrorMsg); std
 %token   <DoubleConstant>  T_DoubleConstant
 
 /* Node Types */
-%type
+%type <expr>      Constant Expr Call OptExpr
+%type <decl>      Decl
+%type <fDecl>     FnDecl FnHeader
+%type <declList>  DeclList
+%type <var>       Variable VarDecl
+%type <varList>   Formals FormalList VarDecls
+%type <exprList>  Actuals ExprList
+%type <stmt>      Stmt StmtBlock
+%type <stmtList>  StmtList
 
 /* Operators precedence */
 %left      '='
@@ -74,6 +82,11 @@ Type        :    T_Int                { $$ = Type::IntType; }
             |    T_Double             { $$ = Type::DoubleType; }
             |    T_Identifier         { $$ = new NamedType(new Identifier(@1,$1)); }
 		    ;
+
+FnHeader  :    Type T_Identifier '(' Formals ')'  
+                                      { $$ = new FnDecl(new Identifier(@2, $2), $1, $4); }
+          |    T_Void T_Identifier '(' Formals ')' 
+                                      { $$ = new FnDecl(new Identifier(@2, $2), Type::voidType, $4); }
 
 Formals     :    FormalList           { $$ = $1; }
             |    /* empty */          { $$ = new list<VarDecl*>; }
