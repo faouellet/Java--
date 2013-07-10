@@ -60,104 +60,97 @@ void yyerror(const char * in_ErrorMsg) { printf("ERROR: %s\n", in_ErrorMsg); std
 
 %%
 
-Program     : DeclList				  {
-										  @1;
-										  Program * program = new Program($1);
-										  program->Emit();
-			  						  }
-	   	    ;
+Program					: DeclarationList								{
+																			@1;
+																			Program * program = new Program($1);
+																			program->Emit();
+			  															}
+	   					;
 
-DeclList    : DeclList Decl			  { ($$=$1)->push_back($2); }
-		    | Decl					  { ($$=new list<Decl*>)->push_back($1); }
-		    ;
+DeclarationList		    : DeclarationList Declaration   				{ ($$=$1)->push_back($2); }
+						| Declaration									{ ($$=new list<Declaration*>)->push_back($1); }
+						;
 
-Decl        :    FnDecl				  { $$=$1; }
-            |    VarDecl			  { $$=$1; }
-            ;
+Declaration				:    FunctionDeclaration						{ $$=$1; }
+						|    VariableDeclaration 						{ $$=$1; }
+						;
 
-VarDecl     :    Variable ';' 
-		    ;
+VariableDeclaration     :    Variable ';' 
+						;
 
-Type        :    T_Int                { $$ = Type::IntType; }
-            |    T_Double             { $$ = Type::DoubleType; }
-            |    T_Identifier         { $$ = new NamedType(new Identifier(@1,$1)); }
-		    ;
+Type					:    T_Int										{ $$ = Type::IntType; }
+						|    T_Double									{ $$ = Type::DoubleType; }
+						|    T_Identifier								{ $$ = new NamedType(new Identifier(@1,$1)); }
+						;
 
-FnHeader  :    Type T_Identifier '(' Formals ')'  
-                                      { $$ = new FnDecl(new Identifier(@2, $2), $1, $4); }
-          |    T_Void T_Identifier '(' Formals ')' 
-                                      { $$ = new FnDecl(new Identifier(@2, $2), Type::voidType, $4); }
+FunctionHeader		    :    Type T_Identifier '(' Formals ')'			{ $$ = new FunctionDeclaration(new Identifier(@2, $2), $1, $4); }
+						|    T_Void T_Identifier '(' Formals ')'		{ $$ = new FunctionDeclaration(new Identifier(@2, $2), Type::VoidType, $4); }
+						;
 
-Formals     :    FormalList           { $$ = $1; }
-            |    /* empty */          { $$ = new list<VarDecl*>; }
-            ;
+Formals					:    FormalList									{ $$ = $1; }
+						|    /* empty */								{ $$ = new list<VarDecl*>; }
+						;
 
-FormalList  :    FormalList ',' Variable  
-                                      { ($$=$1)->push_back($3); }
-            |    Variable             { ($$ = new list<VarDecl*>)->push_back($1); }
-            ;
+FormalList				:    FormalList ',' Variable					{ ($$=$1)->push_back($3); }
+						|    Variable									{ ($$ = new list<VarDecl*>)->push_back($1); }
+						;
 
-FnDecl      :    FnHeader StmtBlock   { ($$=$1)->SetFunctionBody($2); }
-            ;
+FunctionDeclaration     :    FunctionHeader StatementBlock				{ ($$=$1)->SetFunctionBody($2); }
+						;
 
-StmtBlock   :    '{' VarDecls StmtList '}' 
-                                      { $$ = new StmtBlock($2, $3); }
-            ;
+StatementBlock			:    '{' VariableDeclarations StatementList '}' { $$ = new StatementBlock($2, $3); }
+						;
 
-VarDecls    :    VarDecls VarDecl     { ($$=$1)->push_back($2); }
-            |    /* empty */          { $$ = new list<VarDecl*>; }
-            ;
+VariableDeclarations    :    VariableDeclarations VariableDeclaration   { ($$=$1)->push_back($2); }
+						|    /* empty */								{ $$ = new list<VariableDeclaration*>; }
+						;
 
-StmtList    :    Stmt StmtList        { $$ = $2; $$->push_front($1); }
-            |    /* empty */          { $$ = new list<Stmt*>; }
-            ;
+StatementList			:    Statement StatementList					{ $$ = $2; $$->push_front($1); }
+						|    /* empty */								{ $$ = new list<Statement*>; }
+						;
 
-Stmt        :    OptExpr ';'          { $$ = $1; }
-            |    StmtBlock
-            |    T_Return Expr ';'    { $$ = new ReturnStmt(@2, $2); }
-            |    T_Return ';'         { $$ = new ReturnStmt(@1, new EmptyExpr()); }
-            ;
+Stmt					:    OptExpr ';'								{ $$ = $1; }
+						|    StatementBlock
+						|    T_Return Expression ';'					{ $$ = new ReturnStmt(@2, $2); }
+						|    T_Return ';'								{ $$ = new ReturnStmt(@1, new EmptyExpr()); }
+						;
 
-Call        :    T_Identifier '(' Actuals ')' 
-                                      { $$ = new Call(Join(@1,@4), NULL, new Identifier(@1,$1), $3); }
-            |    Expr '.' T_Identifier '(' Actuals ')' 
-                                      { $$ = new Call(Join(@1,@6), $1, new Identifier(@3,$3), $5); }
-            ;
+FunctionCall			:    T_Identifier '(' Actuals ')'				{ $$ = new Call(Join(@1,@4), NULL, new Identifier(@1,$1), $3); }
+						|    Expression '.' T_Identifier '(' Actuals ')' 
+																		{ $$ = new Call(Join(@1,@6), $1, new Identifier(@3,$3), $5); }
+						;
 
-OptExpr     :    Expr                 { $$ = $1; }
-            |    /* empty */          { $$ = new EmptyExpr(); }
+OptExpr					:    Expression									{ $$ = $1; }
+						|    /* empty */								{ $$ = new EmptyExpression(); }
+						;
 
-Expr        :    Call
-            |    Constant
-            |    LValue '=' Expr      { $$ = new AssignExpr($1, new Operator(@2,"="), $3); }
-            |    Expr '+' Expr        { $$ = new ArithmeticExpr($1, new Operator(@2, "+"), $3); }
-            |    Expr '-' Expr        { $$ = new ArithmeticExpr($1, new Operator(@2, "-"), $3); }
-            |    Expr '/' Expr        { $$ = new ArithmeticExpr($1, new Operator(@2,"/"), $3); }
-            |    Expr '*' Expr        { $$ = new ArithmeticExpr($1, new Operator(@2,"*"), $3); }
-            |    Expr '%' Expr        { $$ = new ArithmeticExpr($1, new Operator(@2,"%"), $3); }
-            |    Expr T_Equal Expr    { $$ = new EqualityExpr($1, new Operator(@2,"=="), $3); }
-            |    Expr T_NotEqual Expr { $$ = new EqualityExpr($1, new Operator(@2,"!="), $3); }
-            |    Expr T_LessThan Expr
-							          { $$ = new RelationalExpr($1, new Operator(@2,"<"), $3); }
-            |    Expr T_GreaterThan Expr        
-									  { $$ = new RelationalExpr($1, new Operator(@2,">"), $3); }
-            |    Expr T_LessEqual Expr 
-                                      { $$ = new RelationalExpr($1, new Operator(@2,"<="), $3); }
-            |    Expr T_GreaterEqual Expr 
-                                      { $$ = new RelationalExpr($1, new Operator(@2,">="), $3); }
-            |    Expr T_And Expr      { $$ = new LogicalExpr($1, new Operator(@2,"&&"), $3); }
-            |    Expr T_Or Expr       { $$ = new LogicalExpr($1, new Operator(@2,"||"), $3); }
-            |    '(' Expr ')'         { $$ = $2; }
-            ;
+Expression				:    FunctionCall
+						|    Constant
+						|    LValue '=' Expression						{ $$ = new AssignExpr($1, new Operator(@2,"="), $3); }
+						|    Expression '+' Expression					{ $$ = new ArithmeticExpression($1, new Operator(@2, "+"), $3); }
+						|    Expression '-' Expression					{ $$ = new ArithmeticExpression($1, new Operator(@2, "-"), $3); }
+						|    Expression '/' Expression					{ $$ = new ArithmeticExpression($1, new Operator(@2,"/"), $3); }
+						|    Expression '*' Expression					{ $$ = new ArithmeticExpression($1, new Operator(@2,"*"), $3); }
+						|    Expression '%' Expression					{ $$ = new ArithmeticExpression($1, new Operator(@2,"%"), $3); }
+						|    Expression T_Equal Expression				{ $$ = new EqualityExpression($1, new Operator(@2,"=="), $3); }
+						|    Expression T_NotEqual Expression			{ $$ = new EqualityExpression($1, new Operator(@2,"!="), $3); }
+						|    Expression T_LessThan Expression			{ $$ = new RelationalExpression($1, new Operator(@2,"<"), $3); }
+						|    Expression T_GreaterThan Expression		{ $$ = new RelationalExpression($1, new Operator(@2,">"), $3); }
+						|    Expression T_LessEqual Expression			{ $$ = new RelationalExpression($1, new Operator(@2,"<="), $3); }
+						|    Expression T_GreaterEqual Expression		{ $$ = new RelationalExpression($1, new Operator(@2,">="), $3); }
+						|    Expression T_And Expression				{ $$ = new LogicalExpression($1, new Operator(@2,"&&"), $3); }
+						|    Expression T_Or Expression					{ $$ = new LogicalExpression($1, new Operator(@2,"||"), $3); }
+						|    '(' Expression ')'							{ $$ = $2; }
+						;
 
-Constant  :    T_IntConstant        { $$ = new IntConstant(@1,$1); }
-          |    T_DoubleConstant     { $$ = new DoubleConstant(@1,$1); }
-          ;
+Constant				:    T_IntConstant								{ $$ = new IntConstant(@1,$1); }
+						|    T_DoubleConstant							{ $$ = new DoubleConstant(@1,$1); }
+						;
 
-Actuals   :    ExprList             { $$ = $1; }
-          |    /* empty */          { $$ = new list<Expr*>; }
-          ;
+Actuals					:    ExpressionList								{ $$ = $1; }
+						|    /* empty */								{ $$ = new list<Expression*>; }
+						;
 
-ExprList  :    ExprList ',' Expr    { ($$=$1)->push_back($3); }
-          |    Expr                 { ($$ = new list<Expr*>)->push_back($1); }
-          ;
+ExpressionList			:    ExpressionList ',' Expression				{ ($$=$1)->push_back($3); }
+						|    Expression									{ ($$ = new list<Expression*>)->push_back($1); }
+						;

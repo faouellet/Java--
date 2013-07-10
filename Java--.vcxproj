@@ -97,7 +97,6 @@
     <None Include="Lexer\tokens.l" />
     <None Include="Makefile" />
     <None Include="Parser\parser.y" />
-    <None Include="Parser\y.output" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AST\ast.h" />
