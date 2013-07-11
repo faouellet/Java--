@@ -19,6 +19,14 @@ public:
 	virtual void Emit();
 };
 
+class EmptyExpression : public Expression
+{
+public:
+	EmptyExpression();
+	virtual ~EmptyExpression();
+	virtual void Emit();
+};
+
 class DoubleConstant : public Expression
 {
 public:

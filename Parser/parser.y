@@ -16,8 +16,6 @@ void yyerror(const char * in_ErrorMsg) { printf("ERROR: %s\n", in_ErrorMsg); std
 	Declaration			*decl;
     list<Decl*>			*declList;
     Type				*type;
-    NamedType			*cType;
-    list<NamedType*>	*cTypeList;
     FnDecl				*fDecl;
     VarDecl				*var;
     list<VarDecl*>		*varList;
@@ -37,15 +35,15 @@ void yyerror(const char * in_ErrorMsg) { printf("ERROR: %s\n", in_ErrorMsg); std
 %token   <DoubleConstant>  T_DoubleConstant
 
 /* Node Types */
-%type <expr>      Constant Expr Call OptExpr
-%type <decl>      Decl
-%type <fDecl>     FnDecl FnHeader
-%type <declList>  DeclList
-%type <var>       Variable VarDecl
-%type <varList>   Formals FormalList VarDecls
-%type <exprList>  Actuals ExprList
-%type <stmt>      Stmt StmtBlock
-%type <stmtList>  StmtList
+%type <expr>      Constant Expression Call OptExpr
+%type <decl>      Declaration
+%type <fDecl>     FunctionDeclaration FunctionHeader
+%type <declList>  DeclarationList
+%type <var>       Variable VariableDeclaration
+%type <varList>   Formals FormalList VariableDeclarations
+%type <exprList>  Actuals ExpressionList
+%type <stmt>      Statement StatementBlock
+%type <stmtList>  StatementList
 
 /* Operators precedence */
 %left      '='
@@ -67,8 +65,8 @@ Program					: DeclarationList								{
 			  															}
 	   					;
 
-DeclarationList		    : DeclarationList Declaration   				{ ($$=$1)->push_back($2); }
-						| Declaration									{ ($$=new list<Declaration*>)->push_back($1); }
+DeclarationList		    :	 DeclarationList Declaration   				{ ($$=$1)->push_back($2); }
+						|	 Declaration								{ ($$=new list<Declaration*>)->push_back($1); }
 						;
 
 Declaration				:    FunctionDeclaration						{ $$=$1; }
@@ -80,7 +78,6 @@ VariableDeclaration     :    Variable ';'
 
 Type					:    T_Int										{ $$ = Type::IntType; }
 						|    T_Double									{ $$ = Type::DoubleType; }
-						|    T_Identifier								{ $$ = new NamedType(new Identifier(@1,$1)); }
 						;
 
 FunctionHeader		    :    Type T_Identifier '(' Formals ')'			{ $$ = new FunctionDeclaration(new Identifier(@2, $2), $1, $4); }
@@ -88,11 +85,11 @@ FunctionHeader		    :    Type T_Identifier '(' Formals ')'			{ $$ = new Function
 						;
 
 Formals					:    FormalList									{ $$ = $1; }
-						|    /* empty */								{ $$ = new list<VarDecl*>; }
+						|    /* empty */								{ $$ = new list<VariableDeclarations*>; }
 						;
 
 FormalList				:    FormalList ',' Variable					{ ($$=$1)->push_back($3); }
-						|    Variable									{ ($$ = new list<VarDecl*>)->push_back($1); }
+						|    Variable									{ ($$ = new list<VariableDeclaration*>)->push_back($1); }
 						;
 
 FunctionDeclaration     :    FunctionHeader StatementBlock				{ ($$=$1)->SetFunctionBody($2); }
@@ -109,18 +106,18 @@ StatementList			:    Statement StatementList					{ $$ = $2; $$->push_front($1); 
 						|    /* empty */								{ $$ = new list<Statement*>; }
 						;
 
-Stmt					:    OptExpr ';'								{ $$ = $1; }
+Statement				:    OptExpression ';'							{ $$ = $1; }
 						|    StatementBlock
 						|    T_Return Expression ';'					{ $$ = new ReturnStmt(@2, $2); }
-						|    T_Return ';'								{ $$ = new ReturnStmt(@1, new EmptyExpr()); }
+						|    T_Return ';'								{ $$ = new ReturnStmt(@1, new EmptyExpression()); }
 						;
 
-FunctionCall			:    T_Identifier '(' Actuals ')'				{ $$ = new Call(Join(@1,@4), NULL, new Identifier(@1,$1), $3); }
+FunctionCall			:    T_Identifier '(' Actuals ')'				{ $$ = new FunctionCall(Join(@1,@4), NULL, new Identifier(@1,$1), $3); }
 						|    Expression '.' T_Identifier '(' Actuals ')' 
-																		{ $$ = new Call(Join(@1,@6), $1, new Identifier(@3,$3), $5); }
+																		{ $$ = new FunctionCall(Join(@1,@6), $1, new Identifier(@3,$3), $5); }
 						;
 
-OptExpr					:    Expression									{ $$ = $1; }
+OptionalExpression		:    Expression									{ $$ = $1; }
 						|    /* empty */								{ $$ = new EmptyExpression(); }
 						;
 
