@@ -8,7 +8,7 @@ class Statement : public Node
 public:
 	Statement();
 	virtual ~Statement();
-	virtual void Emit() = 0;
+	virtual void Accept(std::unique_ptr<CodeGen> in_CG) = 0;
 };
 
 class ReturnStatement : public Statement
@@ -16,7 +16,7 @@ class ReturnStatement : public Statement
 public:
 	ReturnStatement();
 	virtual ~ReturnStatement();
-	virtual void Emit();
+	virtual void Accept(std::unique_ptr<CodeGen> in_CG);
 };
 
 #endif // STATEMENTS_H

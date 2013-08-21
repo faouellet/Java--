@@ -1,11 +1,13 @@
 #include "types.h"
 
+////////// Type //////////
+Type::Type() { }
 
-Types::Types()
-{
-}
+Type::~Type() { }
 
+////////// ArrayType //////////
+ArrayType::ArrayType() { }
 
-Types::~Types()
-{
-}
+ArrayType::~ArrayType() { }
+
+void ArrayType::Accept(std::unique_ptr<CodeGen> in_CG) { }

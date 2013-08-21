@@ -1,11 +1,16 @@
 #include "statements.h"
 
+////////// Statement //////////
+Statement::Statement() { }
 
-Statements::Statements()
+Statement::~Statement() { }
+
+////////// ReturnStatement //////////
+ReturnStatement::ReturnStatement() { }
+
+ReturnStatement::~ReturnStatement() { }
+
+void ReturnStatement::Accept(std::unique_ptr<CodeGen> in_CG)
 {
-}
-
-
-Statements::~Statements()
-{
+	in_CG->Visit(this);
 }

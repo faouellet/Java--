@@ -88,7 +88,7 @@
     <ClCompile Include="AST\expressions.cpp" />
     <ClCompile Include="AST\statements.cpp" />
     <ClCompile Include="AST\types.cpp" />
-    <ClCompile Include="codegen.cpp" />
+    <ClCompile Include="CodeGen\codegen.cpp" />
     <ClCompile Include="Lexer\lex.yy.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Parser\y.tab.c" />
@@ -104,13 +104,14 @@
     <ClInclude Include="AST\expressions.h" />
     <ClInclude Include="AST\statements.h" />
     <ClInclude Include="AST\types.h" />
-    <ClInclude Include="codegen.h" />
+    <ClInclude Include="CodeGen\codegen.h" />
     <ClInclude Include="Lexer\lexer.h" />
     <ClInclude Include="Parser\parser.h" />
     <ClInclude Include="Parser\y.tab.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="INSTALL.txt" />
     <Text Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>

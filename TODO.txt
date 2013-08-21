@@ -10,8 +10,10 @@
 - Errors formatting and reporting
 - Remove possibility of using the keywords const and goto
 
-- DOCUMENTATION
+- DOXYGEN DOCUMENTATION
+- INSTALL NOTES
 
 ?- Separate the logic contained in the code generator into multiple files
 ?- Separate into folders
 ?- #ifdef the prints to stdout
+?- Add NodeVisitor
