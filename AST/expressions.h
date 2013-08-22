@@ -11,59 +11,98 @@ public:
 	virtual void Accept(std::unique_ptr<CodeGen> in_CG) = 0;
 };
 
-class IntConstant : public Expression
+class BooleanConstant : public Expression
 {
+public:
+	BooleanConstant();
+	virtual ~BooleanConstant();
+	virtual void Accept(std::unique_ptr<CodeGen> in_CG);
+};
+
+class NumericConst : public Expression
+{
+public:
+	NumericConst();
+	virtual ~NumericConst();
+	virtual void Accept(std::unique_ptr<CodeGen> in_CG) = 0;
+};
+
+class IntConstant : public NumericConst
+{
+private:
+	int m_Val;
+
 public:
 	IntConstant();
 	virtual ~IntConstant();
 	virtual void Accept(std::unique_ptr<CodeGen> in_CG);
+	int GetValue() const { return m_Val; }
 };
 
-class EmptyExpression : public Expression
+class DoubleConstant : public NumericConst
 {
-public:
-	EmptyExpression();
-	virtual ~EmptyExpression();
-	virtual void Accept(std::unique_ptr<CodeGen> in_CG);
-};
+private:
+	double m_Val;
 
-class DoubleConstant : public Expression
-{
 public:
 	DoubleConstant();
 	virtual ~DoubleConstant();
 	virtual void Accept(std::unique_ptr<CodeGen> in_CG);
+	double GetValue() const { return m_Val; }
 };
 
-class Operator : public Expression
+class NullConstant : public Expression
 {
 public:
-	Operator();
-	virtual ~Operator();
+	NullConstant();
+	virtual ~NullConstant();
 	virtual void Accept(std::unique_ptr<CodeGen> in_CG);
 };
 
-class CompoundExpression : public Expression
+class LeftValue : public Expression
 {
 public:
-	CompoundExpression();
-	virtual ~CompoundExpression();
+	LeftValue();
+	virtual ~LeftValue();
 	virtual void Accept(std::unique_ptr<CodeGen> in_CG);
 };
 
-class ArithmeticExpression : public Expression
+class RightValue : public Expression
 {
 public:
-	ArithmeticExpression();
-	virtual ~ArithmeticExpression();
+	RightValue();
+	virtual ~RightValue();
 	virtual void Accept(std::unique_ptr<CodeGen> in_CG);
 };
 
-class FunctionCall : public Expression
+// TODO : I'm confused concerning the difference between FunctionCall & ProcedureCall
+
+class ArrayCreator : public Expression
 {
 public:
-	FunctionCall();
-	virtual ~FunctionCall();
+	ArrayCreator();
+	virtual ~ArrayCreator();
+	virtual void Accept(std::unique_ptr<CodeGen> in_CG);
+};
+
+class BinaryExpression : public Expression
+{
+private:
+	char m_Op;
+	Expression* m_LHS;
+	Expression* m_RHS;
+
+public:
+	BinaryExpression();
+	virtual ~BinaryExpression();
+	virtual void Accept(std::unique_ptr<CodeGen> in_CG);
+};
+
+class UnaryExpression : public Expression
+{
+public:
+	UnaryExpression();
+	virtual ~UnaryExpression();
 	virtual void Accept(std::unique_ptr<CodeGen> in_CG);
 };
 

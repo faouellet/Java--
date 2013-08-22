@@ -1,16 +1,30 @@
 #ifndef CODEGEN_H
 #define CODEGEN_H
 
+#include <llvm\IR\DerivedTypes.h>
 #include <llvm\IR\IRBuilder.h>
-#include <llvm\IR\LLVMContext.h>
-#include <llvm\IR\Module.h>   // <-- Including this here, does it limits me in the number of modules that I can produce ??
+#include <llvm\IR\LLVMContext.h>  // This might need to be included somewhere else
+#include <llvm\IR\Module.h>       // This might need to be included somewhere else
 
+// Expressions
+class BooleanConstant;
 class DoubleConstant;
-class EmptyExpression;
-class FunctionDeclaration;
-class Identifier;
 class IntConstant;
+class NullConstant;
+class LeftValue;
+class RightValue;
+class ArrayCreator;
+class BinaryExpression;
+class UnaryExpression;
+
+// Statements
+class Assignment;
+class ProcedureCall;
 class ReturnStatement;
+class WhileStatement;
+
+// Declarations
+class FunctionDeclaration;
 class VariableDeclaration;
 
 /*
@@ -28,13 +42,25 @@ public:
 	~CodeGen();
 
 public:
-	void Visit(const DoubleConstant* in_DConst);
-	void Visit(const EmptyExpression* in_EmptyExpr);
-	void Visit(const FunctionDeclaration* in_FuncDecl);
-	void Visit(const Identifier* in_Id);
-	void Visit(const IntConstant* in_IConst);
-	void Visit(const ReturnStatement* in_RetStmt);
-	void Visit(const VariableDeclaration* in_VarDecl);
+	llvm::Value* Visit(const BooleanConstant* in_BConst);
+	llvm::Value* Visit(const DoubleConstant* in_DConst);
+	llvm::Value* Visit(const IntConstant* in_IConst);
+	llvm::Value* Visit(const NullConstant* in_NConst);
+	llvm::Value* Visit(const LeftValue* in_LVal);
+	llvm::Value* Visit(const RightValue* in_RVal);
+	llvm::Value* Visit(const ArrayCreator* in_ArrCtor);
+	llvm::Value* Visit(const BinaryExpression* in_BinExpr);
+	llvm::Value* Visit(const UnaryExpression* in_UExpr);
+	
+public:
+	llvm::Value* Visit(const Assignment* in_Assign);
+	llvm::Value* Visit(const ProcedureCall* in_ProcCall);
+	llvm::Value* Visit(const ReturnStatement* in_RetStmt);
+	llvm::Value* Visit(const WhileStatement* in_WhileStmt);
+
+public:
+	llvm::Value* Visit(const FunctionDeclaration* in_FuncDecl);
+	llvm::Value* Visit(const VariableDeclaration* in_VarDecl);
 };
 
 #endif // CODEGEN_H
