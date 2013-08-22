@@ -3,14 +3,6 @@
 
 #include "ast.h"
 
-class Expression
-{
-public:
-	Expression();
-	virtual ~Expression();
-	virtual void Accept(std::unique_ptr<CodeGen> in_CG) = 0;
-};
-
 class BooleanConstant : public Expression
 {
 public:
@@ -100,6 +92,10 @@ public:
 
 class UnaryExpression : public Expression
 {
+private:
+	char m_Op;
+	Expression* m_Expr;
+
 public:
 	UnaryExpression();
 	virtual ~UnaryExpression();

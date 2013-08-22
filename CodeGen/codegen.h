@@ -1,6 +1,9 @@
 #ifndef CODEGEN_H
 #define CODEGEN_H
 
+#include <map>
+#include <string>
+
 #include <llvm\IR\DerivedTypes.h>
 #include <llvm\IR\IRBuilder.h>
 #include <llvm\IR\LLVMContext.h>  // This might need to be included somewhere else
@@ -19,6 +22,7 @@ class UnaryExpression;
 
 // Statements
 class Assignment;
+class IfStatement;
 class ProcedureCall;
 class ReturnStatement;
 class WhileStatement;
@@ -36,7 +40,8 @@ class CodeGen
 private:
 	llvm::Module* m_Module;
 	llvm::IRBuilder<> m_Builder;
-	
+	std::map<std::string, llvm::Value*> m_SymbolTable;
+
 public:
 	CodeGen();
 	~CodeGen();
@@ -54,6 +59,7 @@ public:
 	
 public:
 	llvm::Value* Visit(const Assignment* in_Assign);
+	llvm::Value* Visit(const IfStatement* in_RetStmt);
 	llvm::Value* Visit(const ProcedureCall* in_ProcCall);
 	llvm::Value* Visit(const ReturnStatement* in_RetStmt);
 	llvm::Value* Visit(const WhileStatement* in_WhileStmt);

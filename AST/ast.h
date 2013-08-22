@@ -15,12 +15,30 @@ public:
 	virtual void Accept(std::unique_ptr<CodeGen> in_CG) = 0;
 };
 
-class Identifier : public Node
+// Categories of nodes
+
+class Declaration : public Node
 {
 public:
-	Identifier();
-	virtual ~Identifier();
-	virtual void Accept(std::unique_ptr<CodeGen> in_CG);
+	Declaration();
+	virtual ~Declaration();
+	virtual void Accept(std::unique_ptr<CodeGen> in_CG) = 0;
+};
+
+class Expression
+{
+public:
+	Expression();
+	virtual ~Expression();
+	virtual void Accept(std::unique_ptr<CodeGen> in_CG) = 0;
+};
+
+class Statement : public Node
+{
+public:
+	Statement();
+	virtual ~Statement();
+	virtual void Accept(std::unique_ptr<CodeGen> in_CG) = 0;
 };
 
 #endif // AST_H

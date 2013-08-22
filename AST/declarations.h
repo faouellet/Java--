@@ -3,14 +3,6 @@
 
 #include "ast.h"
 
-class Declaration : public Node
-{
-public:
-	Declaration();
-	virtual ~Declaration();
-	virtual void Accept(std::unique_ptr<CodeGen> in_CG) = 0;
-};
-
 class FunctionDeclaration : public Declaration
 {
 public:
@@ -21,6 +13,9 @@ public:
 
 class VariableDeclaration : public Declaration
 {
+private:
+	std::string m_Name;
+
 public:
 	VariableDeclaration();
 	virtual ~VariableDeclaration();

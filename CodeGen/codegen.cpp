@@ -87,6 +87,24 @@ llvm::Value* CodeGen::Visit(const Assignment* in_Assign)
 
 }
 
+llvm::Value* CodeGen::Visit(const IfStatement* in_RetStmt)
+{
+	llvm::Value* l_CondVal = Visit(Cond);
+
+	if(l_CondVal == nullptr)
+		return nullptr;
+
+	l_CondVal = m_Builder.CreateFCmpONE(l_CondVal, llvm::ConstantFP::get(llvm::getGlobalContext(), llvm::APFloat(0,0)));
+
+	Function* l_Func = m_Builder.GetInsertBlock()->getParent();
+
+	llvm::BasicBlock l_ThenBlock = llvm::BasicBlock::Create(llvm::getGlobalContext(), "then", l_Func);
+	llvm::BasicBlock l_ElseBlock = llvm::BasicBlock::Create(llvm::getGlobalContext(), "else");
+	llvm::BasicBlock l_MergeBlock = llvm::BasicBlock::Create(llvm::getGlobalContext(), "ifcont");
+
+	m_Builder.CreateCondBr(l_CondVal, l_ThenBlock, l_ElseBlock);
+}
+
 llvm::Value* CodeGen::Visit(const ProcedureCall* in_ProcCall)
 {
 	llvm::Function* l_Callee = m_Module->getFunction(Callee);

@@ -1,15 +1,9 @@
 #ifndef STATEMENTS_H
 #define STATEMENTS_H
 
-#include "ast.h"
+#include <vector>
 
-class Statement : public Node
-{
-public:
-	Statement();
-	virtual ~Statement();
-	virtual void Accept(std::unique_ptr<CodeGen> in_CG) = 0;
-};
+#include "ast.h"
 
 class Assignment : public Statement
 {
@@ -19,8 +13,25 @@ public:
 	virtual void Accept(std::unique_ptr<CodeGen> in_CG);
 };
 
+class IfStatement : public Statement
+{
+private:
+	Expression* m_Cond;
+	Expression* m_Then;
+	Expression* m_Else;
+
+public:
+	IfStatement();
+	virtual ~IfStatement();
+	virtual void Accept(std::unique_ptr<CodeGen> in_CG);
+};
+
 class ProcedureCall : public Statement
 {
+private:
+	std::string m_FuncName;
+	std::vector<Expression*> m_Args;
+
 public:
 	ProcedureCall();
 	virtual ~ProcedureCall();
