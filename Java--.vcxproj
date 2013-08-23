@@ -84,9 +84,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AST\declarations.cpp" />
-    <ClCompile Include="AST\expressions.cpp" />
-    <ClCompile Include="AST\statements.cpp" />
     <ClCompile Include="AST\types.cpp" />
     <ClCompile Include="CodeGen\codegen.cpp" />
     <ClCompile Include="Lexer\lex.yy.c" />

@@ -10,7 +10,7 @@ class Assignment : public Statement
 public:
 	Assignment();
 	virtual ~Assignment();
-	virtual void Accept(std::unique_ptr<CodeGen> in_CG);
+	virtual void Accept(std::unique_ptr<CodeGen> in_CG) { in_CG->Visit(this); }
 };
 
 class IfStatement : public Statement
@@ -23,7 +23,10 @@ private:
 public:
 	IfStatement();
 	virtual ~IfStatement();
-	virtual void Accept(std::unique_ptr<CodeGen> in_CG);
+	virtual void Accept(std::unique_ptr<CodeGen> in_CG) { in_CG->Visit(this); }
+	Expression* GetCond() const { return m_Cond; }
+	Expression* GetThen() const { return m_Then; }
+	Expression* GetElse() const { return m_Else; }
 };
 
 class ProcedureCall : public Statement
@@ -35,7 +38,10 @@ private:
 public:
 	ProcedureCall();
 	virtual ~ProcedureCall();
-	virtual void Accept(std::unique_ptr<CodeGen> in_CG);
+	virtual void Accept(std::unique_ptr<CodeGen> in_CG) { in_CG->Visit(this); }
+	std::string GetName() { return m_FuncName; }
+	std::vector<Expression*> GetCond() const { return m_Args; }
+
 };
 
 class ReturnStatement : public Statement
@@ -43,15 +49,19 @@ class ReturnStatement : public Statement
 public:
 	ReturnStatement();
 	virtual ~ReturnStatement();
-	virtual void Accept(std::unique_ptr<CodeGen> in_CG);
+	virtual void Accept(std::unique_ptr<CodeGen> in_CG) { in_CG->Visit(this); }
 };
 
 class WhileStatement : public Statement
 {
+private:
+	Expression* m_Cond;
+
 public:
 	WhileStatement();
 	virtual ~WhileStatement();
-	virtual void Accept(std::unique_ptr<CodeGen> in_CG);
+	virtual void Accept(std::unique_ptr<CodeGen> in_CG) { in_CG->Visit(this); }
+	Expression* GetCond() { return m_Cond; }
 };
 
 #endif // STATEMENTS_H
