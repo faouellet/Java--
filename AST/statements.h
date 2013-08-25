@@ -39,7 +39,7 @@ public:
 	ProcedureCall();
 	virtual ~ProcedureCall();
 	virtual void Accept(std::unique_ptr<CodeGen> in_CG) { in_CG->Visit(this); }
-	std::string GetName() { return m_FuncName; }
+	std::string GetName() const { return m_FuncName; }
 	std::vector<Expression*> GetCond() const { return m_Args; }
 
 };
@@ -56,12 +56,14 @@ class WhileStatement : public Statement
 {
 private:
 	Expression* m_Cond;
+	Expression* m_Body;
 
 public:
 	WhileStatement();
 	virtual ~WhileStatement();
 	virtual void Accept(std::unique_ptr<CodeGen> in_CG) { in_CG->Visit(this); }
-	Expression* GetCond() { return m_Cond; }
+	Expression* GetCond() const { return m_Cond; }
+	Expression* GetBody() const { return m_Body; }
 };
 
 #endif // STATEMENTS_H

@@ -136,11 +136,11 @@ llvm::Value* CodeGen::Visit(const IfStatement* in_IfStmt)
 
 llvm::Value* CodeGen::Visit(const ProcedureCall* in_ProcCall)
 {
-	llvm::Function* l_Callee = m_Module->getFunction(Callee);
+	llvm::Function* l_Callee = m_Module->getFunction(in_ProcCall->GetName());
 	if(l_Callee == nullptr)
 		return nullptr; // TODO : Error handling
 
-	if(l_Callee->arg_size() != Args.size())
+	if(l_Callee->arg_size() != in_ProcCall->GetArgs().size())
 		return nullptr; // TODO : Error handling
 
 	return m_Builder.CreateCall(l_Callee, ...);
@@ -153,7 +153,15 @@ llvm::Value* CodeGen::Visit(const ReturnStatement* in_RetStmt)
 
 llvm::Value* CodeGen::Visit(const WhileStatement* in_WhileStmt)
 {
+	llvm::Value* l_CondVal = Visit(in_WhileStmt->GetCond());
+	if(l_CondVal == nullptr)
+		return nullptr;
 
+	l_CondVal = m_Builder.CreateFCmpONE(l_CondVal, llvm::ConstantFP::get(llvm::getGlobalContext(), llvm::APFloat(0.0)));
+
+	llvm::Function* l_Func = m_Builder.GetInsertBlock()->getParent();
+
+	llvm::BasicBlock* l_BodyBlock = llvm::BasicBlock::Create(llvm::getGlobalContext(), "loop", l_Func);
 }
 
 llvm::Value* CodeGen::Visit(const FunctionDeclaration* in_FuncDecl)
