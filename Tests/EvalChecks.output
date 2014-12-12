@@ -1,0 +1,218 @@
+Compiling: "EvalChecks.mjv"
+  Parsing and constructing the AST...
+    Initializing the parser...
+    Initializing the scanner...
+    Initializing the parser...
+    Finalizing the parser...
+    Finalizing the scanner...
+  Memory  131680  Tree   61452  Symb       0
+  Evaluating the attributes...
+    Initializing the attribute evaluator...
+    Finalizing the attribute evaluator...
+  Memory  152176  Tree   61452  Symb   20484
+*** Semantic errors:
+"":  14, 47: Error       Modifier static not allowed for class.
+"":  19, 19: Error       Field: duplicate symbol declaration.
+"":  32, 14: Error       Local variable: duplicate symbol declaration.
+"":  35,  7: Error       Method not declared.
+"":  36, 11: Error       Method not declared.
+"":  38, 11: Error       Object method call not allowed from static context.
+"":  39,  7: Error       Object method call not allowed from static context.
+"":  41, 20: Error       Too many arguments to method call.
+"":  42, 24: Error       Too many arguments to method call.
+"":  43, 12: Error       Too few arguments to method call.
+"":  44, 16: Error       Too few arguments to method call.
+"":  46, 14: Error       Argument type does not match formal type.
+"":  47, 18: Error       Argument type does not match formal type.
+"":  52,  7: Error       Symbol not declared.
+"":  53, 11: Error       Symbol not declared.
+"":  55,  7: Error       Symbol not declared.
+"":  56, 11: Error       Symbol not declared.
+"":  58,  7: Error       Object member reference not allowed from static context.
+"":  59, 11: Error       Object member reference not allowed from static context.
+"":  63, 13: Error       Invalid type for indexed reference.
+"":  63, 25: Error       Invalid type for indexed variable.
+"":  64, 11: Error       Indexing expression must be integer.
+"":  65, 20: Error       Indexing expression must be integer.
+"":  67, 11: Error       Invalid return type for method call.
+"":  71, 13: Error       Incompatible operand types in binary expression.
+"":  72, 16: Error       Incompatible operand types in binary expression.
+"":  73, 13: Error       Incompatible operand types in binary expression.
+"":  74, 14: Error       Incompatible operand types in binary expression.
+"":  75, 16: Error       Incompatible operand types in binary expression.
+"":  76, 14: Error       Incompatible operand types in binary expression.
+"":  77, 16: Error       Incompatible operand types in binary expression.
+"":  78, 16: Error       Incompatible operand types in binary expression.
+"":  79, 16: Error       Incompatible operand types in binary expression.
+"":  81, 13: Error       Incompatible operand types in binary expression.
+"":  82, 16: Error       Incompatible operand types in binary expression.
+"":  83, 13: Error       Incompatible operand types in binary expression.
+"":  84, 14: Error       Incompatible operand types in binary expression.
+"":  85, 16: Error       Incompatible operand types in binary expression.
+"":  86, 14: Error       Incompatible operand types in binary expression.
+"":  87, 16: Error       Incompatible operand types in binary expression.
+"":  88, 16: Error       Incompatible operand types in binary expression.
+"":  89, 16: Error       Incompatible operand types in binary expression.
+"":  91, 13: Error       Incompatible operand types in binary expression.
+"":  92, 14: Error       Incompatible operand types in binary expression.
+"":  93, 13: Error       Incompatible operand types in binary expression.
+"":  94, 14: Error       Incompatible operand types in binary expression.
+"":  95, 13: Error       Incompatible operand types in binary expression.
+"":  96, 14: Error       Incompatible operand types in binary expression.
+"":  97, 13: Error       Incompatible operand types in binary expression.
+"":  98, 14: Error       Incompatible operand types in binary expression.
+"":  99, 13: Error       Incompatible operand types in binary expression.
+"": 100, 14: Error       Incompatible operand types in binary expression.
+"": 102, 13: Error       Incompatible operand types in binary expression.
+"": 103, 14: Error       Incompatible operand types in binary expression.
+"": 104, 13: Error       Incompatible operand types in binary expression.
+"": 105, 14: Error       Incompatible operand types in binary expression.
+"": 106, 13: Error       Incompatible operand types in binary expression.
+"": 107, 14: Error       Incompatible operand types in binary expression.
+"": 108, 13: Error       Incompatible operand types in binary expression.
+"": 109, 14: Error       Incompatible operand types in binary expression.
+"": 110, 13: Error       Incompatible operand types in binary expression.
+"": 111, 14: Error       Incompatible operand types in binary expression.
+"": 112, 16: Error       Incompatible operand types in binary expression.
+"": 113, 16: Error       Incompatible operand types in binary expression.
+"": 114, 16: Error       Incompatible operand types in binary expression.
+"": 115, 16: Error       Incompatible operand types in binary expression.
+"": 116, 16: Error       Incompatible operand types in binary expression.
+"": 117, 16: Error       Incompatible operand types in binary expression.
+"": 118, 16: Error       Incompatible operand types in binary expression.
+"": 119, 16: Error       Incompatible operand types in binary expression.
+"": 120, 16: Error       Incompatible operand types in binary expression.
+"": 121, 16: Error       Incompatible operand types in binary expression.
+"": 123, 13: Error       Incompatible operand types in binary expression.
+"": 124, 14: Error       Incompatible operand types in binary expression.
+"": 125, 13: Error       Incompatible operand types in binary expression.
+"": 126, 14: Error       Incompatible operand types in binary expression.
+"": 127, 13: Error       Incompatible operand types in binary expression.
+"": 128, 14: Error       Incompatible operand types in binary expression.
+"": 129, 13: Error       Incompatible operand types in binary expression.
+"": 130, 14: Error       Incompatible operand types in binary expression.
+"": 131, 13: Error       Incompatible operand types in binary expression.
+"": 132, 14: Error       Incompatible operand types in binary expression.
+"": 133, 13: Error       Incompatible operand types in binary expression.
+"": 134, 14: Error       Incompatible operand types in binary expression.
+"": 136, 13: Error       Incompatible operand types in binary expression.
+"": 137, 17: Error       Incompatible operand types in binary expression.
+"": 138, 13: Error       Incompatible operand types in binary expression.
+"": 139, 17: Error       Incompatible operand types in binary expression.
+"": 140, 13: Error       Incompatible operand types in binary expression.
+"": 141, 17: Error       Incompatible operand types in binary expression.
+"": 142, 13: Error       Incompatible operand types in binary expression.
+"": 143, 17: Error       Incompatible operand types in binary expression.
+"": 144, 13: Error       Incompatible operand types in binary expression.
+"": 145, 17: Error       Incompatible operand types in binary expression.
+"": 146, 13: Error       Incompatible operand types in binary expression.
+"": 147, 17: Error       Incompatible operand types in binary expression.
+"": 149, 13: Error       Incompatible operand types in binary expression.
+"": 150, 16: Error       Incompatible operand types in binary expression.
+"": 151, 13: Error       Incompatible operand types in binary expression.
+"": 152, 16: Error       Incompatible operand types in binary expression.
+"": 153, 13: Error       Incompatible operand types in binary expression.
+"": 154, 16: Error       Incompatible operand types in binary expression.
+"": 155, 13: Error       Incompatible operand types in binary expression.
+"": 156, 16: Error       Incompatible operand types in binary expression.
+"": 157, 13: Error       Incompatible operand types in binary expression.
+"": 158, 16: Error       Incompatible operand types in binary expression.
+"": 159, 13: Error       Incompatible operand types in binary expression.
+"": 160, 16: Error       Incompatible operand types in binary expression.
+"": 162, 13: Error       Incompatible operand types in binary expression.
+"": 163, 15: Error       Incompatible operand types in binary expression.
+"": 164, 13: Error       Incompatible operand types in binary expression.
+"": 165, 15: Error       Incompatible operand types in binary expression.
+"": 166, 13: Error       Incompatible operand types in binary expression.
+"": 167, 15: Error       Incompatible operand types in binary expression.
+"": 168, 13: Error       Incompatible operand types in binary expression.
+"": 169, 15: Error       Incompatible operand types in binary expression.
+"": 170, 13: Error       Incompatible operand types in binary expression.
+"": 171, 15: Error       Incompatible operand types in binary expression.
+"": 172, 13: Error       Incompatible operand types in binary expression.
+"": 173, 15: Error       Incompatible operand types in binary expression.
+"": 175, 14: Error       Incompatible operand types in binary expression.
+"": 176, 17: Error       Incompatible operand types in binary expression.
+"": 177, 14: Error       Incompatible operand types in binary expression.
+"": 178, 17: Error       Incompatible operand types in binary expression.
+"": 179, 14: Error       Incompatible operand types in binary expression.
+"": 180, 17: Error       Incompatible operand types in binary expression.
+"": 181, 14: Error       Incompatible operand types in binary expression.
+"": 182, 17: Error       Incompatible operand types in binary expression.
+"": 183, 14: Error       Incompatible operand types in binary expression.
+"": 184, 17: Error       Incompatible operand types in binary expression.
+"": 185, 14: Error       Incompatible operand types in binary expression.
+"": 186, 17: Error       Incompatible operand types in binary expression.
+"": 188, 14: Error       Incompatible operand types in binary expression.
+"": 189, 16: Error       Incompatible operand types in binary expression.
+"": 190, 14: Error       Incompatible operand types in binary expression.
+"": 191, 16: Error       Incompatible operand types in binary expression.
+"": 192, 14: Error       Incompatible operand types in binary expression.
+"": 193, 16: Error       Incompatible operand types in binary expression.
+"": 194, 14: Error       Incompatible operand types in binary expression.
+"": 195, 16: Error       Incompatible operand types in binary expression.
+"": 196, 14: Error       Incompatible operand types in binary expression.
+"": 197, 16: Error       Incompatible operand types in binary expression.
+"": 198, 14: Error       Incompatible operand types in binary expression.
+"": 199, 16: Error       Incompatible operand types in binary expression.
+"": 201, 14: Error       Incompatible operand types in binary expression.
+"": 202, 15: Error       Incompatible operand types in binary expression.
+"": 203, 14: Error       Incompatible operand types in binary expression.
+"": 204, 15: Error       Incompatible operand types in binary expression.
+"": 205, 14: Error       Incompatible operand types in binary expression.
+"": 206, 15: Error       Incompatible operand types in binary expression.
+"": 207, 14: Error       Incompatible operand types in binary expression.
+"": 208, 15: Error       Incompatible operand types in binary expression.
+"": 209, 14: Error       Incompatible operand types in binary expression.
+"": 210, 15: Error       Incompatible operand types in binary expression.
+"": 211, 14: Error       Incompatible operand types in binary expression.
+"": 212, 15: Error       Incompatible operand types in binary expression.
+"": 214, 17: Error       Incompatible operand types in binary expression.
+"": 215, 15: Error       Incompatible operand types in binary expression.
+"": 216, 16: Error       Incompatible operand types in binary expression.
+"": 217, 15: Error       Incompatible operand types in binary expression.
+"": 221, 11: Error       Invalid operand type in unary expression.
+"": 222, 11: Error       Invalid operand type in unary expression.
+"": 223, 11: Error       Invalid operand type in unary expression.
+"": 224, 11: Error       Invalid operand type in unary expression.
+"": 225, 11: Error       Invalid operand type in unary expression.
+"": 226, 11: Error       Invalid operand type in unary expression.
+"": 228, 12: Error       Boolean expression required
+"": 229, 12: Error       Boolean expression required
+"": 230, 12: Error       Boolean expression required
+"": 231, 12: Error       Boolean expression required
+"": 232, 12: Error       Boolean expression required
+"": 233, 12: Error       Boolean expression required
+"": 234, 12: Error       Boolean expression required
+"": 235, 12: Error       Boolean expression required
+"": 236, 15: Error       Boolean expression required
+"": 237, 15: Error       Boolean expression required
+"": 238, 15: Error       Boolean expression required
+"": 239, 15: Error       Boolean expression required
+"": 241, 11: Error       Expression type not compatible with target of assignment.
+"": 242, 11: Error       Expression type not compatible with target of assignment.
+"": 243, 11: Error       Expression type not compatible with target of assignment.
+"": 244, 11: Error       Expression type not compatible with target of assignment.
+"": 245, 11: Error       Expression type not compatible with target of assignment.
+"": 246, 11: Error       Expression type not compatible with target of assignment.
+"": 247, 11: Error       Expression type not compatible with target of assignment.
+"": 248, 13: Error       Expression type not compatible with target of assignment.
+"": 249, 13: Error       Expression type not compatible with target of assignment.
+"": 250, 13: Error       Expression type not compatible with target of assignment.
+"": 252, 13: Error       Expression type not compatible with target of assignment.
+"": 254, 13: Error       Invalid operand type in Read operation.
+"": 256, 14: Error       Invalid operand type in Print operation.
+"": 257, 14: Error       Invalid operand type in Print operation.
+"": 258, 14: Error       Invalid operand type in Print operation.
+"": 259, 14: Error       Invalid operand type in Print operation.
+"": 265, 22: Error       Method: duplicate symbol declaration.
+"": 276, 14: Error       Method missing return statement.
+"": 281, 14: Error       Method missing return statement.
+"": 288, 14: Error       Method missing return statement.
+"": 302, 14: Error       Method missing return statement.
+"": 330,  5: Error       Missing expression in return statement.
+"": 337, 12: Error       Expression type incompatible with method's return type.
+"": 338, 12: Error       Expression type incompatible with method's return type.
+"": 339, 12: Error       Expression type incompatible with method's return type.
+"": 340, 12: Error       Expression type incompatible with method's return type.
+

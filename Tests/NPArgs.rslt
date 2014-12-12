@@ -1,0 +1,95 @@
+*** static int a, b; ***
+*** static float e, f; ***
+
+i_echo( 1 + 2 ) = 3
+i_echo( 11 - 34 ) = -23
+i_echo( 10 * 8 ) = 80
+i_echo( 80 / 10 ) = 8
+i_echo( 82 % 10 ) = 2
+f_echo( 1.0f + 2.0f ) = 3.0
+f_echo( 11.0f - 32.0f ) = -21.0
+f_echo( 10.0f * 8.0f ) = 80.0
+f_echo( 80.0f / 10.0f ) = 8.0
+f_echo( 82.0f % 10.0f ) = 2.0
+a = 1; b = 2;
+i_echo( a + b ) = 3
+a = 11; b = 34;
+i_echo( a - b ) = -23
+a = 10; b = 8;
+i_echo( a * b ) = 80
+a = 80; b = 10;
+i_echo( a / b ) = 8
+a = 83; b = 10;
+i_echo( a % b ) = 3
+e = 1; f = 2;
+f_echo( e + f ) = 3.0
+e = 11; f = 34;
+f_echo( e - f ) = -23.0
+e = 10; f = 8;
+f_echo( e * f ) = 80.0
+e = 80; f = 10;
+f_echo( e / f ) = 8.0
+e = 83; f = 10;
+f_echo( e % f ) = 3.0
+e = 1.0f; f = 2.0f;
+f_echo( e + f ) = 3.0
+e = 11.0f; f = 34.0f;
+f_echo( e - f ) = -23.0
+e = 10.0f; f = 8.0f;
+f_echo( e * f ) = 80.0
+e = 80.0f; f = 10.0f;
+f_echo( e / f ) = 8.0
+e = 83.0f; f = 10.0f;
+f_echo( e % f ) = 3.0
+a = 4;
+i_echo( - a ) ) = -4
+e = 4.0f;
+f_echo( - e ) ) = -4.0
+
+*** int a; ***
+*** float e; ***
+
+a = 1; b = 2;
+i_echo( a + b ) = 3
+a = 11; b = 34;
+i_echo( a - b ) = -23
+a = 10; b = 8;
+i_echo( a * b ) = 80
+a = 80; b = 10;
+i_echo( a / b ) = 8
+a = 83; b = 10;
+i_echo( a % b ) = 3
+e = 1; f = 2;
+f_echo( e + f ) = 3.0
+e = 11; f = 34;
+f_echo( e - f ) = -23.0
+e = 10; f = 8;
+f_echo( e * f ) = 80.0
+e = 80; f = 10;
+f_echo( e / f ) = 8.0
+e = 83; f = 10;
+f_echo( e % f ) = 3.0
+
+*** int[][][] b; b = new int[1][1][1]; ***
+*** float[][][] f; f = new float[1][1][1]; ***
+
+a = 1; b[0][0][0] = 2;
+i_echo( a + b[0][0][0] ) = 3
+a = 11; b[0][0][0] = 34;
+i_echo( a - b[0][0][0] ) = -23
+a = 10; b[0][0][0] = 8;
+i_echo( a * b[0][0][0] ) = 80
+a = 80; b[0][0][0] = 10;
+i_echo( a / b[0][0][0] ) = 8
+a = 83; b[0][0][0] = 10;
+i_echo( a % b[0][0][0] ) = 3
+e = 1; f[0][0][0] = 2;
+f_echo( e + f[0][0][0] ) = 3.0
+e = 11; f[0][0][0] = 34;
+f_echo( e - f[0][0][0] ) = -23.0
+e = 10; f[0][0][0] = 8;
+f_echo( e * f[0][0][0] ) = 80.0
+e = 80; f[0][0][0] = 10;
+f_echo( e / f[0][0][0] ) = 8.0
+e = 83; f[0][0][0] = 10;
+f_echo( e % f[0][0][0] ) = 3.0

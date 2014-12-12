@@ -1,0 +1,12 @@
+read( i ); => > 1
+read( e ); => > 2.0
+read( b ); => > true
+read( sfi ); => > 3
+read( sfe ); => > 4.0
+read( sfb ); => > true
+read( i1d[0] ); => > 5
+read( e1d[0] ); => > 6.0
+read( b1d[0] ); => > true
+read( sfi2d[0][0] ); => > 7
+read( sfe2d[0][0] ); => > 8.0
+read( sfb2d[0][0] ); => > false
