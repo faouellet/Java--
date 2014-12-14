@@ -10,12 +10,22 @@
 #undef YY_DECL
 #define YY_DECL int javamm::Lexer::yylex()
 
+#include "parser.tab.h"
+
 namespace javamm {
 
 class Lexer : public yyFlexLexer {
 public:
+  Lexer(std::istream *In) : yyFlexLexer(In), yyval(nullptr){};
+
+  int yylex(Parser::semantic_type *Val) {
+    yyval = Val;
+    return yylex();
+  }
+
 private:
   int yylex();
+  Parser::semantic_type *yyval;
 };
 
 } // End namespace javamm
