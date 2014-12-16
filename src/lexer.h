@@ -8,7 +8,7 @@
 
 // Taking over
 #undef YY_DECL
-#define YY_DECL int Lexer::yylex()
+#define YY_DECL int javamm::Lexer::yylex()
 
 #include "parser.hpp"
 

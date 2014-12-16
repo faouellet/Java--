@@ -18,6 +18,8 @@
 %parse-param    { javamm::Lexer &Lex }
 
 %code {
+  #include "lexer.h"
+
   static int yylex(javamm::Parser::semantic_type *yyval, javamm::Lexer &Lex);
 }
 
