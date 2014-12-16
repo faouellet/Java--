@@ -12,7 +12,7 @@ typedef javamm::Parser::token token;
 %option c++
 %option noyywrap
 %option default
-%option yyclass="Lexer"
+%option yyclass="javamm::Lexer"
 
 %%
 

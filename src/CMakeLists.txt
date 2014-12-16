@@ -6,7 +6,7 @@ find_package(BISON)
 find_package(FLEX)
 
 BISON_TARGET(parser
-    ${CMAKE_CURRENT_SOURCE_DIR}/parser.yy
+    ${CMAKE_CURRENT_SOURCE_DIR}/parser.y
     ${CMAKE_CURRENT_SOURCE_DIR}/parser.cpp)
 
 FLEX_TARGET(lexer

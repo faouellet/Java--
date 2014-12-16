@@ -6,18 +6,20 @@
 %define api.namespace { javamm }
 
 %code requires {
+  #include "node.h"
+
   namespace javamm
   {
     class Lexer;
   }
 }
 
-%lex-param      { Lexer &Lex }
-%parse-param    { Lexer &Lex }
+%lex-param      { javamm::Lexer &Lex }
+%parse-param    { javamm::Lexer &Lex }
 
-%locations
-%define parse.trace
-%define parse.error verbose
+%code {
+  static int yylex(javamm::Parser::semantic_type *yyval, javamm::Lexer &Lex);
+}
 
 /* yyval */
 %union {
@@ -38,6 +40,8 @@
     $$ = nullptr;
   }
 } <Str> <ENode> <PNode> <FNode> <Names> <Nodes>
+
+%define api.token.prefix {}
 
 /* Tokens (terminal symbols) declarations */
 %token          END             0
@@ -61,10 +65,10 @@
 %token  <Op>    SUBTRACT        "-"
 
 /* Non terminal symbols declarations */
-%type   <ENode>  external expression 
+%type   <ENode>  expression 
 %type   <ENode>  binaryexpr callexpr identifierexpr numberexpr parenexpr
 %type   <FNode>  definition
-%type   <PNode>  prototype
+%type   <PNode>  external prototype
 %type   <Names>  argsnames
 %type   <Nodes>  callargs
 
@@ -99,7 +103,7 @@ binaryexpr : expression "=" expression { $$ = new BinaryExprNode($2, $1, $3); }
  | expression "-" expression { $$ = new BinaryExprNode($2, $1, $3); }
  ;
 
-callexpr : IDENTIFIER "(" callargs ")" { $$ = new CallExprNode($1, $3); }
+callexpr : IDENTIFIER "(" callargs ")" { $$ = new CallExprNode(*$1, *$3); }
  ;
 
 callargs : { $$ = new std::vector<ExprNode *>(); }
@@ -107,7 +111,7 @@ callargs : { $$ = new std::vector<ExprNode *>(); }
  | expression { $$ = new std::vector<ExprNode *>(); $$->push_back($1); }
  ;
 
-identifierexpr : IDENTIFIER { $$ = new VariableExprNode($1); }
+identifierexpr : IDENTIFIER { $$ = new VariableExprNode(*$1); }
  ;
 
 numberexpr : NUMBER { $$ = new NumberExprNode($1); }
@@ -126,12 +130,16 @@ prototype : IDENTIFIER "(" argsnames ")" { $$ = new PrototypeNode(*$1, *$3); }
  ;
 
 argsnames : { $$ = new std::vector<std::string>(); }
- | argsnames "," IDENTIFIER { $$ = $1; $$->push_back($3); }
- | IDENTIFIER { $$ = new std::vector<std::string>(); $$->push_back($1); }
+ | argsnames "," IDENTIFIER { $$ = $1; $$->push_back(*$3); }
+ | IDENTIFIER { $$ = new std::vector<std::string>(); $$->push_back(*$1); }
  ;
 
 %%
 /*** Code section ***/
+static int yylex(javamm::Parser::semantic_type *yyval, javamm::Lexer &Lex) {
+  return Lex.yylex(yyval);
+}
+
 void javamm::Parser::error(const std::string &Err) {
   std::cerr << "Error: " << Err << std::endl;
 }

@@ -8,9 +8,9 @@
 
 // Taking over
 #undef YY_DECL
-#define YY_DECL int javamm::Lexer::yylex()
+#define YY_DECL int Lexer::yylex()
 
-#include "parser.tab.h"
+#include "parser.hpp"
 
 namespace javamm {
 
@@ -18,7 +18,7 @@ class Lexer : public yyFlexLexer {
 public:
   Lexer(std::istream *In) : yyFlexLexer(In), yyval(nullptr){};
 
-  int yylex(Parser::semantic_type *Val) {
+  int yylex(javamm::Parser::semantic_type *Val) {
     yyval = Val;
     return yylex();
   }

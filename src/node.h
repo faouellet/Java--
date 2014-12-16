@@ -1,5 +1,5 @@
-#ifndef NODE_H
-#define NODE_H
+#ifndef JAVAMM_NODE_H
+#define JAVAMM_NODE_H
 
 #include <string>
 #include <vector>
@@ -30,7 +30,7 @@ private:
 // Expression class for a binary operator
 class BinaryExprNode : public ExprNode {
 public:
-  BinaryExprNode(char, ExprNode, ExprNode) {}
+  BinaryExprNode(char, ExprNode *, ExprNode *) {}
 };
 
 // Expression class for function calls
@@ -61,10 +61,10 @@ private:
 // Class representing a function definition
 class FunctionNode {
 public:
-  FunctionNode(PrototypeNode, ExprNode) {}
+  FunctionNode(PrototypeNode *, ExprNode *) {}
 };
 
 } // End namespace javamm
 
-#endif // NODE_H
+#endif // JAVAMM_NODE_H
 
