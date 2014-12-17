@@ -22,7 +22,8 @@ public:
   CodeGenerator()
       : TheModule{std::make_unique<llvm::Module>("javamm Module",
                                                  llvm::getGlobalContext())},
-        TheBuilder{std::make_unique<llvm::IRBuilder<>>(TheModule)} {}
+        TheBuilder{
+            std::make_unique<llvm::IRBuilder<>>(TheModule->getContext())} {}
 
 public: // Core language generation
   llvm::Value *genConstant(double Val);

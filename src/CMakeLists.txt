@@ -21,6 +21,16 @@ add_library(frontend
     ${BISON_parser_OUTPUTS}
     ${FLEX_lexer_OUTPUTS})
 
+find_package(LLVM)
+if( NOT LLVM_FOUND )
+    message(FATAL_ERROR "LLVM package can't be found. Set CMAKE_PREFIX_PATH variable to LLVM's installation prefix.")
+endif()
+
+include_directories( src ${LLVM_INCLUDE_DIRS} )
+link_directories( ${LLVM_LIBRARY_DIRS} )
+
+llvm_map_components_to_libnames(REQ_LLVM_LIBRARIES native)
+
 add_executable(java-- ${SOURCES})
 
-target_link_libraries(java-- frontend)
+target_link_libraries(java-- frontend ${REQ_LLVM_LIBRARIES})

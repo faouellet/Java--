@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-set(CMAKE_CXX_FLAGS "-std=c++11")
+set(CMAKE_CXX_FLAGS "-std=c++14")
 
 add_definitions(${CMAKE_CXX_FLAGS} -D__STDC_CONSTANT_MACROS)
 add_definitions(${CMAKE_CXX_FLAGS} -D__STDC_FORMAT_MACROS)
@@ -11,16 +11,7 @@ add_definitions(${CMAKE_CXX_FLAGS} -fvisibility-inlines-hidden)
 
 project(java--)
 
-find_package(LLVM)
-if( NOT LLVM_FOUND )
-    message(FATAL_ERROR "LLVM package can't be found. Set CMAKE_PREFIX_PATH variable to LLVM's installation prefix.")
-endif()
-
-include_directories( src ${LLVM_INCLUDE_DIRS} )
-link_directories( ${LLVM_LIBRARY_DIRS} )
-
 set(CMAKE_BUILD_TYPE Debug)
-llvm_map_components_to_libnames(REQ_LLVM_LIBRARIES native)
 
 add_subdirectory(src)
 

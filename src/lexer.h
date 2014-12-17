@@ -14,6 +14,7 @@
 
 namespace javamm {
 
+/// Lexer - TODO
 class Lexer : public yyFlexLexer {
 public:
   Lexer(std::istream *In) : yyFlexLexer(In), yyval(nullptr){};
