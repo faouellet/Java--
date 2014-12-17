@@ -6,7 +6,7 @@
 %define api.namespace { javamm }
 
 %code requires {
-  #include "node.h"
+  #include "driver.h"
 
   namespace javamm
   {
@@ -16,6 +16,7 @@
 
 %lex-param      { javamm::Lexer &Lex }
 %parse-param    { javamm::Lexer &Lex }
+%parse-param    { javamm::Driver &Drive }
 
 %code {
   #include "lexer.h"
@@ -84,16 +85,19 @@
 
 %%
 /*** Rules section ***/
-top : definition 
- | external 
- | expression 
+top : definition END { Drive.setRoot($1); }
+ | external END { Drive.setRoot($1); }
+ | expression END { 
+                    PrototypeNode *Proto = new PrototypeNode("", std::vector<std::string>()); 
+                    Drive.setRoot(new FunctionNode(Proto, $1));
+                  }
  ;
 
-expression : binaryexpr END
- | callexpr END
- | identifierexpr END
- | numberexpr END
- | parenexpr END
+expression : binaryexpr 
+ | callexpr 
+ | identifierexpr 
+ | numberexpr
+ | parenexpr 
  ;
 
 binaryexpr : expression "=" expression { $$ = new BinaryExprNode($2, $1, $3); }

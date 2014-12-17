@@ -25,14 +25,18 @@ public:
         TheBuilder{
             std::make_unique<llvm::IRBuilder<>>(TheModule->getContext())} {}
 
+public: // Output functions
+  void dumpIR();
+  // void dumpAsm();
+
 public: // Core language generation
   llvm::Value *genConstant(double Val);
   llvm::Value *genVariable(const std::string &Val);
   llvm::Value *genBinOp(char Op, llvm::Value *LHS, llvm::Value *RHS);
   llvm::Value *genCall(const std::string &FuncName,
                        const std::vector<llvm::Value *> Args);
-  llvm::Value *genPrototype(const std::string &FuncName,
-                            const std::vector<llvm::Type *> Args);
+  llvm::Function *genPrototype(const std::string &FuncName,
+                            const std::vector<std::string> Args);
   llvm::Value *genFunction(llvm::Function *F, llvm::Value *Body);
 
 //public: // Control flow generation

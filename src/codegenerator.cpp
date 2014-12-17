@@ -11,6 +11,12 @@ using namespace javamm;
 using namespace llvm;
 
 //===----------------------------------------------------------------------===//
+// Implementation of the output functions
+//
+
+void CodeGenerator::dumpIR() { TheModule->dump(); }
+
+//===----------------------------------------------------------------------===//
 // Implementation of the core language code generation
 //
 
@@ -56,19 +62,31 @@ Value *CodeGenerator::genCall(const std::string &FuncName,
   return TheBuilder->CreateCall(F, Args);
 }
 
-Value *CodeGenerator::genPrototype(const std::string &FuncName,
-                                   const std::vector<Type *> Args) {
-  FunctionType *FT =
-      FunctionType::get(Type::getVoidTy(TheBuilder->getContext()), Args, false);
-  Function *F =
-      Function::Create(FT, Function::ExternalLinkage, FuncName, TheModule.get());
+Function *CodeGenerator::genPrototype(const std::string &FuncName,
+                                   const std::vector<std::string> Args) {
+  FunctionType *FT = FunctionType::get(
+      Type::getDoubleTy(TheBuilder->getContext()),
+      std::vector<Type *>(Args.size(),
+                          Type::getDoubleTy(TheBuilder->getContext())),
+      false);
+  Function *F = Function::Create(FT, Function::ExternalLinkage, FuncName,
+                                 TheModule.get());
+
+  unsigned Index = 0;
+  for (auto ArgIt = F->arg_begin(), ArgEnd = F->arg_end(); ArgIt != ArgEnd;
+       ++ArgIt) {
+    ArgIt->setName(Args[Index]);
+    SymbolTable[Args[Index++]] = ArgIt;
+  }
 
   return F;
 }
 
 Value *CodeGenerator::genFunction(Function *F, Value *Body) {
-  if (F == nullptr)
+  if (F == nullptr || Body == nullptr)
     return nullptr;
+
+  SymbolTable.clear();
 
   BasicBlock *BB = BasicBlock::Create(TheBuilder->getContext(), "entry", F);
   TheBuilder->SetInsertPoint(BB);

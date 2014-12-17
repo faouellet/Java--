@@ -8,11 +8,17 @@
 
 namespace javamm {
 
+// Base class for all nodes in the AST
+class ASTNode {
+public:
+  virtual ~ASTNode() {}
+  virtual llvm::Value *codegen(CodeGenerator *) = 0;
+};
+
 // Base class for all expression nodes
-class ExprNode {
+class ExprNode : public ASTNode {
 public:
   virtual ~ExprNode() {}
-  // virtual llvm::Value *codegen(CodeGenerator *) = 0;
 };
 
 // Expression class for numeric literal like "1.0"
@@ -20,7 +26,7 @@ class NumberExprNode : public ExprNode {
 public:
   NumberExprNode(double Num) : Val{Num} {}
   virtual ~NumberExprNode() {}
-  // virtual llvm::Value *codegen(CodeGenerator *CodeGen) override;
+  virtual llvm::Value *codegen(CodeGenerator *CodeGen) override;
 
 private:
   double Val;
@@ -31,7 +37,7 @@ class VariableExprNode : public ExprNode {
 public:
   VariableExprNode(const std::string &Val) : Name{Val} {}
   virtual ~VariableExprNode() {}
-  // virtual llvm::Value *codegen(CodeGenerator *CodeGen) override;
+  virtual llvm::Value *codegen(CodeGenerator *CodeGen) override;
 
 private:
   std::string Name;
@@ -40,9 +46,15 @@ private:
 // Expression class for a binary operator
 class BinaryExprNode : public ExprNode {
 public:
-  BinaryExprNode(char, ExprNode *, ExprNode *) {}
+  BinaryExprNode(char Op, ExprNode *LHS, ExprNode *RHS)
+      : Operator{Op}, LHSNode{LHS}, RHSNode{RHS} {}
   virtual ~BinaryExprNode() {}
-  // virtual llvm::Value *codegen(CodeGenerator *CodeGen) override;
+  virtual llvm::Value *codegen(CodeGenerator *CodeGen) override;
+
+private:
+  char Operator;
+  ExprNode *LHSNode;
+  ExprNode *RHSNode;
 };
 
 // Expression class for function calls
@@ -52,7 +64,7 @@ public:
                const std::vector<ExprNode *> Arguments)
       : Callee{FuncName}, Args{Arguments} {}
   virtual ~CallExprNode() {}
-  // virtual llvm::Value *codegen(CodeGenerator *CodeGen) override;
+  virtual llvm::Value *codegen(CodeGenerator *CodeGen) override;
 
 private:
   std::string Callee;
@@ -62,11 +74,11 @@ private:
 // Class representing a function prototype. It has the knowledge of the function
 // name, the name of its arguments and, implicitly, the number of arguments the
 // function has.
-class PrototypeNode {
+class PrototypeNode : public ASTNode {
 public:
   PrototypeNode(const std::string &Name, const std::vector<std::string> &Args)
       : FuncName{Name}, ArgsNames{Args} {}
-  // llvm::Value *codegen(CodeGenerator *CodeGen);
+  llvm::Function *codegen(CodeGenerator *CodeGen) override;
 
 private:
   std::string FuncName;
@@ -74,10 +86,15 @@ private:
 };
 
 // Class representing a function definition
-class FunctionNode {
+class FunctionNode : public ASTNode {
 public:
-  FunctionNode(PrototypeNode *, ExprNode *) {}
-  // llvm::Value *codegen(CodeGenerator *CodeGen);
+  FunctionNode(PrototypeNode *FuncProto, ExprNode *FuncBody)
+      : Prototype{FuncProto}, Body{FuncBody} {}
+  llvm::Value *codegen(CodeGenerator *CodeGen) override;
+
+private:
+  PrototypeNode *Prototype;
+  ExprNode *Body;
 };
 
 } // End namespace javamm

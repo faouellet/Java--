@@ -1,20 +1,25 @@
+#include "driver.h"
+#include "lexer.h"
 #include "parser.hpp"
 
-#include "llvm/IR/Function.h"
-#include "llvm/IR/Instructions.h"
-#include "llvm/IR/IRBuilder.h"
-#include "llvm/IR/Module.h"
-
 #include <fstream>
-#include <iostream>
 
-int main(int argc, char **argv) {
-  if (argc < 2) {
-    std::cerr << "Incorrect number of arguments" << std::endl;
-    std::cerr << "Usage: javamm <filename>" << std::endl;
-    return 1;
+using namespace javamm;
+
+void Driver::compile(const std::string &Filename, bool ToAsm) {
+  std::ifstream FileStream(Filename);
+  if (!FileStream.is_open())
+    return;
+
+  Lexer TheLexer(&FileStream);
+  Parser TheParser(TheLexer, *this);
+
+  TheParser.parse();
+
+  if (ASTRoot) {
+    ASTRoot->codegen(Generator.get());
+    if (!ToAsm)
+      Generator->dumpIR();
   }
-
-  std::cout << "Hello world" << std::endl;
 }
 

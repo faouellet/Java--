@@ -26,6 +26,8 @@ public:
 
 private:
   int yylex();
+
+private:
   Parser::semantic_type *yyval;
 };
 
