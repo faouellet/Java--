@@ -6,13 +6,23 @@
 #include "llvm/IR/Function.h"
 #include "llvm/IR/Type.h"
 #include "llvm/IR/Value.h"
+#include "llvm/IR/Verifier.h"
+
+#include "llvm/Support/Debug.h"
 
 using namespace javamm;
 using namespace llvm;
 
 //===----------------------------------------------------------------------===//
-// Implementation of the output functions
+// Implementation of the utilitie functions
 //
+
+void CodeGenerator::clearSymbolTable() { SymbolTable.clear(); }
+
+void CodeGenerator::createEntryBasicBlock(Function *F) {
+  BasicBlock *BB = BasicBlock::Create(TheBuilder->getContext(), "entry", F);
+  TheBuilder->SetInsertPoint(BB);
+}
 
 void CodeGenerator::dumpIR() { TheModule->dump(); }
 
@@ -86,12 +96,9 @@ Value *CodeGenerator::genFunction(Function *F, Value *Body) {
   if (F == nullptr || Body == nullptr)
     return nullptr;
 
-  SymbolTable.clear();
-
-  BasicBlock *BB = BasicBlock::Create(TheBuilder->getContext(), "entry", F);
-  TheBuilder->SetInsertPoint(BB);
   TheBuilder->CreateRet(Body);
 
+  verifyFunction(*F);
   return F;
 }
 

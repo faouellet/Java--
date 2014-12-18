@@ -25,7 +25,10 @@ public:
         TheBuilder{
             std::make_unique<llvm::IRBuilder<>>(TheModule->getContext())} {}
 
-public: // Output functions
+public: // Utilities functions
+  void clearSymbolTable();
+  void createEntryBasicBlock(llvm::Function *F);
+
   void dumpIR();
   // void dumpAsm();
 

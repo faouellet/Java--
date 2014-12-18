@@ -31,7 +31,9 @@ Function *PrototypeNode::codegen(CodeGenerator *CodeGen) {
 }
 
 Value *FunctionNode::codegen(CodeGenerator *CodeGen) {
+  CodeGen->clearSymbolTable();
   Function *FuncProto = Prototype->codegen(CodeGen);
+  CodeGen->createEntryBasicBlock(FuncProto);
   Value *FuncBody = Body->codegen(CodeGen);
 
   return CodeGen->genFunction(FuncProto, FuncBody);
