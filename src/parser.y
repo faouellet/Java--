@@ -93,12 +93,12 @@
 
 %%
 /*** Rules section ***/
-top : definition END { Drive.setRoot($1); }
- | external END { Drive.setRoot($1); }
- | expression END { 
-                    PrototypeNode *Proto = new PrototypeNode("", std::vector<std::string>()); 
-                    Drive.setRoot(new FunctionNode(Proto, $1));
-                  }
+top : definition STATEMENT_END { Drive.setRoot($1); }
+ | external STATEMENT_END { Drive.setRoot($1); }
+ | expression STATEMENT_END { 
+                PrototypeNode *Proto = new PrototypeNode("", std::vector<std::string>()); 
+                Drive.setRoot(new FunctionNode(Proto, $1));
+              }
  ;
 
 expression : binaryexpr 
