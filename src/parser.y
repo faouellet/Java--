@@ -58,7 +58,9 @@
 %token          ELSE            "else"
 
 %token          COMMA           ","
+%token          CLOSE_BRACE     "}"
 %token          CLOSE_PAREN     ")"
+%token          OPEN_BRACE      "{"
 %token          OPEN_PAREN      "("
 %token          STATEMENT_END   ";"
 
@@ -93,7 +95,7 @@
 
 %%
 /*** Rules section ***/
-top : definition STATEMENT_END { Drive.setRoot($1); }
+top : definition { Drive.setRoot($1); }
  | external STATEMENT_END { Drive.setRoot($1); }
  | expression STATEMENT_END { 
                 PrototypeNode *Proto = new PrototypeNode("", std::vector<std::string>()); 
@@ -129,7 +131,9 @@ callargs : { $$ = new std::vector<ExprNode *>(); }
 identifierexpr : IDENTIFIER { $$ = new VariableExprNode(*$1); }
  ;
 
-ifexpr : IF expression THEN expression ELSE expression { $$ = new IfNode($2, $4, $6); }
+ifexpr : IF OPEN_PAREN expression CLOSE_PAREN 
+         THEN OPEN_BRACE expression CLOSE_BRACE 
+         ELSE OPEN_BRACE expression CLOSE_BRACE { $$ = new IfNode($3, $7, $11); }
 
 numberexpr : NUMBER { $$ = new NumberExprNode($1); }
  ;
@@ -137,7 +141,7 @@ numberexpr : NUMBER { $$ = new NumberExprNode($1); }
 parenexpr : OPEN_PAREN expression CLOSE_PAREN { $$ = $2; }
  ;
 
-definition : DEF prototype expression { $$ = new FunctionNode($2, $3); }
+definition : DEF prototype OPEN_BRACE expression CLOSE_BRACE { $$ = new FunctionNode($2, $4); }
  ;
 
 external : EXTERN prototype { $$ = $2; }

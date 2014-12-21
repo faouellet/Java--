@@ -23,7 +23,9 @@ typedef javamm::Parser::token token;
 "else"                  { return token::ELSE; }
 
 ","                     { return token::COMMA; }
+"}"                     { return token::CLOSE_BRACE; }
 ")"                     { return token::CLOSE_PAREN; }
+"{"                     { return token::OPEN_BRACE; }
 "("                     { return token::OPEN_PAREN; }
 ";"                     { return token::STATEMENT_END; }
 
