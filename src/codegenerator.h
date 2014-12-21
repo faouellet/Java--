@@ -10,11 +10,13 @@
 #include <unordered_map>
 
 namespace llvm {
-  class Function;
   class Value;
 }
 
 namespace javamm {
+
+class ExprNode;
+class PrototypeNode;
 
 /// CodeGenerator - TODO
 class CodeGenerator {
@@ -23,27 +25,23 @@ public:
       : TheModule{std::make_unique<llvm::Module>("javamm Module",
                                                  llvm::getGlobalContext())},
         TheBuilder{
-            std::make_unique<llvm::IRBuilder<>>(TheModule->getContext())} {}
+            std::make_unique<llvm::IRBuilder<>>(TheModule->getContext())}, CurrenVal{nullptr} {}
 
-public: // Utilities functions
-  void clearSymbolTable();
-  void createEntryBasicBlock(llvm::Function *F);
-
+public: // Utilities function 
   void dumpIR();
   // void dumpAsm();
 
 public: // Core language generation
-  llvm::Value *genConstant(double Val);
-  llvm::Value *genVariable(const std::string &Val);
-  llvm::Value *genBinOp(char Op, llvm::Value *LHS, llvm::Value *RHS);
-  llvm::Value *genCall(const std::string &FuncName,
-                       const std::vector<llvm::Value *> Args);
-  llvm::Function *genPrototype(const std::string &FuncName,
-                            const std::vector<std::string> Args);
-  llvm::Value *genFunction(llvm::Function *F, llvm::Value *Body);
+  void genConstant(double Val);
+  void genVariable(const std::string &Val);
+  void genBinOp(char Op, ExprNode *LHS, ExprNode *RHS);
+  void genCall(const std::string &FuncName, const std::vector<ExprNode *> Args);
+  void genPrototype(const std::string &FuncName,
+                    const std::vector<std::string> Args);
+  void genFunction(PrototypeNode *Prototype, ExprNode *Body);
 
-//public: // Control flow generation
-//  llvm::Value *genIf();
+public: // Control flow generation
+  void genIf(ExprNode *Cond, ExprNode *Then, ExprNode *Else);
 //  llvm::Value *genFor();
 //  llvm::Value *genWhile();
 
@@ -51,6 +49,7 @@ private:
   std::unordered_map<std::string, llvm::Value *> SymbolTable;
   std::unique_ptr<llvm::Module> TheModule;
   std::unique_ptr<llvm::IRBuilder<>> TheBuilder;
+  llvm::Value *CurrenVal;
 };
 
 } // End namespace javamm

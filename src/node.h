@@ -1,18 +1,18 @@
 #ifndef JAVAMM_NODE_H
 #define JAVAMM_NODE_H
 
-#include "codegenerator.h"
-
 #include <string>
 #include <vector>
 
 namespace javamm {
 
+class CodeGenerator;
+
 // Base class for all nodes in the AST
 class ASTNode {
 public:
   virtual ~ASTNode() {}
-  virtual llvm::Value *codegen(CodeGenerator *) = 0;
+  virtual void codegen(CodeGenerator *) = 0;
 };
 
 // Base class for all expression nodes
@@ -26,7 +26,7 @@ class NumberExprNode : public ExprNode {
 public:
   NumberExprNode(double Num) : Val{Num} {}
   virtual ~NumberExprNode() {}
-  virtual llvm::Value *codegen(CodeGenerator *CodeGen) override;
+  void codegen(CodeGenerator *CodeGen) override;
 
 private:
   double Val;
@@ -37,7 +37,7 @@ class VariableExprNode : public ExprNode {
 public:
   VariableExprNode(const std::string &Val) : Name{Val} {}
   virtual ~VariableExprNode() {}
-  virtual llvm::Value *codegen(CodeGenerator *CodeGen) override;
+  void codegen(CodeGenerator *CodeGen) override;
 
 private:
   std::string Name;
@@ -49,7 +49,7 @@ public:
   BinaryExprNode(char Op, ExprNode *LHS, ExprNode *RHS)
       : Operator{Op}, LHSNode{LHS}, RHSNode{RHS} {}
   virtual ~BinaryExprNode() {}
-  virtual llvm::Value *codegen(CodeGenerator *CodeGen) override;
+  void codegen(CodeGenerator *CodeGen) override;
 
 private:
   char Operator;
@@ -64,11 +64,25 @@ public:
                const std::vector<ExprNode *> Arguments)
       : Callee{FuncName}, Args{Arguments} {}
   virtual ~CallExprNode() {}
-  virtual llvm::Value *codegen(CodeGenerator *CodeGen) override;
+  void codegen(CodeGenerator *CodeGen) override;
 
 private:
   std::string Callee;
   std::vector<ExprNode *> Args;
+};
+
+// Expression class for if/then/else 
+class IfNode : public ExprNode {
+public:
+  IfNode(ExprNode *CondNode, ExprNode *ThenNode, ExprNode *ElseNode)
+      : Cond{CondNode}, Then{ThenNode}, Else{ElseNode} {}
+  virtual ~IfNode() {}
+  void codegen(CodeGenerator *CodeGen) override;
+
+private:
+  ExprNode *Cond;
+  ExprNode *Then;
+  ExprNode *Else;
 };
 
 // Class representing a function prototype. It has the knowledge of the function
@@ -78,7 +92,7 @@ class PrototypeNode : public ASTNode {
 public:
   PrototypeNode(const std::string &Name, const std::vector<std::string> &Args)
       : FuncName{Name}, ArgsNames{Args} {}
-  llvm::Function *codegen(CodeGenerator *CodeGen) override;
+  void codegen(CodeGenerator *CodeGen) override;
 
 private:
   std::string FuncName;
@@ -90,7 +104,7 @@ class FunctionNode : public ASTNode {
 public:
   FunctionNode(PrototypeNode *FuncProto, ExprNode *FuncBody)
       : Prototype{FuncProto}, Body{FuncBody} {}
-  llvm::Value *codegen(CodeGenerator *CodeGen) override;
+  void codegen(CodeGenerator *CodeGen) override;
 
 private:
   PrototypeNode *Prototype;

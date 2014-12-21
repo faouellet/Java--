@@ -53,6 +53,9 @@
 %token          END             0
 %token          DEF             "def"
 %token          EXTERN          "extern"
+%token          IF              "if"
+%token          THEN            "then"
+%token          ELSE            "else"
 
 %token          COMMA           ","
 %token          CLOSE_PAREN     ")"
@@ -72,7 +75,7 @@
 
 /* Non terminal symbols declarations */
 %type   <ENode>  expression 
-%type   <ENode>  binaryexpr callexpr identifierexpr numberexpr parenexpr
+%type   <ENode>  binaryexpr callexpr identifierexpr ifexpr numberexpr parenexpr
 %type   <FNode>  definition
 %type   <PNode>  external prototype
 %type   <Names>  argsnames
@@ -84,7 +87,9 @@
 %left "+" "-"
 %left "/" "*"
 
-%start top
+%left "else" "then";
+
+%start top;
 
 %%
 /*** Rules section ***/
@@ -99,20 +104,21 @@ top : definition END { Drive.setRoot($1); }
 expression : binaryexpr 
  | callexpr 
  | identifierexpr 
+ | ifexpr
  | numberexpr
  | parenexpr 
  ;
 
-binaryexpr : expression "=" expression { $$ = new BinaryExprNode($2, $1, $3); }
- | expression "+" expression { $$ = new BinaryExprNode($2, $1, $3); }
- | expression "/" expression { $$ = new BinaryExprNode($2, $1, $3); }
- | expression ">" expression { $$ = new BinaryExprNode($2, $1, $3); }
- | expression "<" expression { $$ = new BinaryExprNode($2, $1, $3); }
- | expression "*" expression { $$ = new BinaryExprNode($2, $1, $3); }
- | expression "-" expression { $$ = new BinaryExprNode($2, $1, $3); }
+binaryexpr : expression ASSIGNMENT expression { $$ = new BinaryExprNode($2, $1, $3); }
+ | expression ADD       expression { $$ = new BinaryExprNode($2, $1, $3); }
+ | expression DIVIDE    expression { $$ = new BinaryExprNode($2, $1, $3); }
+ | expression GREATER   expression { $$ = new BinaryExprNode($2, $1, $3); }
+ | expression LESS      expression { $$ = new BinaryExprNode($2, $1, $3); }
+ | expression MULTIPLY  expression { $$ = new BinaryExprNode($2, $1, $3); }
+ | expression SUBTRACT  expression { $$ = new BinaryExprNode($2, $1, $3); }
  ;
 
-callexpr : IDENTIFIER "(" callargs ")" { $$ = new CallExprNode(*$1, *$3); }
+callexpr : IDENTIFIER OPEN_PAREN callargs CLOSE_PAREN { $$ = new CallExprNode(*$1, *$3); }
  ;
 
 callargs : { $$ = new std::vector<ExprNode *>(); }
@@ -123,19 +129,21 @@ callargs : { $$ = new std::vector<ExprNode *>(); }
 identifierexpr : IDENTIFIER { $$ = new VariableExprNode(*$1); }
  ;
 
+ifexpr : IF expression THEN expression ELSE expression { $$ = new IfNode($2, $4, $6); }
+
 numberexpr : NUMBER { $$ = new NumberExprNode($1); }
  ;
 
-parenexpr : "(" expression ")" { $$ = $2; }
+parenexpr : OPEN_PAREN expression CLOSE_PAREN { $$ = $2; }
  ;
 
-definition : "def" prototype expression { $$ = new FunctionNode($2, $3); }
+definition : DEF prototype expression { $$ = new FunctionNode($2, $3); }
  ;
 
-external : "extern" prototype { $$ = $2; }
+external : EXTERN prototype { $$ = $2; }
  ;
 
-prototype : IDENTIFIER "(" argsnames ")" { $$ = new PrototypeNode(*$1, *$3); }
+prototype : IDENTIFIER OPEN_PAREN argsnames CLOSE_PAREN { $$ = new PrototypeNode(*$1, *$3); }
  ;
 
 argsnames : { $$ = new std::vector<std::string>(); }

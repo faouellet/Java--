@@ -18,6 +18,9 @@ typedef javamm::Parser::token token;
 
 "def"                   { return token::DEF; }
 "extern"                { return token::EXTERN; }
+"if"                    { return token::IF; }
+"then"                  { return token::THEN; }
+"else"                  { return token::ELSE; }
 
 ","                     { return token::COMMA; }
 ")"                     { return token::CLOSE_PAREN; }

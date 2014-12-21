@@ -1,6 +1,7 @@
 #ifndef JAVAMM_DRIVER_H
 #define JAVAMM_DRIVER_H
 
+#include "codegenerator.h"
 #include "node.h"
 
 #include <memory>
