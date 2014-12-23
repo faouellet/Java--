@@ -133,7 +133,6 @@ void CodeGenerator::genFunction(PrototypeNode *Prototype, ExprNode *Body) {
 
   Body->codegen(this);
   if (CurrenVal != nullptr) {
-    outs() << "NIGGA\n";
     TheBuilder->CreateRet(CurrenVal);
 
     verifyFunction(*F);

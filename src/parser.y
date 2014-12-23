@@ -91,11 +91,18 @@
 
 %left "else" "then";
 
-%start top;
+%start program;
 
 %%
 /*** Rules section ***/
-top : definition { Drive.setRoot($1); }
+program : statements
+ ;
+
+statements : statement
+ | statements statement
+ ;
+
+statement : definition { Drive.setRoot($1); }
  | external STATEMENT_END { Drive.setRoot($1); }
  | expression STATEMENT_END { 
                 PrototypeNode *Proto = new PrototypeNode("", std::vector<std::string>()); 
@@ -120,7 +127,7 @@ binaryexpr : expression ASSIGNMENT expression { $$ = new BinaryExprNode($2, $1, 
  | expression SUBTRACT  expression { $$ = new BinaryExprNode($2, $1, $3); }
  ;
 
-callexpr : IDENTIFIER OPEN_PAREN callargs CLOSE_PAREN { $$ = new CallExprNode(*$1, *$3); }
+callexpr : IDENTIFIER OPEN_PAREN callargs CLOSE_PAREN { $$ = new CallExprNode(*$1, *$3); delete $3; }
  ;
 
 callargs : { $$ = new std::vector<ExprNode *>(); }
@@ -147,7 +154,7 @@ definition : DEF prototype OPEN_BRACE expression CLOSE_BRACE { $$ = new Function
 external : EXTERN prototype { $$ = $2; }
  ;
 
-prototype : IDENTIFIER OPEN_PAREN argsnames CLOSE_PAREN { $$ = new PrototypeNode(*$1, *$3); }
+prototype : IDENTIFIER OPEN_PAREN argsnames CLOSE_PAREN { $$ = new PrototypeNode(*$1, *$3); delete $3; }
  ;
 
 argsnames : { $$ = new std::vector<std::string>(); }

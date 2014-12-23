@@ -1,6 +1,14 @@
 cmake_minimum_required(VERSION 2.8)
 
-file(GLOB SOURCES *.cpp)
+#file(GLOB SOURCES *.cpp)
+
+set(SOURCES 
+    astprinter.cpp
+    codegenerator.cpp
+    driver.cpp
+    main.cpp
+    node.cpp
+   )
 
 find_package(BISON)
 find_package(FLEX)

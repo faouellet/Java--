@@ -6,13 +6,15 @@
 
 namespace javamm {
 
+class ASTPrinter;
 class CodeGenerator;
 
 // Base class for all nodes in the AST
 class ASTNode {
 public:
   virtual ~ASTNode() {}
-  virtual void codegen(CodeGenerator *) = 0;
+  virtual void codegen(CodeGenerator *) const = 0;
+  virtual void print(const ASTPrinter *, unsigned) const = 0;
 };
 
 // Base class for all expression nodes
@@ -26,7 +28,8 @@ class NumberExprNode : public ExprNode {
 public:
   NumberExprNode(double Num) : Val{Num} {}
   virtual ~NumberExprNode() {}
-  void codegen(CodeGenerator *CodeGen) override;
+  void codegen(CodeGenerator *CodeGen) const override;
+  void print(const ASTPrinter *Printer, unsigned Depth) const override;
 
 private:
   double Val;
@@ -37,7 +40,8 @@ class VariableExprNode : public ExprNode {
 public:
   VariableExprNode(const std::string &Val) : Name{Val} {}
   virtual ~VariableExprNode() {}
-  void codegen(CodeGenerator *CodeGen) override;
+  void codegen(CodeGenerator *CodeGen) const override;
+  void print(const ASTPrinter *Printer, unsigned Depth) const override;
 
 private:
   std::string Name;
@@ -49,7 +53,8 @@ public:
   BinaryExprNode(char Op, ExprNode *LHS, ExprNode *RHS)
       : Operator{Op}, LHSNode{LHS}, RHSNode{RHS} {}
   virtual ~BinaryExprNode() {}
-  void codegen(CodeGenerator *CodeGen) override;
+  void codegen(CodeGenerator *CodeGen) const override;
+  void print(const ASTPrinter *Printer, unsigned Depth) const override;
 
 private:
   char Operator;
@@ -64,20 +69,22 @@ public:
                const std::vector<ExprNode *> Arguments)
       : Callee{FuncName}, Args{Arguments} {}
   virtual ~CallExprNode() {}
-  void codegen(CodeGenerator *CodeGen) override;
+  void codegen(CodeGenerator *CodeGen) const override;
+  void print(const ASTPrinter *Printer, unsigned Depth) const override;
 
 private:
   std::string Callee;
   std::vector<ExprNode *> Args;
 };
 
-// Expression class for if/then/else 
+// Expression class for if/then/else
 class IfNode : public ExprNode {
 public:
   IfNode(ExprNode *CondNode, ExprNode *ThenNode, ExprNode *ElseNode)
       : Cond{CondNode}, Then{ThenNode}, Else{ElseNode} {}
   virtual ~IfNode() {}
-  void codegen(CodeGenerator *CodeGen) override;
+  void codegen(CodeGenerator *CodeGen) const override;
+  void print(const ASTPrinter *Printer, unsigned Depth) const override;
 
 private:
   ExprNode *Cond;
@@ -92,7 +99,8 @@ class PrototypeNode : public ASTNode {
 public:
   PrototypeNode(const std::string &Name, const std::vector<std::string> &Args)
       : FuncName{Name}, ArgsNames{Args} {}
-  void codegen(CodeGenerator *CodeGen) override;
+  void codegen(CodeGenerator *CodeGen) const override;
+  void print(const ASTPrinter *Printer, unsigned Depth) const override;
 
 private:
   std::string FuncName;
@@ -104,7 +112,8 @@ class FunctionNode : public ASTNode {
 public:
   FunctionNode(PrototypeNode *FuncProto, ExprNode *FuncBody)
       : Prototype{FuncProto}, Body{FuncBody} {}
-  void codegen(CodeGenerator *CodeGen) override;
+  void codegen(CodeGenerator *CodeGen) const override;
+  void print(const ASTPrinter *Printer, unsigned Depth) const override;
 
 private:
   PrototypeNode *Prototype;

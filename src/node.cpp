@@ -1,35 +1,65 @@
 #include "node.h"
+
+#include "astprinter.h"
 #include "codegenerator.h"
 
 using namespace javamm;
 using llvm::Function;
 using llvm::Value;
 
-void NumberExprNode::codegen(CodeGenerator *CodeGen) {
+void NumberExprNode::codegen(CodeGenerator *CodeGen) const {
   CodeGen->genConstant(Val);
 }
 
-void VariableExprNode::codegen(CodeGenerator *CodeGen) {
+void NumberExprNode::print(const ASTPrinter *Printer, unsigned Depth) const {
+  Printer->printConstant(Val, Depth);
+}
+
+void VariableExprNode::codegen(CodeGenerator *CodeGen) const {
   CodeGen->genVariable(Name);
 }
 
-void BinaryExprNode::codegen(CodeGenerator *CodeGen) {
+void VariableExprNode::print(const ASTPrinter *Printer, unsigned Depth) const {
+  Printer->printVariable(Name, Depth);
+}
+
+void BinaryExprNode::codegen(CodeGenerator *CodeGen) const {
   CodeGen->genBinOp(Operator, LHSNode, RHSNode);
 }
 
-void CallExprNode::codegen(CodeGenerator *CodeGen) {
+void BinaryExprNode::print(const ASTPrinter *Printer, unsigned Depth) const {
+  Printer->printBinOp(Operator, LHSNode, RHSNode, Depth);
+}
+
+void CallExprNode::codegen(CodeGenerator *CodeGen) const {
   CodeGen->genCall(Callee, Args);
 }
 
-void IfNode::codegen(CodeGenerator *CodeGen) {
-  CodeGen->genIf(Cond, Then, Else); 
+void CallExprNode::print(const ASTPrinter *Printer, unsigned Depth) const {
+  Printer->printCall(Callee, Args, Depth);
 }
 
-void PrototypeNode::codegen(CodeGenerator *CodeGen) {
+void IfNode::codegen(CodeGenerator *CodeGen) const {
+  CodeGen->genIf(Cond, Then, Else);
+}
+
+void IfNode::print(const ASTPrinter *Printer, unsigned Depth) const {
+  Printer->printIf(Cond, Then, Else, Depth);
+}
+
+void PrototypeNode::codegen(CodeGenerator *CodeGen) const {
   CodeGen->genPrototype(FuncName, ArgsNames);
 }
 
-void FunctionNode::codegen(CodeGenerator *CodeGen) {
+void PrototypeNode::print(const ASTPrinter *Printer, unsigned Depth) const {
+  Printer->printPrototype(FuncName, ArgsNames, Depth);
+}
+
+void FunctionNode::codegen(CodeGenerator *CodeGen) const {
   CodeGen->genFunction(Prototype, Body);
+}
+
+void FunctionNode::print(const ASTPrinter *Printer, unsigned Depth) const {
+  Printer->printFunction(Prototype, Body, Depth);
 }
 

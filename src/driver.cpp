@@ -17,9 +17,10 @@ void Driver::compile(const std::string &Filename, bool ToAsm) {
   TheParser.parse();
 
   if (ASTRoot) {
-    ASTRoot->codegen(Generator.get());
-    if (!ToAsm)
-      Generator->dumpIR();
+    ASTRoot->print(Printer.get(), 0);
+    //ASTRoot->codegen(Generator.get());
+    //if (!ToAsm)
+    //  Generator->dumpIR();
   }
 }
 

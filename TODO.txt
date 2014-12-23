@@ -2,6 +2,8 @@
 - Add disclaimer / copyright stuff
 - Errors formatting and reporting
 - Remove possibility of using the keywords const and goto
+- Make AST printer use Graphviz
+- Organize everything
 
 - DOXYGEN DOCUMENTATION
 - INSTALL NOTES
