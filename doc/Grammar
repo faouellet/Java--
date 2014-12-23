@@ -1,0 +1,70 @@
+CompilationUnit ::= TypeDecls
+
+TypeDecls ::= 
+          | TypeDecls TypeDecl
+          | TypeDecl
+          ;
+
+TypeDecl ::= Mods 'class' IDENTIFIER '{' ClassBodyDecls '}' ';'
+
+Mods ::= 
+     | Mods Mod
+     | Mod
+     ;
+
+Mod ::= 'public'
+    | 'static'
+    ;
+
+ClassBodyDecls ::= 
+               | ClassBodyDecls ClassBodyDecl
+               | ClassBodyDecl
+               ; 
+
+ClassBodyDecl ::= FieldDecl
+              | MethodDecl
+              ;
+
+FieldDecl ::= Mods Type FieldElements ';'
+
+MethodDecl ::= Mods Prototype Block
+
+Type ::= PrimitiveType
+     | ArrayType
+     ;
+
+PrimitiveType ::= 'int'
+              | 'float'
+              | 'boolean'
+              ;
+
+ArrayType ::= Type '[' ']'
+
+FieldElements ::= IDENTIFIER
+              | FieldElements ',' IDENTIFIER
+              ;
+
+Prototype ::= 'void' IDENTIFIER Parameters
+          | Type IDENTIFIER Parameters
+          ;
+
+Parameters ::= '(' ')'
+           | '(' ParameterDecls ')'
+           ;
+
+ParameterDecls ::= Type IDENTIFIER
+               | ParameterDecls ',' Type IDENTIFIER
+               ;
+
+Block ::= '{' BlockStmts '}'
+
+BlockStmts ::= BlockStmt
+           | BlockStmts BlockStmt
+           ;
+
+BlockStmt ::= LocalVarDecl ';'
+          | Block
+          | 
+          ;
+
+
