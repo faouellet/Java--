@@ -83,3 +83,18 @@ void ASTPrinter::printIf(ExprNode *Cond, ExprNode *Then, ExprNode *Else,
   Else->print(this, Depth + FILL_WIDTH);
 }
 
+void ASTPrinter::printFor(const std::string &VarName, ExprNode *Begin,
+                          ExprNode *End, ExprNode *Step, ExprNode *Body,
+                          unsigned Depth) const {
+
+  std::cout << std::setfill(FILL_CHAR) << std::setw(Depth)
+            << "For: " << std::endl;
+  std::cout << std::setfill(FILL_CHAR) << std::setw(Depth)
+            << "Induction Variable: " << VarName << std::endl;
+
+  Begin->print(this, Depth + FILL_WIDTH);
+  End->print(this, Depth + FILL_WIDTH);
+  Step->print(this, Depth + FILL_WIDTH);
+  Body->print(this, Depth + FILL_WIDTH);
+}
+

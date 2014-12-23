@@ -77,6 +77,25 @@ private:
   std::vector<ExprNode *> Args;
 };
 
+// Expression class for for loop
+class ForNode : public ExprNode {
+public:
+  ForNode(const std::string &VarName, ExprNode *Begin, ExprNode *End,
+          ExprNode *Step, ExprNode *Body)
+      : InductionVariableName{VarName}, BeginNode{Begin}, EndNode{End},
+        StepNode{Step}, BodyNode{Body} {}
+  virtual ~ForNode() {}
+  void codegen(CodeGenerator *CodeGen) const override;
+  void print(const ASTPrinter *Printer, unsigned Depth) const override;
+
+private:
+  std::string InductionVariableName;
+  ExprNode *BeginNode;
+  ExprNode *EndNode;
+  ExprNode *StepNode;
+  ExprNode *BodyNode;
+};
+
 // Expression class for if/then/else
 class IfNode : public ExprNode {
 public:

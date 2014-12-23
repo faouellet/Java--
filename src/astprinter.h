@@ -6,7 +6,6 @@
 
 namespace javamm {
 
-class ASTNode;
 class ExprNode;
 class PrototypeNode;
 
@@ -26,6 +25,8 @@ public: // Core language nodes printing
 public: // Control flow nodes printing
   void printIf(ExprNode *Cond, ExprNode *Then, ExprNode *Else,
                unsigned Depth) const;
+  void printFor(const std::string &VarName, ExprNode *Begin, ExprNode *End,
+                ExprNode *Step, ExprNode *Body, unsigned Depth) const;
 
 private:
   const char FILL_CHAR = ' ';

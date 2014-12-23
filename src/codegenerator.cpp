@@ -197,11 +197,63 @@ void CodeGenerator::genIf(ExprNode *Cond, ExprNode *Then, ExprNode *Else) {
   PN->addIncoming(ElseVal, ElseBB);
 }
 
-//Value *CodeGenerator::genFor() {
-//  return nullptr;
-//}
-//
-//Value *CodeGenerator::genWhile() {
-//  return nullptr;
-//}
+void CodeGenerator::genFor(const std::string &VarName, ExprNode *Begin,
+                           ExprNode *End, ExprNode *Step, ExprNode *Body) {
+  assert(Begin != nullptr && "For: begin block is null");
+  assert(End != nullptr && "For: end block is null");
+  assert(Step != nullptr && "For: step block is null");
+
+  Begin->codegen(this);
+  if (CurrenVal == nullptr)
+    return;
+  Value *BeginVal = CurrenVal;
+
+  Function *F = TheBuilder->GetInsertBlock()->getParent();
+  BasicBlock *PreheaderBB = TheBuilder->GetInsertBlock();
+  BasicBlock *HeaderBB = BasicBlock::Create(TheBuilder->getContext(), "", F);
+
+  TheBuilder->CreateBr(HeaderBB);
+
+  TheBuilder->SetInsertPoint(HeaderBB);
+
+  PHINode *InductionVariable = TheBuilder->CreatePHI(
+      Type::getDoubleTy(TheBuilder->getContext()), 2, VarName);
+  InductionVariable->addIncoming(BeginVal, PreheaderBB);
+
+  Value *OldVal = SymbolTable[VarName];
+  SymbolTable[VarName] = BeginVal;
+
+  Body->codegen(this);
+  if (CurrenVal == nullptr)
+    return;
+
+  Step->codegen(this);
+  if (CurrenVal == nullptr)
+    return;
+  Value *StepVal = CurrenVal;
+
+  Value *NextVar = TheBuilder->CreateFAdd(InductionVariable, StepVal);
+
+  End->codegen(this);
+  if (CurrenVal == nullptr)
+    return;
+  Value *EndVal = CurrenVal;
+
+  //EndVal = TheBuilder->CreateFCmpONE(
+  //    EndVal, ConstantFP::get(TheBuilder->getContext(), APFloat(0.0)));
+
+  BasicBlock *EndBB = TheBuilder->GetInsertBlock();
+  BasicBlock *AfterBB = BasicBlock::Create(TheBuilder->getContext(), "", F);
+
+  TheBuilder->CreateCondBr(EndVal, HeaderBB, AfterBB);
+
+  TheBuilder->SetInsertPoint(AfterBB);
+
+  InductionVariable->addIncoming(NextVar, EndBB);
+
+  if (OldVal != nullptr)
+    SymbolTable[VarName] = OldVal;
+  else
+    SymbolTable.erase(VarName);
+}
 

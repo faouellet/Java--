@@ -53,6 +53,7 @@
 %token          END             0
 %token          DEF             "def"
 %token          EXTERN          "extern"
+%token          FOR             "for"
 %token          IF              "if"
 %token          THEN            "then"
 %token          ELSE            "else"
@@ -77,7 +78,7 @@
 
 /* Non terminal symbols declarations */
 %type   <ENode>  expression 
-%type   <ENode>  binaryexpr callexpr identifierexpr ifexpr numberexpr parenexpr
+%type   <ENode>  binaryexpr callexpr forexpr identifierexpr ifexpr numberexpr parenexpr
 %type   <FNode>  definition
 %type   <PNode>  external prototype
 %type   <Names>  argsnames
@@ -105,6 +106,7 @@ program : definition { Drive.setRoot($1); }
 
 expression : binaryexpr 
  | callexpr 
+ | forexpr
  | identifierexpr 
  | ifexpr
  | numberexpr
@@ -126,6 +128,10 @@ callexpr : IDENTIFIER OPEN_PAREN callargs CLOSE_PAREN { $$ = new CallExprNode(*$
 callargs : { $$ = new std::vector<ExprNode *>(); }
  | callargs COMMA expression { $$ = $1; $$->push_back($3); }
  | expression { $$ = new std::vector<ExprNode *>(); $$->push_back($1); }
+ ;
+
+forexpr : FOR OPEN_PAREN IDENTIFIER ASSIGNMENT expression STATEMENT_END expression STATEMENT_END expression CLOSE_PAREN expression
+        { $$ = new ForNode(*$3, $5, $7, $9, $11); }
  ;
 
 identifierexpr : IDENTIFIER { $$ = new VariableExprNode(*$1); }

@@ -39,6 +39,16 @@ void CallExprNode::print(const ASTPrinter *Printer, unsigned Depth) const {
   Printer->printCall(Callee, Args, Depth);
 }
 
+void ForNode::codegen(CodeGenerator *CodeGen) const {
+  CodeGen->genFor(InductionVariableName, BeginNode, EndNode, StepNode,
+                  BodyNode);
+}
+
+void ForNode::print(const ASTPrinter *Printer, unsigned Depth) const {
+  Printer->printFor(InductionVariableName, BeginNode, EndNode, StepNode,
+                    BodyNode, Depth);
+}
+
 void IfNode::codegen(CodeGenerator *CodeGen) const {
   CodeGen->genIf(Cond, Then, Else);
 }

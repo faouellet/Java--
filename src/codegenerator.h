@@ -15,7 +15,6 @@ namespace llvm {
 
 namespace javamm {
 
-class ASTNode;
 class ExprNode;
 class PrototypeNode;
 
@@ -43,8 +42,8 @@ public: // Core language generation
 
 public: // Control flow generation
   void genIf(ExprNode *Cond, ExprNode *Then, ExprNode *Else);
-//  llvm::Value *genFor();
-//  llvm::Value *genWhile();
+  void genFor(const std::string &VarName, ExprNode *Begin, ExprNode *End,
+              ExprNode *Step, ExprNode *Body);
 
 private:
   std::unordered_map<std::string, llvm::Value *> SymbolTable;
