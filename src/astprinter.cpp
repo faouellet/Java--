@@ -28,8 +28,8 @@ void ASTPrinter::printBinOp(char Op, ExprNode *LHS, ExprNode *RHS, unsigned Dept
   std::cout << std::setfill(FILL_CHAR) << std::setw(Depth) << "BinOp: " << Op
             << std::endl;
 
-  LHS->print(this, Depth+2);
-  RHS->print(this, Depth+2);
+  LHS->print(this, Depth + FILL_WIDTH);
+  RHS->print(this, Depth + FILL_WIDTH);
 }
 
 void ASTPrinter::printCall(const std::string &FuncName,
@@ -39,7 +39,7 @@ void ASTPrinter::printCall(const std::string &FuncName,
             << "Call: " << FuncName << std::endl;
 
   for (auto &&EN : Args)
-    EN->print(this, Depth + 2);
+    EN->print(this, Depth + FILL_WIDTH);
 }
 
 void ASTPrinter::printPrototype(const std::string &FuncName,
@@ -49,7 +49,7 @@ void ASTPrinter::printPrototype(const std::string &FuncName,
             << "Prototype: " << FuncName << std::endl;
 
   for (auto &&Arg : Args)
-    std::cout << std::setfill(FILL_CHAR) << std::setw(Depth + 2)
+    std::cout << std::setfill(FILL_CHAR) << std::setw(Depth + FILL_WIDTH)
               << "Arg: " << Arg << std::endl;
 }
 
@@ -61,8 +61,8 @@ void ASTPrinter::printFunction(PrototypeNode *Prototype, ExprNode *Body,
   std::cout << std::setfill(FILL_CHAR) << std::setw(Depth)
             << "Function: " << std::endl;
 
-  Prototype->print(this, Depth + 2);
-  Body->print(this, Depth + 2);
+  Prototype->print(this, Depth + FILL_WIDTH);
+  Body->print(this, Depth + FILL_WIDTH);
 }
 
 //===----------------------------------------------------------------------===//
@@ -78,8 +78,8 @@ void ASTPrinter::printIf(ExprNode *Cond, ExprNode *Then, ExprNode *Else,
   std::cout << std::setfill(FILL_CHAR) << std::setw(Depth)
             << "If: " << std::endl;
 
-  Cond->print(this, Depth + 2);
-  Then->print(this, Depth + 2);
-  Else->print(this, Depth + 2);
+  Cond->print(this, Depth + FILL_WIDTH);
+  Then->print(this, Depth + FILL_WIDTH);
+  Else->print(this, Depth + FILL_WIDTH);
 }
 

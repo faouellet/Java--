@@ -36,7 +36,7 @@
   PrototypeNode *PNode;
   FunctionNode *FNode;
   std::vector<std::string> *Names;
-  std::vector<ExprNode *> *Nodes;
+  std::vector<ExprNode *> *ENodes;
 }
 
 /* Clean up routine */
@@ -45,7 +45,7 @@
     delete $$;
     $$ = nullptr;
   }
-} <Str> <ENode> <PNode> <FNode> <Names> <Nodes>
+} <Str> <ENode> <PNode> <FNode> <Names> <ENodes> 
 
 %define api.token.prefix {}
 
@@ -81,7 +81,7 @@
 %type   <FNode>  definition
 %type   <PNode>  external prototype
 %type   <Names>  argsnames
-%type   <Nodes>  callargs
+%type   <ENodes> callargs
 
 /* Operator precedence */
 %left "="
@@ -95,14 +95,7 @@
 
 %%
 /*** Rules section ***/
-program : statements
- ;
-
-statements : statement
- | statements statement
- ;
-
-statement : definition { Drive.setRoot($1); }
+program : definition { Drive.setRoot($1); }
  | external STATEMENT_END { Drive.setRoot($1); }
  | expression STATEMENT_END { 
                 PrototypeNode *Proto = new PrototypeNode("", std::vector<std::string>()); 

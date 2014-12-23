@@ -15,6 +15,7 @@ namespace llvm {
 
 namespace javamm {
 
+class ASTNode;
 class ExprNode;
 class PrototypeNode;
 

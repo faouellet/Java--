@@ -6,6 +6,7 @@
 
 namespace javamm {
 
+class ASTNode;
 class ExprNode;
 class PrototypeNode;
 
@@ -28,6 +29,7 @@ public: // Control flow nodes printing
 
 private:
   const char FILL_CHAR = ' ';
+  const char FILL_WIDTH = 4;
 };
 
 } // End namespace javamm

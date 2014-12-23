@@ -14,7 +14,7 @@ class Driver {
 public:
   Driver()
       : Printer{std::make_unique<ASTPrinter>()},
-        Generator{std::make_unique<CodeGenerator>()} {}
+        Generator{std::make_unique<CodeGenerator>()}, ASTRoot(nullptr) {}
 
   void compile(const std::string &Filename, bool ToAsm);
 
