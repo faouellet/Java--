@@ -23,6 +23,20 @@ public:
   virtual ~ExprNode() {}
 };
 
+// Expression class for variable declaration
+class DeclNode : public ExprNode {
+public:
+  DeclNode(const std::string &Variable, ExprNode *DeclBody)
+      : VarName{Variable}, Body{DeclBody} {}
+  virtual ~DeclNode() {}
+  void codegen(CodeGenerator *CodeGen) const override;
+  void print(const ASTPrinter *Printer, unsigned Depth) const override;
+
+private:
+  std::string VarName;
+  ExprNode *Body;
+};
+
 // Expression class for numeric literal like "1.0"
 class NumberExprNode : public ExprNode {
 public:
@@ -42,6 +56,7 @@ public:
   virtual ~VariableExprNode() {}
   void codegen(CodeGenerator *CodeGen) const override;
   void print(const ASTPrinter *Printer, unsigned Depth) const override;
+  const std::string &getName() const { return Name; }
 
 private:
   std::string Name;
@@ -120,6 +135,7 @@ public:
       : FuncName{Name}, ArgsNames{Args} {}
   void codegen(CodeGenerator *CodeGen) const override;
   void print(const ASTPrinter *Printer, unsigned Depth) const override;
+  const std::vector<std::string> &getArgsNames() const { return ArgsNames; }
 
 private:
   std::string FuncName;

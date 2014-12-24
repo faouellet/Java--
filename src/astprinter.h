@@ -12,6 +12,7 @@ class PrototypeNode;
 class ASTPrinter {
 public: // Core language nodes printing
   void printConstant(double Val, unsigned Depth) const;
+  void printDecl(const std::string &Var, ExprNode *Body, unsigned Depth) const;
   void printVariable(const std::string &Val, unsigned Depth) const;
   void printBinOp(char Op, ExprNode *LHS, ExprNode *RHS, unsigned Depth) const;
   void printCall(const std::string &FuncName,

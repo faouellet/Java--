@@ -16,6 +16,15 @@ void ASTPrinter::printConstant(double Val, unsigned Depth) const {
             << std::endl;
 }
 
+void ASTPrinter::printDecl(const std::string &Var, ExprNode *Body,
+                           unsigned Depth) const {
+  assert(Body != nullptr && "Decl: body is null");
+  std::cout << std::setfill(FILL_CHAR) << std::setw(Depth) << "Decl: " << Var
+            << std::endl;
+
+  Body->print(this, Depth + 2);
+}
+
 void ASTPrinter::printVariable(const std::string &Val, unsigned Depth) const {
   std::cout << std::setfill(FILL_CHAR) << std::setw(Depth) << "Variable: " << Val
             << std::endl;

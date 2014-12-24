@@ -5,6 +5,7 @@
 #include "llvm/IR/BasicBlock.h"
 #include "llvm/IR/Constants.h"
 #include "llvm/IR/Function.h"
+#include "llvm/IR/Instructions.h"
 #include "llvm/IR/Type.h"
 #include "llvm/IR/Value.h"
 #include "llvm/IR/Verifier.h"
@@ -17,10 +18,27 @@ using namespace javamm;
 using namespace llvm;
 
 //===----------------------------------------------------------------------===//
-// Implementation of the core language code generation
+// Implementation of the utilities functions
 //
 
 void CodeGenerator::dumpIR() { TheModule->dump(); }
+
+AllocaInst *CodeGenerator::createEntryBlockAlloca(Function *F,
+                                           const std::string &VarName) {
+  TheBuilder->SetInsertPoint(F->getEntryBlock().begin());
+  return TheBuilder->CreateAlloca(Type::getDoubleTy(TheBuilder->getContext()), 0,
+                           VarName);
+}
+
+void CodeGenerator::createArgumentAllocas(
+    Function *F, const std::vector<std::string> &VarNames) {
+  auto ArgIt = F->begin();
+  for (unsigned i = 0, e = F->arg_size(); i != e; ++i, ++ArgIt) {
+    AllocaInst *AllocaVal = createEntryBlockAlloca(F, VarNames[i]);
+    TheBuilder->CreateStore(ArgIt, AllocaVal);
+    SymbolTable[VarNames[i]] = AllocaVal;
+  }
+}
 
 //===----------------------------------------------------------------------===//
 // Implementation of the core language code generation
@@ -30,13 +48,49 @@ void CodeGenerator::genConstant(double Val) {
   CurrenVal = ConstantFP::get(TheBuilder->getContext(), APFloat(Val));
 }
 
+void CodeGenerator::genDecl(const std::string &Var,
+                            ExprNode *Body) {
+  assert(Body != nullptr && "Decl: body is null");
+
+  Function *F = TheBuilder->GetInsertBlock()->getParent();
+
+  Body->codegen(this);
+  if (CurrenVal == nullptr)
+    return;
+  Value *BodyVal = CurrenVal;
+
+  AllocaInst *AllocaVal = createEntryBlockAlloca(F, Var);
+  TheBuilder->CreateStore(BodyVal, AllocaVal);
+}
+
 void CodeGenerator::genVariable(const std::string &Val) {
-  CurrenVal = SymbolTable[Val];
+  Value *V = SymbolTable[Val];
+  // TODO: What if V == nullptr?
+  CurrenVal = TheBuilder->CreateLoad(V, Val);
 }
 
 void CodeGenerator::genBinOp(char Op, ExprNode *LHS, ExprNode *RHS) {
   assert(RHS != nullptr && "BinOp: rhs operand null");
   assert(LHS != nullptr && "BinOp: lhs operand null");
+
+  // An assignment is a special case where we don't want to generate the LHS
+  if (Op == '=') {
+    VariableExprNode *VarNode = dynamic_cast<VariableExprNode *>(LHS);
+    if (VarNode == nullptr)
+      return;
+
+    RHS->codegen(this);
+    if (CurrenVal == nullptr)
+      return;
+    Value *RHSVal = CurrenVal;
+
+    Value *Var = SymbolTable[VarNode->getName()];
+    if (Var == nullptr)
+      return;
+
+    TheBuilder->CreateStore(RHSVal, Var);
+    CurrenVal = RHSVal;
+  }
 
   LHS->codegen(this);
   if (CurrenVal == nullptr)
@@ -112,7 +166,6 @@ void CodeGenerator::genPrototype(const std::string &FuncName,
   for (auto ArgIt = F->arg_begin(), ArgEnd = F->arg_end(); ArgIt != ArgEnd;
        ++ArgIt) {
     ArgIt->setName(Args[Index]);
-    SymbolTable[Args[Index++]] = ArgIt;
   }
 
   CurrenVal = F;
@@ -122,6 +175,8 @@ void CodeGenerator::genFunction(PrototypeNode *Prototype, ExprNode *Body) {
   assert(Prototype != nullptr && "Function: prototype null");
   assert(Body != nullptr && "Function: body null");
 
+  SymbolTable.clear();
+
   Prototype->codegen(this);
   if (CurrenVal == nullptr)
     return;
@@ -130,6 +185,8 @@ void CodeGenerator::genFunction(PrototypeNode *Prototype, ExprNode *Body) {
 
   BasicBlock *BB = BasicBlock::Create(TheBuilder->getContext(), "entry", F);
   TheBuilder->SetInsertPoint(BB);
+
+  createArgumentAllocas(F, Prototype->getArgsNames());
 
   Body->codegen(this);
   if (CurrenVal != nullptr) {
@@ -203,25 +260,24 @@ void CodeGenerator::genFor(const std::string &VarName, ExprNode *Begin,
   assert(End != nullptr && "For: end block is null");
   assert(Step != nullptr && "For: step block is null");
 
+  Function *F = TheBuilder->GetInsertBlock()->getParent();
+  AllocaInst *AllocaVal = createEntryBlockAlloca(F, VarName);
+
   Begin->codegen(this);
   if (CurrenVal == nullptr)
     return;
   Value *BeginVal = CurrenVal;
 
-  Function *F = TheBuilder->GetInsertBlock()->getParent();
-  BasicBlock *PreheaderBB = TheBuilder->GetInsertBlock();
+  TheBuilder->CreateStore(BeginVal, AllocaVal);
+
   BasicBlock *HeaderBB = BasicBlock::Create(TheBuilder->getContext(), "", F);
 
   TheBuilder->CreateBr(HeaderBB);
 
   TheBuilder->SetInsertPoint(HeaderBB);
 
-  PHINode *InductionVariable = TheBuilder->CreatePHI(
-      Type::getDoubleTy(TheBuilder->getContext()), 2, VarName);
-  InductionVariable->addIncoming(BeginVal, PreheaderBB);
-
-  Value *OldVal = SymbolTable[VarName];
-  SymbolTable[VarName] = BeginVal;
+  AllocaInst *OldVal = SymbolTable[VarName];
+  SymbolTable[VarName] = AllocaVal;
 
   Body->codegen(this);
   if (CurrenVal == nullptr)
@@ -232,28 +288,30 @@ void CodeGenerator::genFor(const std::string &VarName, ExprNode *Begin,
     return;
   Value *StepVal = CurrenVal;
 
-  Value *NextVar = TheBuilder->CreateFAdd(InductionVariable, StepVal);
-
   End->codegen(this);
   if (CurrenVal == nullptr)
     return;
   Value *EndVal = CurrenVal;
 
-  //EndVal = TheBuilder->CreateFCmpONE(
-  //    EndVal, ConstantFP::get(TheBuilder->getContext(), APFloat(0.0)));
+  Value *CurVar = TheBuilder->CreateLoad(AllocaVal, VarName);
+  Value *NextVar = TheBuilder->CreateFAdd(CurVar, StepVal);
+  TheBuilder->CreateStore(NextVar, AllocaVal);
 
-  BasicBlock *EndBB = TheBuilder->GetInsertBlock();
+  EndVal = TheBuilder->CreateFCmpONE(
+      EndVal, ConstantFP::get(TheBuilder->getContext(), APFloat(0.0)));
+
   BasicBlock *AfterBB = BasicBlock::Create(TheBuilder->getContext(), "", F);
 
   TheBuilder->CreateCondBr(EndVal, HeaderBB, AfterBB);
 
   TheBuilder->SetInsertPoint(AfterBB);
 
-  InductionVariable->addIncoming(NextVar, EndBB);
-
   if (OldVal != nullptr)
     SymbolTable[VarName] = OldVal;
   else
     SymbolTable.erase(VarName);
+
+  CurrenVal =
+      Constant::getNullValue(Type::getDoubleTy(TheBuilder->getContext()));
 }
 

@@ -52,6 +52,7 @@
 /* Tokens (terminal symbols) declarations */
 %token          END             0
 %token          DEF             "def"
+%token          VAR             "var"
 %token          EXTERN          "extern"
 %token          FOR             "for"
 %token          IF              "if"
@@ -77,6 +78,7 @@
 %token  <Op>    SUBTRACT        "-"
 
 /* Non terminal symbols declarations */
+%type   <ENode>  decl
 %type   <ENode>  expression 
 %type   <ENode>  binaryexpr callexpr forexpr identifierexpr ifexpr numberexpr parenexpr
 %type   <FNode>  definition
@@ -104,7 +106,8 @@ program : definition { Drive.setRoot($1); }
               }
  ;
 
-expression : binaryexpr 
+expression : decl
+ | binaryexpr 
  | callexpr 
  | forexpr
  | identifierexpr 
@@ -112,6 +115,8 @@ expression : binaryexpr
  | numberexpr
  | parenexpr 
  ;
+
+decl : VAR IDENTIFIER ASSIGNMENT expression STATEMENT_END { $$ = new DeclNode(*$2, $4); }
 
 binaryexpr : expression ASSIGNMENT expression { $$ = new BinaryExprNode($2, $1, $3); }
  | expression ADD       expression { $$ = new BinaryExprNode($2, $1, $3); }

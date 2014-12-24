@@ -10,7 +10,8 @@
 #include <unordered_map>
 
 namespace llvm {
-  class Value;
+  class AllocaInst;
+  class Function;
 }
 
 namespace javamm {
@@ -33,6 +34,7 @@ public: // Utilities function
 
 public: // Core language generation
   void genConstant(double Val);
+  void genDecl(const std::string &Var, ExprNode *Body);
   void genVariable(const std::string &Val);
   void genBinOp(char Op, ExprNode *LHS, ExprNode *RHS);
   void genCall(const std::string &FuncName, const std::vector<ExprNode *> Args);
@@ -46,7 +48,12 @@ public: // Control flow generation
               ExprNode *Step, ExprNode *Body);
 
 private:
-  std::unordered_map<std::string, llvm::Value *> SymbolTable;
+  llvm::AllocaInst *createEntryBlockAlloca(llvm::Function *F,
+                                           const std::string &VarName);
+  void createArgumentAllocas(llvm::Function *F, const std::vector<std::string> &VarNames);
+
+private:
+  std::unordered_map<std::string, llvm::AllocaInst*> SymbolTable;
   std::unique_ptr<llvm::Module> TheModule;
   std::unique_ptr<llvm::IRBuilder<>> TheBuilder;
   llvm::Value *CurrenVal;

@@ -7,6 +7,14 @@ using namespace javamm;
 using llvm::Function;
 using llvm::Value;
 
+void DeclNode::codegen(CodeGenerator *CodeGen) const {
+  CodeGen->genDecl(VarName, Body);
+}
+
+void DeclNode::print(const ASTPrinter *Printer, unsigned Depth) const {
+  Printer->printDecl(VarName, Body, Depth);
+}
+
 void NumberExprNode::codegen(CodeGenerator *CodeGen) const {
   CodeGen->genConstant(Val);
 }
