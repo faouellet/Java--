@@ -1,3 +1,10 @@
+//===---------- codegenerator.h - Code generator class definition ---------===//
+/// \file
+///
+/// This file contains the logic to generate LLVM IR from an AST.
+///
+//===----------------------------------------------------------------------===//
+
 #ifndef JAVAMM_CODE_GENERATOR_H
 #define JAVAMM_CODE_GENERATOR_H
 
@@ -19,7 +26,9 @@ namespace javamm {
 class ExprNode;
 class PrototypeNode;
 
-/// CodeGenerator - TODO
+/// \brief CodeGenerator
+/// This class is a visitor that recursively traverse the AST to generate LLVM
+/// IR. This process is known a syntax-directed translation.
 class CodeGenerator {
 public:
   CodeGenerator()

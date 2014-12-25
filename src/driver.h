@@ -1,3 +1,10 @@
+//===----------------- driver.h - Driver class definition -----------------===//
+/// \file
+///
+/// This file contains the compiler driver.
+///
+//===----------------------------------------------------------------------===//
+
 #ifndef JAVAMM_DRIVER_H
 #define JAVAMM_DRIVER_H
 
@@ -9,7 +16,9 @@
 
 namespace javamm {
 
-/// Driver - TODO
+/// \brief Driver
+/// Implementation of a basic driver that manages the actions to perform on the
+/// AST. It can starts both the compilation and the printing process.
 class Driver {
 public:
   Driver()

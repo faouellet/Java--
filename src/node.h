@@ -1,3 +1,11 @@
+//===------------------ node.h - Node class definition --------------------===//
+/// \file
+///
+/// This file contains the declarations of all the node classes that can appear
+/// in a java-- AST.
+///
+//===----------------------------------------------------------------------===//
+
 #ifndef JAVAMM_NODE_H
 #define JAVAMM_NODE_H
 
@@ -9,7 +17,8 @@ namespace javamm {
 class ASTPrinter;
 class CodeGenerator;
 
-// Base class for all nodes in the AST
+/// \brief ASTNode
+/// Base class for all nodes in the AST.
 class ASTNode {
 public:
   virtual ~ASTNode() {}
@@ -17,13 +26,17 @@ public:
   virtual void print(const ASTPrinter *, unsigned) const = 0;
 };
 
-// Base class for all expression nodes
+/// \brief ExprNode
+/// Base class for all expression nodes i.e. nodes that can produce a value.
 class ExprNode : public ASTNode {
 public:
   virtual ~ExprNode() {}
 };
 
-// Expression class for variable declaration
+/// \brief DeclNode
+/// Expression class for variable declaration.
+/// A correct variable declaration will look like this: 
+///             var X = 42;
 class DeclNode : public ExprNode {
 public:
   DeclNode(const std::string &Variable, ExprNode *DeclBody)
@@ -37,7 +50,8 @@ private:
   ExprNode *Body;
 };
 
-// Expression class for numeric literal like "1.0"
+/// \brief NumberExprNode
+/// Expression class for numeric literal like "1.0"
 class NumberExprNode : public ExprNode {
 public:
   NumberExprNode(double Num) : Val{Num} {}
@@ -49,7 +63,8 @@ private:
   double Val;
 };
 
-// Expression class for referencing a variable like "MyVar"
+/// \brief VariableExprNode
+/// Expression class for referencing a variable like "MyVar"
 class VariableExprNode : public ExprNode {
 public:
   VariableExprNode(const std::string &Val) : Name{Val} {}
@@ -62,7 +77,10 @@ private:
   std::string Name;
 };
 
-// Expression class for a binary operator
+/// \brief BinaryExprNode
+/// Expression class for a binary operator.
+/// The currently accepted binary operators are:
+/// '=', '+', '-', '*', '/' 
 class BinaryExprNode : public ExprNode {
 public:
   BinaryExprNode(char Op, ExprNode *LHS, ExprNode *RHS)
@@ -77,7 +95,8 @@ private:
   ExprNode *RHSNode;
 };
 
-// Expression class for function calls
+/// \brief CallExprNode
+/// Expression class for function calls
 class CallExprNode : public ExprNode {
 public:
   CallExprNode(const std::string &FuncName,
@@ -92,7 +111,10 @@ private:
   std::vector<ExprNode *> Args;
 };
 
-// Expression class for for loop
+/// \brief ForNode
+/// Expression class for for loop.
+/// A for loop looks the same as one in C/C++:
+/// for(init; cond; step) { stmts }
 class ForNode : public ExprNode {
 public:
   ForNode(const std::string &VarName, ExprNode *Begin, ExprNode *End,
@@ -111,7 +133,11 @@ private:
   ExprNode *BodyNode;
 };
 
-// Expression class for if/then/else
+/// \brief IfNode
+/// Expression class for if/then/else
+/// A if condition requires both a true branch and false branch like in the
+/// following example:
+/// if(cond) then { stmts } else { stmts }
 class IfNode : public ExprNode {
 public:
   IfNode(ExprNode *CondNode, ExprNode *ThenNode, ExprNode *ElseNode)
@@ -126,9 +152,10 @@ private:
   ExprNode *Else;
 };
 
-// Class representing a function prototype. It has the knowledge of the function
-// name, the name of its arguments and, implicitly, the number of arguments the
-// function has.
+/// \brief PrototypeNode
+/// Class representing a function prototype. It has the knowledge of the function
+/// name, the name of its arguments and, implicitly, the number of arguments the
+/// function has. 
 class PrototypeNode : public ASTNode {
 public:
   PrototypeNode(const std::string &Name, const std::vector<std::string> &Args)
@@ -142,7 +169,10 @@ private:
   std::vector<std::string> ArgsNames;
 };
 
-// Class representing a function definition
+/// \brief FunctionNode
+/// Class representing a function definition.
+/// A function definition starts with the "def" keyword like this:
+/// def foo(x,y) { stmts }
 class FunctionNode : public ASTNode {
 public:
   FunctionNode(PrototypeNode *FuncProto, ExprNode *FuncBody)

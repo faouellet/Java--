@@ -1,3 +1,10 @@
+//===-------------- astprinter.h - ASTPrinter class definition -------------===//
+/// \file
+///
+/// This file contains the logic to print an AST to the console.
+///
+//===----------------------------------------------------------------------===//
+
 #ifndef JAVAMM_AST_PRINTER_H
 #define JAVAMM_AST_PRINTER_H
 
@@ -9,6 +16,9 @@ namespace javamm {
 class ExprNode;
 class PrototypeNode;
 
+/// \brief ASTPrinter
+/// This class is a visitor that will recursively traverse the AST to print its
+/// contents to the standard output.
 class ASTPrinter {
 public: // Core language nodes printing
   void printConstant(double Val, unsigned Depth) const;

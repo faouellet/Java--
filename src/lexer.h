@@ -1,3 +1,10 @@
+//===----------------- lexer.h - Lexer class definition -------------------===//
+/// \file
+///
+/// This file contains the lexer declaration
+///
+//===----------------------------------------------------------------------===//
+
 #ifndef JAVAMM_LEXER_H
 #define JAVAMM_LEXER_H
 
@@ -14,7 +21,8 @@
 
 namespace javamm {
 
-/// Lexer - TODO
+/// \brief Lexer
+/// This class replaces the default lexer built by Flex.
 class Lexer : public yyFlexLexer {
 public:
   Lexer(std::istream *In) : yyFlexLexer(In), yyval(nullptr){};
