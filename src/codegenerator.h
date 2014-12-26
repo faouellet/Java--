@@ -11,6 +11,7 @@
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/IR/Module.h"
+#include "llvm/Support/raw_ostream.h"
 
 #include <memory>
 #include <string>
@@ -38,8 +39,9 @@ public:
             std::make_unique<llvm::IRBuilder<>>(TheModule->getContext())}, CurrenVal{nullptr} {}
 
 public: // Utilities function 
-  void dumpIR();
+  void dumpIR() const;
   // void dumpAsm();
+  void printIR(llvm::raw_ostream &OS) const;
 
 public: // Core language generation
   void genConstant(double Val);

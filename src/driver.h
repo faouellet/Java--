@@ -25,7 +25,7 @@ public:
       : Printer{std::make_unique<ASTPrinter>()},
         Generator{std::make_unique<CodeGenerator>()}, ASTRoot(nullptr) {}
 
-  void compile(const std::string &Filename, bool ToAsm);
+  void compile(int NbArgs, char **Args);
 
   void setRoot(ASTNode *N) { ASTRoot = N; }
 

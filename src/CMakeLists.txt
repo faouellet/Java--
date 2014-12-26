@@ -29,16 +29,17 @@ add_library(frontend
     ${BISON_parser_OUTPUTS}
     ${FLEX_lexer_OUTPUTS})
 
-find_package(LLVM)
+find_package(LLVM REQUIRED COMPONENTS support core native)
 if( NOT LLVM_FOUND )
     message(FATAL_ERROR "LLVM package can't be found. Set CMAKE_PREFIX_PATH variable to LLVM's installation prefix.")
 endif()
 
 include_directories( src ${LLVM_INCLUDE_DIRS} )
+add_definitions(${LLVM_DEFINITIONS})
 link_directories( ${LLVM_LIBRARY_DIRS} )
 
-llvm_map_components_to_libnames(REQ_LLVM_LIBRARIES native)
-
 add_executable(java-- ${SOURCES})
+
+llvm_map_components_to_libnames(REQ_LLVM_LIBRARIES support core native)
 
 target_link_libraries(java-- frontend ${REQ_LLVM_LIBRARIES})

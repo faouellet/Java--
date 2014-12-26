@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
 
   javamm::Driver Compiler;
 
-  Compiler.compile(argv[1], /*ToAsm=*/false);
+  Compiler.compile(argc, argv);
 
   std::cout << "Compilation done" << std::endl;
 }

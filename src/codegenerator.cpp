@@ -21,7 +21,11 @@ using namespace llvm;
 // Implementation of the utilities functions
 //
 
-void CodeGenerator::dumpIR() { TheModule->dump(); }
+void CodeGenerator::dumpIR() const { TheModule->dump(); }
+
+void CodeGenerator::printIR(raw_ostream &OS) const {
+  TheModule->print(OS, nullptr);
+}
 
 AllocaInst *CodeGenerator::createEntryBlockAlloca(Function *F,
                                            const std::string &VarName) {
