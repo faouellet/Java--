@@ -1,0 +1,12 @@
+On Linux:
+1. Get the LLVM libraries either by getting the sources or the packages
+
+2. Create a build directory
+
+3. In the build directory, enter the command:
+   cmake /path/to/the/java--/folder
+
+4. Enter the command make
+
+On Windows:
+TODO

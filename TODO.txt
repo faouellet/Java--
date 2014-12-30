@@ -4,6 +4,7 @@
 - Remove possibility of using the keywords const and goto
 - Make AST printer use Graphviz
 - Organize everything
+- Extract grammar from the original implementation of the language
 
 - DOXYGEN DOCUMENTATION
 - INSTALL NOTES
