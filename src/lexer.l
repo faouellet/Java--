@@ -3,6 +3,8 @@
 %{
 #include "lexer.h"
 
+#include <iostream>
+
 typedef javamm::Parser::token token;
 
 // Taking over yyterminate to return a real token instead of nullptr
@@ -24,6 +26,9 @@ typedef javamm::Parser::token token;
 "then"                  { return token::THEN; }
 "else"                  { return token::ELSE; }
 "while"                 { return token::WHILE; }
+
+"const"                 { std::cout << "Keyword const is not allowed" << std::endl; }
+"goto"                  { std::cout << "Keyword goto is not allowed" << std::endl; }
 
 ","                     { return token::COMMA; }
 "}"                     { return token::CLOSE_BRACE; }
