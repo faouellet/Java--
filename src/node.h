@@ -111,26 +111,43 @@ private:
   std::vector<ExprNode *> Args;
 };
 
+/// \brief WhileNode
+/// Expression class for a while loop
+/// A while loop looks the same as one in C/C++
+/// while(cond) { stmts }
+class WhileNode : public ExprNode {
+public:
+  WhileNode(ExprNode *CondNode, ExprNode *BodyNode)
+      : Cond{CondNode}, Body{BodyNode} {}
+  virtual ~WhileNode() {}
+  void codegen(CodeGenerator *CodeGen) const override;
+  void print(const ASTPrinter *Printer, unsigned Depth) const override;
+
+private:
+  ExprNode *Cond;
+  ExprNode *Body;
+};
+
 /// \brief ForNode
 /// Expression class for for loop.
 /// A for loop looks the same as one in C/C++:
 /// for(init; cond; step) { stmts }
 class ForNode : public ExprNode {
 public:
-  ForNode(const std::string &VarName, ExprNode *Begin, ExprNode *End,
-          ExprNode *Step, ExprNode *Body)
-      : InductionVariableName{VarName}, BeginNode{Begin}, EndNode{End},
-        StepNode{Step}, BodyNode{Body} {}
+  ForNode(const std::string &VarName, ExprNode *BeginNode, ExprNode *EndNode,
+          ExprNode *StepNode, ExprNode *BodyNode)
+      : InductionVariableName{VarName}, Begin{BeginNode}, End{EndNode},
+        Step{StepNode}, Body{BodyNode} {}
   virtual ~ForNode() {}
   void codegen(CodeGenerator *CodeGen) const override;
   void print(const ASTPrinter *Printer, unsigned Depth) const override;
 
 private:
   std::string InductionVariableName;
-  ExprNode *BeginNode;
-  ExprNode *EndNode;
-  ExprNode *StepNode;
-  ExprNode *BodyNode;
+  ExprNode *Begin;
+  ExprNode *End;
+  ExprNode *Step;
+  ExprNode *Body;
 };
 
 /// \brief IfNode

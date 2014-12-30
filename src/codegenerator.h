@@ -57,6 +57,7 @@ public: // Control flow generation
   void genIf(ExprNode *Cond, ExprNode *Then, ExprNode *Else);
   void genFor(const std::string &VarName, ExprNode *Begin, ExprNode *End,
               ExprNode *Step, ExprNode *Body);
+  void genWhile(ExprNode *Cond, ExprNode *Body);
 
 private:
   llvm::AllocaInst *createEntryBlockAlloca(llvm::Function *F,

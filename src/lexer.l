@@ -23,6 +23,7 @@ typedef javamm::Parser::token token;
 "if"                    { return token::IF; }
 "then"                  { return token::THEN; }
 "else"                  { return token::ELSE; }
+"while"                 { return token::WHILE; }
 
 ","                     { return token::COMMA; }
 "}"                     { return token::CLOSE_BRACE; }

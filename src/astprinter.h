@@ -38,6 +38,7 @@ public: // Control flow nodes printing
                unsigned Depth) const;
   void printFor(const std::string &VarName, ExprNode *Begin, ExprNode *End,
                 ExprNode *Step, ExprNode *Body, unsigned Depth) const;
+  void printWhile(ExprNode *Cond, ExprNode *Body, unsigned Depth) const;
 
 private:
   const char FILL_CHAR = ' ';

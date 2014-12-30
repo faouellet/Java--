@@ -47,14 +47,20 @@ void CallExprNode::print(const ASTPrinter *Printer, unsigned Depth) const {
   Printer->printCall(Callee, Args, Depth);
 }
 
+void WhileNode::codegen(CodeGenerator *CodeGen) const {
+  CodeGen->genWhile(Cond, Body);
+}
+
+void WhileNode::print(const ASTPrinter *Printer, unsigned Depth) const {
+  Printer->printWhile(Cond, Body, Depth);
+}
+
 void ForNode::codegen(CodeGenerator *CodeGen) const {
-  CodeGen->genFor(InductionVariableName, BeginNode, EndNode, StepNode,
-                  BodyNode);
+  CodeGen->genFor(InductionVariableName, Begin, End, Step, Body);
 }
 
 void ForNode::print(const ASTPrinter *Printer, unsigned Depth) const {
-  Printer->printFor(InductionVariableName, BeginNode, EndNode, StepNode,
-                    BodyNode, Depth);
+  Printer->printFor(InductionVariableName, Begin, End, Step, Body, Depth);
 }
 
 void IfNode::codegen(CodeGenerator *CodeGen) const {

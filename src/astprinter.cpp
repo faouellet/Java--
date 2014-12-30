@@ -95,6 +95,7 @@ void ASTPrinter::printIf(ExprNode *Cond, ExprNode *Then, ExprNode *Else,
 void ASTPrinter::printFor(const std::string &VarName, ExprNode *Begin,
                           ExprNode *End, ExprNode *Step, ExprNode *Body,
                           unsigned Depth) const {
+  assert(End != nullptr && "For: end condition is null");
 
   std::cout << std::setfill(FILL_CHAR) << std::setw(Depth)
             << "For: " << std::endl;
@@ -104,6 +105,17 @@ void ASTPrinter::printFor(const std::string &VarName, ExprNode *Begin,
   Begin->print(this, Depth + FILL_WIDTH);
   End->print(this, Depth + FILL_WIDTH);
   Step->print(this, Depth + FILL_WIDTH);
+  Body->print(this, Depth + FILL_WIDTH);
+}
+
+void ASTPrinter::printWhile(ExprNode *Cond, ExprNode *Body,
+                            unsigned Depth) const {
+  assert(Cond != nullptr && "While: condition is null");
+
+  std::cout << std::setfill(FILL_CHAR) << std::setw(Depth)
+            << "While: " << std::endl;
+
+  Cond->print(this, Depth + FILL_WIDTH);
   Body->print(this, Depth + FILL_WIDTH);
 }
 

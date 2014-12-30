@@ -58,6 +58,7 @@
 %token          IF              "if"
 %token          THEN            "then"
 %token          ELSE            "else"
+%token          WHILE           "while"
 
 %token          COMMA           ","
 %token          CLOSE_BRACE     "}"
@@ -80,7 +81,7 @@
 /* Non terminal symbols declarations */
 %type   <ENode>  decl
 %type   <ENode>  expression 
-%type   <ENode>  binaryexpr callexpr forexpr identifierexpr ifexpr numberexpr parenexpr
+%type   <ENode>  binaryexpr callexpr forexpr identifierexpr ifexpr numberexpr parenexpr whileexpr
 %type   <FNode>  definition
 %type   <PNode>  external prototype
 %type   <Names>  argsnames
@@ -114,6 +115,7 @@ expression : decl
  | ifexpr
  | numberexpr
  | parenexpr 
+ | whileexpr
  ;
 
 decl : VAR IDENTIFIER ASSIGNMENT expression STATEMENT_END { $$ = new DeclNode(*$2, $4); }
@@ -151,6 +153,9 @@ numberexpr : NUMBER { $$ = new NumberExprNode($1); }
 
 parenexpr : OPEN_PAREN expression CLOSE_PAREN { $$ = $2; }
  ;
+
+whileexpr : WHILE OPEN_PAREN expression CLOSE_PAREN
+            OPEN_BRACE expression CLOSE_BRACE { $$ = new WhileNode($3, $6); }
 
 definition : DEF prototype OPEN_BRACE expression CLOSE_BRACE { $$ = new FunctionNode($2, $4); }
  ;

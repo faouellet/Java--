@@ -319,3 +319,33 @@ void CodeGenerator::genFor(const std::string &VarName, ExprNode *Begin,
       Constant::getNullValue(Type::getDoubleTy(TheBuilder->getContext()));
 }
 
+void CodeGenerator::genWhile(ExprNode *Cond, ExprNode *Body) {
+  assert(Cond != nullptr && "While: condition is null");
+
+  Function *F = TheBuilder->GetInsertBlock()->getParent();
+
+  BasicBlock *HeaderBB = BasicBlock::Create(TheBuilder->getContext(), "", F);
+
+  TheBuilder->CreateBr(HeaderBB);
+
+  TheBuilder->SetInsertPoint(HeaderBB);
+
+  Cond->codegen(this);
+  if (CurrenVal == nullptr)
+    return;
+  Value *CondVal = CurrenVal;
+
+  CondVal = TheBuilder->CreateFCmpONE(
+      CondVal, ConstantFP::get(TheBuilder->getContext(), APFloat(0.0)));
+
+  Body->codegen(this);
+  if (CurrenVal == nullptr)
+    return;
+
+  BasicBlock *ContBB = BasicBlock::Create(TheBuilder->getContext());
+
+  TheBuilder->CreateCondBr(CondVal, HeaderBB, ContBB);
+
+  TheBuilder->SetInsertPoint(ContBB);
+}
+
