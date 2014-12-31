@@ -38,7 +38,7 @@ using namespace javamm;
 //
 
 void Driver::compile(int NbArgs, char **Args) {
-  llvm::cl::ParseCommandLineOptions(NbArgs, Args);
+  //llvm::cl::ParseCommandLineOptions(NbArgs, Args);
 
   std::ifstream FileStream(Args[1]);
   if (!FileStream.is_open()) {

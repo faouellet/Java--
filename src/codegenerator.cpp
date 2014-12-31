@@ -28,10 +28,11 @@ void CodeGenerator::printIR(raw_ostream &OS) const {
 }
 
 AllocaInst *CodeGenerator::createEntryBlockAlloca(Function *F,
-                                           const std::string &VarName) {
-  TheBuilder->SetInsertPoint(F->getEntryBlock().begin());
-  return TheBuilder->CreateAlloca(Type::getDoubleTy(TheBuilder->getContext()), 0,
-                           VarName);
+                                                  const std::string &VarName) {
+  TheBuilder->SetInsertPoint(&F->getEntryBlock());
+  AllocaInst *I =
+      TheBuilder->CreateAlloca(TheBuilder->getDoubleTy(), nullptr, VarName);
+  return I;
 }
 
 void CodeGenerator::createArgumentAllocas(
@@ -157,10 +158,8 @@ void CodeGenerator::genCall(const std::string &FuncName,
 void CodeGenerator::genPrototype(const std::string &FuncName,
                                  const std::vector<std::string> Args) {
   FunctionType *FT = FunctionType::get(
-      Type::getDoubleTy(TheBuilder->getContext()),
-      std::vector<Type *>(Args.size(),
-                          Type::getDoubleTy(TheBuilder->getContext())),
-      false);
+      TheBuilder->getDoubleTy(),
+      std::vector<Type *>(Args.size(), TheBuilder->getDoubleTy()), false);
   Function *F = Function::Create(FT, Function::ExternalLinkage, FuncName,
                                  TheModule.get());
 
@@ -251,8 +250,7 @@ void CodeGenerator::genIf(ExprNode *Cond, ExprNode *Then, ExprNode *Else) {
 
   F->getBasicBlockList().push_back(MergeBB);
   TheBuilder->SetInsertPoint(MergeBB);
-  PHINode *PN =
-      TheBuilder->CreatePHI(Type::getDoubleTy(TheBuilder->getContext()), 2);
+  PHINode *PN = TheBuilder->CreatePHI(TheBuilder->getDoubleTy(), 2);
 
   PN->addIncoming(ThenVal, ThenBB);
   PN->addIncoming(ElseVal, ElseBB);
@@ -301,8 +299,8 @@ void CodeGenerator::genFor(const std::string &VarName, ExprNode *Begin,
   Value *NextVar = TheBuilder->CreateFAdd(CurVar, StepVal);
   TheBuilder->CreateStore(NextVar, AllocaVal);
 
-  EndVal = TheBuilder->CreateFCmpONE(
-      EndVal, ConstantFP::get(TheBuilder->getContext(), APFloat(0.0)));
+  //EndVal = TheBuilder->CreateFCmpONE(
+  //    EndVal, ConstantFP::get(TheBuilder->getContext(), APFloat(0.0)));
 
   BasicBlock *AfterBB = BasicBlock::Create(TheBuilder->getContext(), "", F);
 
@@ -315,8 +313,7 @@ void CodeGenerator::genFor(const std::string &VarName, ExprNode *Begin,
   else
     SymbolTable.erase(VarName);
 
-  CurrenVal =
-      Constant::getNullValue(Type::getDoubleTy(TheBuilder->getContext()));
+  CurrenVal = Constant::getNullValue(TheBuilder->getDoubleTy());
 }
 
 void CodeGenerator::genWhile(ExprNode *Cond, ExprNode *Body) {
