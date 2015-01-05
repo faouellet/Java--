@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-set(CMAKE_CXX_FLAGS "-std=c++14")
+set(CMAKE_CXX_FLAGS "-std=c++14 -fno-rtti")
 
 add_definitions(${CMAKE_CXX_FLAGS} -D__STDC_CONSTANT_MACROS)
 add_definitions(${CMAKE_CXX_FLAGS} -D__STDC_FORMAT_MACROS)

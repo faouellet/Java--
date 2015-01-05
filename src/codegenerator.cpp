@@ -80,7 +80,7 @@ void CodeGenerator::genBinOp(char Op, ExprNode *LHS, ExprNode *RHS) {
 
   // An assignment is a special case where we don't want to generate the LHS
   if (Op == '=') {
-    VariableExprNode *VarNode = dynamic_cast<VariableExprNode *>(LHS);
+    VariableExprNode *VarNode = dyn_cast<VariableExprNode>(LHS);
     if (VarNode == nullptr)
       return;
 

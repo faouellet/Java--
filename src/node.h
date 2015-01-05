@@ -9,6 +9,8 @@
 #ifndef JAVAMM_NODE_H
 #define JAVAMM_NODE_H
 
+#include "llvm/Support/Casting.h"
+
 #include <string>
 #include <vector>
 
@@ -21,15 +23,37 @@ class CodeGenerator;
 /// Base class for all nodes in the AST.
 class ASTNode {
 public:
+  enum NodeKind {
+    DECL,
+    NUMBER_EXPR,
+    VARIABLE_EXPR,
+    BINARY_EXPR,
+    CALL_EXPR,
+    FUNCTION,
+    PROTOTYPE,
+    IF,
+    FOR,
+    WHILE
+  };
+
+public:
+  ASTNode(NodeKind K) : Kind{K} {};
   virtual ~ASTNode() {}
   virtual void codegen(CodeGenerator *) const = 0;
   virtual void print(const ASTPrinter *, unsigned) const = 0;
+
+public:
+  NodeKind getKind() const { return Kind; }
+
+private:
+  NodeKind Kind;
 };
 
 /// \brief ExprNode
 /// Base class for all expression nodes i.e. nodes that can produce a value.
 class ExprNode : public ASTNode {
 public:
+  ExprNode(NodeKind K) : ASTNode{K} {}
   virtual ~ExprNode() {}
 };
 
@@ -40,10 +64,13 @@ public:
 class DeclNode : public ExprNode {
 public:
   DeclNode(const std::string &Variable, ExprNode *DeclBody)
-      : VarName{Variable}, Body{DeclBody} {}
+      : ExprNode{DECL}, VarName{Variable}, Body{DeclBody} {}
   virtual ~DeclNode() {}
   void codegen(CodeGenerator *CodeGen) const override;
   void print(const ASTPrinter *Printer, unsigned Depth) const override;
+
+public:
+  static bool classof(const ExprNode *EN) { return EN->getKind() == DECL; }
 
 private:
   std::string VarName;
@@ -54,10 +81,15 @@ private:
 /// Expression class for numeric literal like "1.0"
 class NumberExprNode : public ExprNode {
 public:
-  NumberExprNode(double Num) : Val{Num} {}
+  NumberExprNode(double Num) : ExprNode{NUMBER_EXPR}, Val{Num} {}
   virtual ~NumberExprNode() {}
   void codegen(CodeGenerator *CodeGen) const override;
   void print(const ASTPrinter *Printer, unsigned Depth) const override;
+
+public:
+  static bool classof(const ExprNode *EN) {
+    return EN->getKind() == NUMBER_EXPR;
+  }
 
 private:
   double Val;
@@ -67,11 +99,17 @@ private:
 /// Expression class for referencing a variable like "MyVar"
 class VariableExprNode : public ExprNode {
 public:
-  VariableExprNode(const std::string &Val) : Name{Val} {}
+  VariableExprNode(const std::string &Val)
+      : ExprNode{VARIABLE_EXPR}, Name{Val} {}
   virtual ~VariableExprNode() {}
   void codegen(CodeGenerator *CodeGen) const override;
   void print(const ASTPrinter *Printer, unsigned Depth) const override;
   const std::string &getName() const { return Name; }
+
+public:
+  static bool classof(const ExprNode *EN) {
+    return EN->getKind() == VARIABLE_EXPR;
+  }
 
 private:
   std::string Name;
@@ -84,10 +122,15 @@ private:
 class BinaryExprNode : public ExprNode {
 public:
   BinaryExprNode(char Op, ExprNode *LHS, ExprNode *RHS)
-      : Operator{Op}, LHSNode{LHS}, RHSNode{RHS} {}
+      : ExprNode{BINARY_EXPR}, Operator{Op}, LHSNode{LHS}, RHSNode{RHS} {}
   virtual ~BinaryExprNode() {}
   void codegen(CodeGenerator *CodeGen) const override;
   void print(const ASTPrinter *Printer, unsigned Depth) const override;
+
+public:
+  static bool classof(const ExprNode *EN) {
+    return EN->getKind() == BINARY_EXPR;
+  }
 
 private:
   char Operator;
@@ -101,10 +144,13 @@ class CallExprNode : public ExprNode {
 public:
   CallExprNode(const std::string &FuncName,
                const std::vector<ExprNode *> Arguments)
-      : Callee{FuncName}, Args{Arguments} {}
+      : ExprNode{CALL_EXPR}, Callee{FuncName}, Args{Arguments} {}
   virtual ~CallExprNode() {}
   void codegen(CodeGenerator *CodeGen) const override;
   void print(const ASTPrinter *Printer, unsigned Depth) const override;
+
+public:
+  static bool classof(const ExprNode *EN) { return EN->getKind() == CALL_EXPR; }
 
 private:
   std::string Callee;
@@ -118,10 +164,13 @@ private:
 class WhileNode : public ExprNode {
 public:
   WhileNode(ExprNode *CondNode, ExprNode *BodyNode)
-      : Cond{CondNode}, Body{BodyNode} {}
+      : ExprNode{WHILE}, Cond{CondNode}, Body{BodyNode} {}
   virtual ~WhileNode() {}
   void codegen(CodeGenerator *CodeGen) const override;
   void print(const ASTPrinter *Printer, unsigned Depth) const override;
+
+public:
+  static bool classof(const ExprNode *EN) { return EN->getKind() == WHILE; }
 
 private:
   ExprNode *Cond;
@@ -136,11 +185,14 @@ class ForNode : public ExprNode {
 public:
   ForNode(const std::string &VarName, ExprNode *BeginNode, ExprNode *EndNode,
           ExprNode *StepNode, ExprNode *BodyNode)
-      : InductionVariableName{VarName}, Begin{BeginNode}, End{EndNode},
-        Step{StepNode}, Body{BodyNode} {}
+      : ExprNode{FOR}, InductionVariableName{VarName}, Begin{BeginNode},
+        End{EndNode}, Step{StepNode}, Body{BodyNode} {}
   virtual ~ForNode() {}
   void codegen(CodeGenerator *CodeGen) const override;
   void print(const ASTPrinter *Printer, unsigned Depth) const override;
+
+public:
+  static bool classof(const ExprNode *EN) { return EN->getKind() == FOR; }
 
 private:
   std::string InductionVariableName;
@@ -158,10 +210,13 @@ private:
 class IfNode : public ExprNode {
 public:
   IfNode(ExprNode *CondNode, ExprNode *ThenNode, ExprNode *ElseNode)
-      : Cond{CondNode}, Then{ThenNode}, Else{ElseNode} {}
+      : ExprNode{IF}, Cond{CondNode}, Then{ThenNode}, Else{ElseNode} {}
   virtual ~IfNode() {}
   void codegen(CodeGenerator *CodeGen) const override;
   void print(const ASTPrinter *Printer, unsigned Depth) const override;
+
+public:
+  static bool classof(const ExprNode *EN) { return EN->getKind() == IF; }
 
 private:
   ExprNode *Cond;
@@ -176,10 +231,13 @@ private:
 class PrototypeNode : public ASTNode {
 public:
   PrototypeNode(const std::string &Name, const std::vector<std::string> &Args)
-      : FuncName{Name}, ArgsNames{Args} {}
+      : ASTNode{PROTOTYPE}, FuncName{Name}, ArgsNames{Args} {}
   void codegen(CodeGenerator *CodeGen) const override;
   void print(const ASTPrinter *Printer, unsigned Depth) const override;
   const std::vector<std::string> &getArgsNames() const { return ArgsNames; }
+
+public:
+  static bool classof(const ExprNode *EN) { return EN->getKind() == PROTOTYPE; }
 
 private:
   std::string FuncName;
@@ -193,9 +251,12 @@ private:
 class FunctionNode : public ASTNode {
 public:
   FunctionNode(PrototypeNode *FuncProto, ExprNode *FuncBody)
-      : Prototype{FuncProto}, Body{FuncBody} {}
+      : ASTNode{FUNCTION}, Prototype{FuncProto}, Body{FuncBody} {}
   void codegen(CodeGenerator *CodeGen) const override;
   void print(const ASTPrinter *Printer, unsigned Depth) const override;
+
+public:
+  static bool classof(const ExprNode *EN) { return EN->getKind() == FUNCTION; }
 
 private:
   PrototypeNode *Prototype;
