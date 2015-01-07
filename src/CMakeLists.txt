@@ -13,6 +13,11 @@ set(SOURCES
 find_package(BISON)
 find_package(FLEX)
 
+if("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")
+    LIST(APPEND CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+    FIND_LIBRARY(FL_LIBRARY NAMES libfl fl DOC "path to the fl library")
+endif()
+
 BISON_TARGET(parser
     ${CMAKE_CURRENT_SOURCE_DIR}/parser.y
     ${CMAKE_CURRENT_SOURCE_DIR}/parser.cpp)
@@ -34,7 +39,7 @@ if( NOT LLVM_FOUND )
     message(FATAL_ERROR "LLVM package can't be found. Set CMAKE_PREFIX_PATH variable to LLVM's installation prefix.")
 endif()
 
-include_directories( src ${LLVM_INCLUDE_DIRS} )
+include_directories( ${CMAKE_CURRENT_LIST_DIR} ${LLVM_INCLUDE_DIRS} )
 add_definitions(${LLVM_DEFINITIONS})
 link_directories( ${LLVM_LIBRARY_DIRS} )
 
