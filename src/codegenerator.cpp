@@ -346,3 +346,24 @@ void CodeGenerator::genWhile(ExprNode *Cond, ExprNode *Body) {
   TheBuilder->SetInsertPoint(ContBB);
 }
 
+//===----------------------------------------------------------------------===//
+// Implementation of the IO code generation
+//
+
+void CodeGenerator::genIO(const std::string &Message) {
+  Function *PrintF =
+      TheBuilder->GetInsertBlock()->getParent()->getParent()->getFunction(
+          "println");
+  if (PrintF == nullptr) {
+    FunctionType *FT = FunctionType::get(
+        TheBuilder->getVoidTy(), Type::getInt8PtrTy(TheBuilder->getContext()));
+    PrintF = Function::Create(FT, Function::ExternalLinkage, "println",
+                              TheModule.get());
+  }
+
+  // TODO: Will this create duplicates?
+  Value *MessageInst = TheBuilder->CreateGlobalStringPtr(Message);
+
+  TheBuilder->CreateCall(PrintF, MessageInst);
+}
+
