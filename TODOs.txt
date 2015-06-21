@@ -8,3 +8,8 @@
 
 - DOXYGEN DOCUMENTATION
 - INSTALL NOTES
+
+- Continuous integration:
+	-- Travis
+	-- Coverall
+	-- Coverity
