@@ -87,3 +87,9 @@ void FunctionNode::print(const ASTPrinter *Printer, unsigned Depth) const {
   Printer->printFunction(Prototype, Body, Depth);
 }
 
+void IONode::codegen(CodeGenerator *CodeGen) const { CodeGen->genIO(Message); }
+
+void IONode::print(const ASTPrinter *Printer, unsigned Depth) const {
+  Printer->printIO(Message, Depth);
+}
+

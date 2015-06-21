@@ -119,3 +119,12 @@ void ASTPrinter::printWhile(ExprNode *Cond, ExprNode *Body,
   Body->print(this, Depth + FILL_WIDTH);
 }
 
+//===----------------------------------------------------------------------===//
+// Implementation of the I/O printing
+//
+
+void ASTPrinter::printIO(const std::string &Message, unsigned Depth) const {
+  std::cout << std::setfill(FILL_CHAR) << std::setw(Depth) << "IO: " << Message
+            << std::endl;
+}
+

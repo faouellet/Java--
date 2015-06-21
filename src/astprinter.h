@@ -40,6 +40,9 @@ public: // Control flow nodes printing
                 ExprNode *Step, ExprNode *Body, unsigned Depth) const;
   void printWhile(ExprNode *Cond, ExprNode *Body, unsigned Depth) const;
 
+public: // IO nodes printing
+  void printIO(const std::string &Message, unsigned Depth) const;
+
 private:
   const char FILL_CHAR = ' ';
   const char FILL_WIDTH = 4;
