@@ -48,9 +48,15 @@ install:
   - sudo apt-get install llvm-3.6-dev
   - sudo apt-get install libclang-3.6-dev
 
-  # Geting the tools for building the frontend
-  - sudo apt-get install bison
+  # Getting the Flex tool
   - sudo apt-get install flex
+
+  # Getting Bison 3.0.2
+  - wget http://ftp.heanet.ie/mirrors/gnu/bison/bison-3.0.2.tar.gz
+  - tar -xvzf bison-3.0.2.tar.gz
+  - cd bison-3.0.2
+  - ./configure && make && sudo make install
+  - cd ..
   
   # Getting latest version of LCOV if needed
   - if [ "${COVERAGE}" == "1" ]; then
