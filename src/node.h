@@ -33,7 +33,8 @@ public:
     PROTOTYPE,
     IF,
     FOR,
-    WHILE
+    WHILE,
+    IO
   };
 
 public:
@@ -261,6 +262,24 @@ public:
 private:
   PrototypeNode *Prototype;
   ExprNode *Body;
+};
+
+/// \brief IONode
+/// Class representing an input action
+/// An input action starts with the "println" keyword followed by a string like
+/// this:
+/// println "Hello World"
+class IONode : public ASTNode {
+public:
+  IONode(const std::string &S) : ASTNode{IO}, Message{S} {}
+  void codegen(CodeGenerator *CodeGen) const override;
+  void print(const ASTPrinter *Printer, unsigned Depth) const override;
+
+public:
+  static bool classof(const ExprNode *EN) { return EN->getKind() == IO; }
+
+private:
+  std::string Message;
 };
 
 } // End namespace javamm

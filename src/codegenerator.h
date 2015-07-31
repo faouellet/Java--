@@ -43,7 +43,7 @@ public: // Utilities function
   // void dumpAsm();
   void printIR(llvm::raw_ostream &OS) const;
 
-public: // Core language generation
+public: // Core language code generation
   void genConstant(double Val);
   void genDecl(const std::string &Var, ExprNode *Body);
   void genVariable(const std::string &Val);
@@ -53,11 +53,14 @@ public: // Core language generation
                     const std::vector<std::string> Args);
   void genFunction(PrototypeNode *Prototype, ExprNode *Body);
 
-public: // Control flow generation
+public: // Control flow code generation
   void genIf(ExprNode *Cond, ExprNode *Then, ExprNode *Else);
   void genFor(const std::string &VarName, ExprNode *Begin, ExprNode *End,
               ExprNode *Step, ExprNode *Body);
   void genWhile(ExprNode *Cond, ExprNode *Body);
+
+public: // IO code generation
+  void genIO(const std::string &Message);
 
 private:
   llvm::AllocaInst *createEntryBlockAlloca(llvm::Function *F,

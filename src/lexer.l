@@ -15,6 +15,7 @@ typedef javamm::Parser::token token;
 %option noyywrap
 %option default
 %option yyclass="javamm::Lexer"
+%option nounistd
 
 %%
 
