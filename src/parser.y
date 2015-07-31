@@ -46,7 +46,7 @@
     delete $$;
     $$ = nullptr;
   }
-} <Str> <ENode> <PNode> <FNode> <ION> <Names> <ENodes> 
+} <Str> <ENode> <PNode> <FNode> <Names> <ENodes> 
 
 %define api.token.prefix {}
 
@@ -88,7 +88,6 @@
 %type   <PNode>  external prototype
 %type   <Names>  argsnames
 %type   <ENodes> callargs
-%type   <ION>    io
 
 /* Operator precedence */
 %left "="
@@ -108,7 +107,6 @@ program : definition { Drive.setRoot($1); }
                 PrototypeNode *Proto = new PrototypeNode("", std::vector<std::string>()); 
                 Drive.setRoot(new FunctionNode(Proto, $1));
               }
- | io STATEMENT_END { Driver.setRoot($1); }
  ;
 
 expression : decl
@@ -173,9 +171,6 @@ prototype : IDENTIFIER OPEN_PAREN argsnames CLOSE_PAREN { $$ = new PrototypeNode
 argsnames : { $$ = new std::vector<std::string>(); }
  | argsnames COMMA IDENTIFIER { $$ = $1; $$->push_back(*$3); }
  | IDENTIFIER { $$ = new std::vector<std::string>(); $$->push_back(*$1); }
- ;
-
-io : PRINTLN OPEN_PAREN IDENTIFIER CLOSE_PAREN { $$ = new IONode(*$3); }
  ;
 
 %%
