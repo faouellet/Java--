@@ -1,0 +1,92 @@
+language: cpp
+
+compiler:
+  - gcc
+  - clang
+
+os:
+  - linux
+  - osx
+
+env:
+  matrix:
+    -COVERAGE=0
+    -COVERAGE=1
+   
+matrix:
+  allow_failures:
+   - env: COVERAGE=1
+  # Don't do test coverage on Mac
+  exclude:
+   - os : osx
+     env: COVERAGE=1
+
+# TODO: Add Coverity static analysis
+
+# Addons for the latest compilers versions
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-precise-3.6
+    packages:
+      - g++-5
+      - clang-3.6
+
+before_install:
+  - sudo apt-get update -qq
+  
+install:
+  # Getting the latest compilers
+  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 50
+  - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-5 50
+  - if [ ${CC} == "clang" ]; then
+       export CC=/usr/bin/clang-3.6 CXX=/usr/bin/clang++-3.6; 
+    fi
+    
+  # Getting the latest version of the Clang and LLVM libraries
+  - sudo apt-get install llvm-3.6-dev
+  - sudo apt-get install libclang-3.6-dev
+
+  # Geting the tools for building the frontend
+  - sudo apt-get install bison
+  - sudo apt-get install flex
+  
+  # Getting latest version of LCOV if needed
+  - if [ "${COVERAGE}" == "1" ]; then
+       wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.11.orig.tar.gz &&
+       tar xf lcov_1.11.orig.tar.gz &&
+       sudo make -C lcov-1.11/ install &&
+       sudo apt-get install ruby1.9.1 ruby1.9.1-dev &&
+       sudo apt-get install rubygems1.9.1 irb1.9.1 ri1.9.1&&
+       rvmsudo gem install coveralls-lcov;
+    fi
+
+before_script:
+  # init coverage to 0 (optional)
+  - cd ${TRAVIS_BUILD_DIR}
+  - lcov --directory . --zerocounters
+
+script: 
+  - mkdir build
+  - cd build
+  
+  # Debug code coverage Linux build
+  - if [ ${COVERAGE} == 1 ]; then 
+       cmake .. -DCMAKE_BUILD_TYPE=DEBUG;
+    fi
+  # Release Linux build
+  - if [ ${COVERAGE} != 1 ]; then 
+       cmake .. -DCMAKE_BUILD_TYPE=RELEASE;
+    fi
+
+  - make
+  - ctest --verbose
+
+after_success:
+  - cd ${TRAVIS_BUILD_DIR}
+  - lcov --directory . --capture --output-file coverage.info
+  - lcov --remove coverage.info 'tests/*' '/usr/*' --output-file coverage.info
+  - lcov --list coverage.info
+  - coveralls-lcov coverage.info
+  
