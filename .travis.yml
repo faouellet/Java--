@@ -85,7 +85,7 @@ script:
        cmake .. -DCMAKE_BUILD_TYPE=RELEASE;
     fi
 
-  - make
+  - make VERBOSE=1
   - ctest --verbose
 
 after_success:
