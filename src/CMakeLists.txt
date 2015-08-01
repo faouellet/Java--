@@ -40,4 +40,8 @@ add_executable(java-- ${SOURCES})
 
 llvm_map_components_to_libnames(REQ_LLVM_LIBRARIES support core native)
 
+message("LLVM LIBS")
+message(${REQ_LLVM_LIBRARIES})
+message("LINKER FLAGS")
+message(${CMAKE_EXE_LINKER_FLAGS})
 target_link_libraries(java-- frontend ${REQ_LLVM_LIBRARIES})
