@@ -44,9 +44,8 @@ install:
        export CC=/usr/bin/clang-3.6 CXX=/usr/bin/clang++-3.6; 
     fi
     
-  # Getting the latest version of the Clang and LLVM libraries
+  # Getting the latest version of the LLVM libraries
   - sudo apt-get install llvm-3.6-dev
-  - sudo apt-get install libclang-3.6-dev
 
   # Getting the Flex tool
   - sudo apt-get install flex

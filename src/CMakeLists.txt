@@ -32,14 +32,6 @@ if( NOT LLVM_FOUND )
     message(FATAL_ERROR "LLVM package can't be found. Set CMAKE_PREFIX_PATH variable to LLVM's installation prefix.")
 endif()
 
-set(SOURCES 
-    astprinter.cpp
-    codegenerator.cpp
-    driver.cpp
-    main.cpp
-    node.cpp
-   )
-
 include_directories(${CMAKE_CURRENT_LIST_DIR} ${LLVM_INCLUDE_DIRS})
 add_definitions(${LLVM_DEFINITIONS})
 link_directories(${LLVM_LIBRARY_DIRS})
