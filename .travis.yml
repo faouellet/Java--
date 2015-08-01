@@ -44,6 +44,8 @@ install:
        export CC=/usr/bin/clang-3.6 CXX=/usr/bin/clang++-3.6; 
     fi
     
+  - sudo apt-get install build-essential
+
   # Getting the latest version of the LLVM libraries
   - sudo apt-get install llvm-3.6-dev
 
